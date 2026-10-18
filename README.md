@@ -1,8 +1,16 @@
-# Skyc
+<p align="center">
+  <img src="public/assets/logos/concept-4-sky-capsule.svg" width="112" height="112" alt="Skyc Official Logo" />
+</p>
 
-**Save anything, From anywhere.**
+<h1 align="center">Skyc</h1>
 
-Simpan dan unduh video tanpa tanda air (*no watermark*), foto resolusi tinggi, serta musik MP3 dari 16+ platform langsung dari perangkat **Android**, **Windows Desktop**, maupun **Terminal CLI** Anda. Dirancang dengan antarmuka hangat bergaya **Claude**, tanpa akun, tanpa iklan, dan berjalan 100% di sisi klien (*client-side*).
+<p align="center">
+  <strong>Save anything, From anywhere.</strong>
+</p>
+
+<p align="center">
+  <em>Universal, Zero-Cloud, Client-Side Media Downloader for Android, Windows Desktop & CLI</em>
+</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Version-v1.0.0-D97757?style=flat-square" alt="Version">
@@ -10,6 +18,8 @@ Simpan dan unduh video tanpa tanda air (*no watermark*), foto resolusi tinggi, s
   <img src="https://img.shields.io/badge/Theme-Claude%20Editorial-F4F3EE?style=flat-square&labelColor=191918&color=D97757" alt="Theme">
   <img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=flat-square" alt="License">
 </p>
+
+Simpan dan unduh video tanpa tanda air (*no watermark*), foto resolusi tinggi, serta musik MP3 dari 16+ platform langsung dari perangkat **Android**, **Windows Desktop**, maupun **Terminal CLI** Anda. Dirancang dengan antarmuka hangat bergaya **Claude**, tanpa akun, tanpa iklan, dan berjalan 100% di sisi klien (*client-side*).
 
 ---
 

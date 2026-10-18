@@ -59,12 +59,20 @@ body {
 .logo-badge {
   width: 36px;
   height: 36px;
-  background-color: var(--accent);
-  color: #FAF9F5;
   border-radius: var(--radius-md);
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(25, 25, 24, 0.16);
+}
+
+.logo-badge img,
+.logo-badge svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
 }
 
 .logo-title {
