@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   build-android:
     name: Build Android APK
@@ -24,6 +27,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
       - name: Install dependencies & compile scrapers
         run: |
           npm install
@@ -33,8 +39,7 @@ jobs:
       - name: Build Android APK
         run: |
           cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          gradle assembleDebug --no-daemon
 
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
