@@ -29,9 +29,10 @@ Seluruh paket instalasi siap pakai tersedia di halaman **GitHub Releases** dan *
 
 | Platform | Paket Tersedia | Metode Instalasi |
 | :--- | :--- | :--- |
-| **Android** | `Skyc-v1.0.0.apk` | Instalasi langsung APK (*Sideload*) |
-| **Windows (64-bit)** | `Skyc-1.0.0-Windows-x64-Setup.exe` / `.msi` | Installer standar Windows (NSIS / WiX) |
-| **CLI (Terminal)** | `npx @elskyx/skyc` | Jalankan langsung melalui Node.js / npm |
+| **Android (Universal / x64)** | [**`Skyc-v1.0.0.apk`**](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc-v1.0.0.apk) | [Unduh Langsung APK](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc-v1.0.0.apk) *(Sideload)* |
+| **Windows Desktop (x64 / x86)** | [**`Skyc-Setup.exe`**](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc_1.0.0_x64-setup.exe) / [**`.msi`**](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc_1.0.0_x64_en-US.msi) | [Unduh Installer .exe](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc_1.0.0_x64-setup.exe) *(NSIS / WiX)* |
+| **Web App (Browser)** | [**Buka Skyc Web**](https://github.com/elskyx/Skyc) | Akses langsung via browser *(Zero Install)* |
+| **CLI (Terminal)** | [`npx @elskyx/skyc`](https://www.npmjs.com/package/@elskyx/skyc) | Jalankan via Node.js / npm (`skyc <URL>`) |
 
 ---
 

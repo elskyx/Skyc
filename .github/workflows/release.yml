@@ -43,10 +43,16 @@ jobs:
           cd android
           gradle assembleDebug --no-daemon
 
+      - name: Prepare APK for Release
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk Skyc-v1.0.0.apk
+
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
-          files: android/app/build/outputs/apk/debug/app-debug.apk
+          files: |
+            Skyc-v1.0.0.apk
+            android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -70,11 +76,27 @@ jobs:
           npm install
           npm run windows:build
 
+      - name: Prepare Windows Installers
+        shell: pwsh
+        run: |
+          $nsis = Get-ChildItem -Path src-tauri/target -Recurse -Filter "*setup.exe" | Select-Object -First 1
+          if ($nsis) {
+            Copy-Item $nsis.FullName "Skyc_1.0.0_x64-setup.exe"
+            Copy-Item $nsis.FullName "Skyc_1.0.0_Windows_Setup.exe"
+          }
+          $msi = Get-ChildItem -Path src-tauri/target -Recurse -Filter "*.msi" | Select-Object -First 1
+          if ($msi) {
+            Copy-Item $msi.FullName "Skyc_1.0.0_x64_en-US.msi"
+            Copy-Item $msi.FullName "Skyc_1.0.0_Windows.msi"
+          }
+
       - name: Upload Windows Installers to Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            src-tauri/target/release/bundle/nsis/*.exe
-            src-tauri/target/release/bundle/msi/*.msi
+            Skyc_1.0.0_x64-setup.exe
+            Skyc_1.0.0_Windows_Setup.exe
+            Skyc_1.0.0_x64_en-US.msi
+            Skyc_1.0.0_Windows.msi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
