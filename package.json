@@ -1,0 +1,41 @@
+{
+  "name": "skyc",
+  "version": "1.0.0",
+  "description": "Client-side media downloader app for Android, Windows, and CLI with a Claude-inspired theme.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elskyx/Skyc.git"
+  },
+  "workspaces": [
+    "cli"
+  ],
+  "scripts": {
+    "build:scrapers": "node scripts/compile-scrapers.mjs",
+    "serve": "npx serve public -l 3000",
+    "cli": "node cli/index.js",
+    "android:sync": "npm run build:scrapers && npx cap sync android",
+    "android:dev": "npm run android:sync && npx cap open android",
+    "android:apk": "npm run android:sync && cd android && ./gradlew assembleRelease",
+    "windows:dev": "npm run build:scrapers && npx tauri dev",
+    "windows:build": "npm run build:scrapers && npx tauri build --target x86_64-pc-windows-msvc"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/clipboard": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/filesystem": "^6.0.0",
+    "@capacitor/haptics": "^6.0.0",
+    "@capacitor/preferences": "^6.0.0",
+    "@capacitor/share": "^6.0.0",
+    "axios": "^1.7.0",
+    "cheerio": "^1.0.0",
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0",
+    "@tauri-apps/cli": "^2.0.0",
+    "esbuild": "^0.24.0"
+  }
+}

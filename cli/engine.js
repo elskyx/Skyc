@@ -1,0 +1,296 @@
+import fs from "fs";
+import path from "path";
+import os from "os";
+
+export const CHROME_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
+export const DEFAULT_DOWNLOAD_DIR = path.join(os.homedir(), "Downloads", "Skyc");
+export const SKYC_DIR = path.join(os.homedir(), ".skyc");
+export const CONFIG_PATH = path.join(SKYC_DIR, "config.json");
+export const HISTORY_PATH = path.join(SKYC_DIR, "history.json");
+
+// Ensure .skyc config directory exists
+if (!fs.existsSync(SKYC_DIR)) {
+  fs.mkdirSync(SKYC_DIR, { recursive: true });
+}
+
+export function detectPlatform(url) {
+  if (!url) return "unknown";
+  const lower = url.toLowerCase();
+  if (lower.includes("tiktok.com") || lower.includes("douyin.com")) return lower.includes("douyin.com") ? "douyin" : "tiktok";
+  if (lower.includes("instagram.com")) return "instagram";
+  if (lower.includes("youtube.com") || lower.includes("youtu.be")) return "youtube";
+  if (lower.includes("twitter.com") || lower.includes("x.com")) return "twitter";
+  if (lower.includes("spotify.com")) return "spotify";
+  if (lower.includes("music.apple.com")) return "applemusic";
+  if (lower.includes("pinterest.com") || lower.includes("pin.it")) return "pinterest";
+  if (lower.includes("facebook.com") || lower.includes("fb.watch")) return "facebook";
+  if (lower.includes("threads.net")) return "threads";
+  if (lower.includes("bandcamp.com")) return "bandcamp";
+  if (lower.includes("pixiv.net")) return "pixiv";
+  if (lower.includes("bilibili.com") || lower.includes("b23.tv")) return "bilibili";
+  if (lower.includes("xiaohongshu.com") || lower.includes("xhslink.com")) return "rednote";
+  if (lower.includes("reddit.com") || lower.includes("redd.it")) return "reddit";
+  if (lower.includes("terabox.com") || lower.includes("1024tera.com")) return "terabox";
+  return "generic";
+}
+
+export function sanitizeFilename(title, maxLength = 80) {
+  if (!title) return `skyc_${Date.now()}`;
+  let clean = title.replace(/[\\/:*?"<>|]/g, "_").replace(/[\x00-\x1f]/g, "").trim();
+  clean = clean.replace(/\s+/g, " ");
+  if (clean.length > maxLength) clean = clean.substring(0, maxLength).trim();
+  return clean || `skyc_${Date.now()}`;
+}
+
+export async function cliFetch(options) {
+  const method = (options.method || (options.data ? "POST" : "GET")).toUpperCase();
+  const headers = { "User-Agent": CHROME_UA, ...options.headers };
+
+  let body = options.data || null;
+  if (typeof body === "object" && body !== null) {
+    if (headers["Content-Type"]?.includes("application/json")) {
+      body = JSON.stringify(body);
+    } else if (headers["Content-Type"]?.includes("application/x-www-form-urlencoded")) {
+      body = new URLSearchParams(body).toString();
+    }
+  }
+
+  const res = await fetch(options.url, {
+    method,
+    headers,
+    body: method !== "GET" ? body : undefined,
+  });
+
+  const contentType = res.headers.get("content-type") || "";
+  if (contentType.includes("application/json")) {
+    return await res.json();
+  }
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch (_) {
+    return text;
+  }
+}
+
+export async function scrapeUrl(url) {
+  const platform = detectPlatform(url);
+
+  // TikTok
+  if (platform === "tiktok" || platform === "douyin") {
+    const res = await cliFetch({
+      method: "POST",
+      url: "https://www.tikwm.com/api/",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      data: { url, count: 12, cursor: 0, web: 1, hd: 1 },
+    });
+    if (res?.data) {
+      const d = res.data;
+      return {
+        platform,
+        title: d.title || "TikTok Video",
+        author: d.author?.nickname || "TikTok User",
+        thumbnail: d.cover || "",
+        duration: d.duration || 0,
+        formats: [
+          {
+            id: "hd_nowm",
+            label: "HD Video (No Watermark)",
+            quality: "1080p",
+            type: "video",
+            ext: "mp4",
+            url: d.hdplay ? (d.hdplay.startsWith("http") ? d.hdplay : `https://www.tikwm.com${d.hdplay}`) : d.play,
+          },
+          ...(d.music ? [{
+            id: "audio_mp3",
+            label: "Audio MP3",
+            quality: "128kbps",
+            type: "audio",
+            ext: "mp3",
+            url: d.music.startsWith("http") ? d.music : `https://www.tikwm.com${d.music}`,
+          }] : []),
+        ],
+        photos: (d.images || []).map((img, i) => ({ id: `p_${i + 1}`, label: `Photo ${i + 1}`, url: img, ext: "jpg" })),
+      };
+    }
+  }
+
+  // YouTube
+  if (platform === "youtube") {
+    const idMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/))([a-zA-Z0-9_-]{11})/i);
+    const videoId = idMatch ? idMatch[1] : null;
+    return {
+      platform: "youtube",
+      title: `YouTube Video (${videoId || "Stream"})`,
+      author: "YouTube Creator",
+      thumbnail: videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : "",
+      duration: 0,
+      formats: [
+        {
+          id: "yt_video",
+          label: "Video (Auto HD)",
+          quality: "HD",
+          type: "video",
+          ext: "mp4",
+          url: `https://invidious.jing.rocks/latest_version?id=${videoId}&itag=22`,
+        },
+        {
+          id: "yt_audio",
+          label: "Audio Only (MP3)",
+          quality: "Audio 128k",
+          type: "audio",
+          ext: "mp3",
+          url: `https://invidious.jing.rocks/latest_version?id=${videoId}&itag=140`,
+        }
+      ],
+      photos: [],
+    };
+  }
+
+  // Instagram
+  if (platform === "instagram") {
+    const res = await cliFetch({
+      method: "POST",
+      url: "https://snapinsta.app/action2.php",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      data: { url, action: "post" },
+    });
+    const html = typeof res === "string" ? res : JSON.stringify(res);
+    const match = html.match(/href="([^"]*(?:snapinsta\.app\/get\.php|\.mp4)[^"]*)"/i);
+    if (match) {
+      return {
+        platform: "instagram",
+        title: "Instagram Post",
+        author: "Instagram Creator",
+        thumbnail: "",
+        duration: 0,
+        formats: [{ id: "ig_hd", label: "Instagram HD Video", quality: "HD", type: "video", ext: "mp4", url: match[1] }],
+        photos: [],
+      };
+    }
+  }
+
+  // Spotify
+  if (platform === "spotify") {
+    const res = await cliFetch({
+      method: "POST",
+      url: "https://api.spotifydown.com/download",
+      headers: { "Content-Type": "application/json" },
+      data: { link: url },
+    });
+    if (res?.success && res?.link) {
+      return {
+        platform: "spotify",
+        title: res.metadata?.title || "Spotify Track",
+        author: res.metadata?.artists || "Artist",
+        thumbnail: res.metadata?.cover || "",
+        duration: 0,
+        formats: [{ id: "spot_mp3", label: "Audio MP3 (320kbps)", quality: "320kbps", type: "audio", ext: "mp3", url: res.link }],
+        photos: [],
+      };
+    }
+  }
+
+  throw new Error(`Extraction for ${platform} is not currently responding. Try again or check the URL.`);
+}
+
+export async function downloadMediaFile(downloadUrl, destPath, onProgress = () => {}) {
+  const dir = path.dirname(destPath);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+  const res = await fetch(downloadUrl, { headers: { "User-Agent": CHROME_UA } });
+  if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+
+  const totalBytes = parseInt(res.headers.get("content-length") || "0", 10);
+  const fileStream = fs.createWriteStream(destPath);
+
+  let downloadedBytes = 0;
+  const reader = res.body.getReader();
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    fileStream.write(value);
+    downloadedBytes += value.length;
+    if (totalBytes > 0) {
+      const pct = Math.round((downloadedBytes / totalBytes) * 100);
+      onProgress(pct, downloadedBytes, totalBytes);
+    }
+  }
+
+  fileStream.end();
+  return { path: destPath, size: downloadedBytes };
+}
+
+export async function compileImagesToPdf(imageUrls, destPath, onProgress = () => {}) {
+  const { PDFDocument } = await import("pdf-lib");
+  const pdfDoc = await PDFDocument.create();
+  const total = imageUrls.length;
+
+  for (let i = 0; i < total; i++) {
+    onProgress(Math.round(((i + 1) / total) * 100), i + 1, total);
+    try {
+      const res = await fetch(imageUrls[i]);
+      const imgBytes = await res.arrayBuffer();
+      const img = imageUrls[i].toLowerCase().includes(".png")
+        ? await pdfDoc.embedPng(imgBytes)
+        : await pdfDoc.embedJpg(imgBytes);
+
+      const { width, height } = img.scale(1.0);
+      const page = pdfDoc.addPage([width, height]);
+      page.drawImage(img, { x: 0, y: 0, width, height });
+    } catch (_) {}
+  }
+
+  const pdfBytes = await pdfDoc.save();
+  const dir = path.dirname(destPath);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(destPath, Buffer.from(pdfBytes));
+  return { path: destPath, size: pdfBytes.length };
+}
+
+export function getHistory() {
+  try {
+    if (fs.existsSync(HISTORY_PATH)) {
+      return JSON.parse(fs.readFileSync(HISTORY_PATH, "utf-8"));
+    }
+  } catch (_) {}
+  return [];
+}
+
+export function addToHistory(item) {
+  const list = getHistory();
+  list.unshift(item);
+  if (list.length > 500) list.pop();
+  try {
+    fs.writeFileSync(HISTORY_PATH, JSON.stringify(list, null, 2));
+  } catch (_) {}
+}
+
+export function clearHistory() {
+  try {
+    fs.writeFileSync(HISTORY_PATH, "[]");
+  } catch (_) {}
+}
+
+export function getStats() {
+  const history = getHistory();
+  let totalBytes = 0;
+  history.forEach((h) => (totalBytes += h.size || 0));
+  return { count: history.length, totalBytes };
+}
+
+export function getSavedConfig() {
+  try {
+    if (fs.existsSync(CONFIG_PATH)) {
+      return JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8"));
+    }
+  } catch (_) {}
+  return { downloadDir: DEFAULT_DOWNLOAD_DIR };
+}
+
+export function saveConfig(cfg) {
+  try {
+    fs.writeFileSync(CONFIG_PATH, JSON.stringify(cfg, null, 2));
+  } catch (_) {}
+}

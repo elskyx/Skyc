@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Skyc — Save anything, From anywhere</title>
+  <meta name="description" content="Client-side media downloader app for Android, Windows, and CLI with a Claude-inspired theme." />
+  <meta name="theme-color" content="#F4F3EE" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+
+  <!-- Typography: Editorial Serif, UI Sans, & Monospace -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- PDF-Lib for Client-Side Photo-to-PDF compilation -->
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+</head>
+<body>
+  <!-- Live Ambient Canvas Background -->
+  <canvas id="ambientCanvas"></canvas>
+
+  <div class="app-viewport">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand-mark">
+        <div class="brand-logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+        </div>
+        <span class="brand-title">Skyc</span>
+        <span class="brand-tag">Zero-Cloud</span>
+      </div>
+      <div class="header-actions">
+        <span id="headerOtaStatus" class="badge badge-neutral">Core v1</span>
+      </div>
+    </header>
+
+    <!-- Main Views Container -->
+    <main class="views-container">
+      
+      <!-- 1. HOME VIEW -->
+      <section id="view-home" class="view-page active">
+        <div class="home-section">
+          <!-- Hero Greeting -->
+          <div class="hero-greeting-container">
+            <h1 class="hero-greeting">Save anything, from anywhere.</h1>
+            <p class="hero-subtext">Watermark-free videos, photos, and music from 16+ platforms. 100% client-side.</p>
+          </div>
+
+          <!-- Claude Prompt-Style URL Composer -->
+          <div class="claude-url-composer">
+            <div class="composer-input-row">
+              <div class="composer-input-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+                  <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+                </svg>
+              </div>
+              <textarea id="composerUrlInput" class="composer-textarea" rows="1" placeholder="Paste link from TikTok, Instagram, YouTube, Spotify, X..."></textarea>
+            </div>
+            
+            <div class="composer-controls-row">
+              <div class="composer-tools-left">
+                <button id="composerPasteBtn" class="tool-chip-btn" title="Paste from clipboard">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                  </svg>
+                  <span>Paste</span>
+                </button>
+                <button id="batchToggleBtn" class="tool-chip-btn" title="Multi-link Batch Mode">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                  </svg>
+                  <span>Batch</span>
+                </button>
+                <button id="composerClearBtn" class="tool-chip-btn" style="display:none;" title="Clear input">
+                  <span>Clear</span>
+                </button>
+              </div>
+
+              <button id="analyzeBtn" class="composer-submit-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                <span>Analyze</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Platforms Ticker -->
+          <div class="platforms-ticker-container">
+            <span class="platform-pill">TikTok</span>
+            <span class="platform-pill">Instagram</span>
+            <span class="platform-pill">YouTube</span>
+            <span class="platform-pill">X / Twitter</span>
+            <span class="platform-pill">Spotify</span>
+            <span class="platform-pill">Apple Music</span>
+            <span class="platform-pill">Pinterest</span>
+            <span class="platform-pill">Facebook</span>
+            <span class="platform-pill">Threads</span>
+            <span class="platform-pill">RedNote</span>
+            <span class="platform-pill">Bilibili</span>
+            <span class="platform-pill">Douyin</span>
+            <span class="platform-pill">Reddit</span>
+            <span class="platform-pill">Bandcamp</span>
+            <span class="platform-pill">Pixiv</span>
+            <span class="platform-pill">TeraBox</span>
+          </div>
+
+          <!-- Live Result Card -->
+          <div id="resultCardContainer" class="claude-card result-card-container">
+            <!-- Thumbnail / Preview -->
+            <div class="media-preview-box">
+              <img id="resultThumbImg" class="media-thumb-img" alt="Media Preview" />
+            </div>
+
+            <!-- Carousel Preview for Photo Albums -->
+            <div id="resultCarouselWrapper" class="carousel-preview-wrapper" style="display: none;">
+              <img id="carouselSlideImg" class="carousel-slide-img" alt="Album slide" />
+              <button id="carouselPrevBtn" class="carousel-nav-btn prev">❮</button>
+              <button id="carouselNextBtn" class="carousel-nav-btn next">❯</button>
+              <div id="carouselDots" class="carousel-dots-indicator"></div>
+            </div>
+
+            <div class="media-meta-header">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span id="resultPlatformBadge" class="badge badge-terracotta">Platform</span>
+              </div>
+              <h2 id="resultTitle" class="media-title-text">Media Title</h2>
+              <div class="media-author-row">
+                <span id="resultAuthor">Creator Name</span>
+              </div>
+            </div>
+
+            <!-- Format Option Chips -->
+            <div id="resultFormatsGrid" class="format-options-grid"></div>
+
+            <!-- Download Action Buttons -->
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button id="startDownloadBtn" class="btn btn-primary" style="flex: 1;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                <span>Download Now</span>
+              </button>
+              <button id="compilePdfBtn" class="btn btn-secondary" style="display: none;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <span>Compile into PDF</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. GALLERY VIEW -->
+      <section id="view-gallery" class="view-page">
+        <div class="gallery-section">
+          <div class="gallery-header-row">
+            <div class="gallery-title-box">
+              <h1 class="gallery-title">Media Vault</h1>
+              <span id="galleryItemsCount" class="gallery-stats">0 items</span>
+            </div>
+
+            <!-- Search & Filter Controls -->
+            <div class="gallery-controls-bar">
+              <div class="gallery-search-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input id="gallerySearchInput" class="gallery-search-input" type="text" placeholder="Search saved media..." />
+              </div>
+
+              <div class="gallery-filters-row">
+                <button class="chip-filter active" data-filter="all">All</button>
+                <button class="chip-filter" data-filter="videos">Videos</button>
+                <button class="chip-filter" data-filter="music">Music</button>
+                <button class="chip-filter" data-filter="photos">Photos</button>
+                <button class="chip-filter" data-filter="pdf">PDF Documents</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gallery Media Grid -->
+          <div id="galleryGridContainer" class="gallery-grid"></div>
+        </div>
+      </section>
+
+      <!-- 3. HISTORY VIEW -->
+      <section id="view-history" class="view-page">
+        <div class="history-section">
+          <div class="history-header-row">
+            <h1 class="history-title">Download Log</h1>
+            <div style="display: flex; gap: 0.4rem;">
+              <button id="exportHistoryBtn" class="btn btn-secondary" style="padding: 0.45rem 0.85rem; font-size: 0.82rem;">Export JSON</button>
+              <button id="clearHistoryBtn" class="btn btn-ghost" style="padding: 0.45rem 0.85rem; font-size: 0.82rem;">Clear</button>
+            </div>
+          </div>
+
+          <!-- History Stats Metric Cards -->
+          <div class="history-stats-bar">
+            <div class="stat-metric-card">
+              <span class="stat-label">Total Downloads</span>
+              <span id="historyStatCount" class="stat-value">0</span>
+            </div>
+            <div class="stat-metric-card">
+              <span class="stat-label">Total Media Size</span>
+              <span id="historyStatSize" class="stat-value">0 B</span>
+            </div>
+            <div class="stat-metric-card">
+              <span class="stat-label">Privacy Mode</span>
+              <span class="stat-value" style="font-size: 0.95rem;">100% Client</span>
+            </div>
+          </div>
+
+          <!-- History List Container -->
+          <div id="historyListContainer" class="history-list"></div>
+        </div>
+      </section>
+
+      <!-- 4. SETTINGS VIEW -->
+      <section id="view-settings" class="view-page">
+        <div class="settings-section">
+          <h1 class="settings-title">Preferences</h1>
+
+          <!-- Appearance Group -->
+          <div class="settings-group">
+            <span class="settings-group-label">Appearance & Ambience</span>
+            <div class="settings-card">
+              <div class="settings-row">
+                <div class="settings-row-left">
+                  <div class="settings-row-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="5"/>
+                      <line x1="12" y1="1" x2="12" y2="3"/>
+                      <line x1="12" y1="21" x2="12" y2="23"/>
+                    </svg>
+                  </div>
+                  <div class="settings-row-texts">
+                    <span class="settings-row-label">Visual Theme</span>
+                    <span class="settings-row-desc">Claude Warm Parchment or Obsidian Dark</span>
+                  </div>
+                </div>
+                <div class="segmented-chips-control">
+                  <button class="segmented-chip-btn theme-chip-btn active" data-theme-val="light">Light</button>
+                  <button class="segmented-chip-btn theme-chip-btn" data-theme-val="dark">Dark</button>
+                </div>
+              </div>
+
+              <div class="settings-row">
+                <div class="settings-row-left">
+                  <div class="settings-row-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  </div>
+                  <div class="settings-row-texts">
+                    <span class="settings-row-label">Live Background</span>
+                    <span class="settings-row-desc">Canvas particle effects</span>
+                  </div>
+                </div>
+                <div class="segmented-chips-control">
+                  <button class="segmented-chip-btn anim-chip-btn active" data-anim-val="fireflies">Fireflies</button>
+                  <button class="segmented-chip-btn anim-chip-btn" data-anim-val="stars">Stars</button>
+                  <button class="segmented-chip-btn anim-chip-btn" data-anim-val="none">None</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Privacy Group -->
+          <div class="settings-group">
+            <span class="settings-group-label">Privacy & Security</span>
+            <div class="settings-card">
+              <div class="settings-row">
+                <div class="settings-row-left">
+                  <div class="settings-row-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                      <path d="M7 11V7a5 5 0 0110 0v4"/>
+                    </svg>
+                  </div>
+                  <div class="settings-row-texts">
+                    <span class="settings-row-label">4-Digit PIN Lock</span>
+                    <span class="settings-row-desc">Require PIN to open Vault and History</span>
+                  </div>
+                </div>
+                <label class="switch-toggle">
+                  <input type="checkbox" id="pinLockToggle" />
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+
+              <div class="settings-row">
+                <div class="settings-row-left">
+                  <div class="settings-row-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                  </div>
+                  <div class="settings-row-texts">
+                    <span class="settings-row-label">Header Spoofing</span>
+                    <span class="settings-row-desc">Prevent 403 Forbidden hotlink blocks</span>
+                  </div>
+                </div>
+                <label class="switch-toggle">
+                  <input type="checkbox" id="headerSpoofToggle" checked />
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Updates & About Group -->
+          <div class="settings-group">
+            <span class="settings-group-label">Updates & OTA Engine</span>
+            <div class="settings-card">
+              <div class="settings-row">
+                <div class="settings-row-left">
+                  <div class="settings-row-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="23 4 23 10 17 10"/>
+                      <polyline points="1 20 1 14 7 14"/>
+                      <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                    </svg>
+                  </div>
+                  <div class="settings-row-texts">
+                    <span class="settings-row-label">OTA Scraper Hot-Patching</span>
+                    <span class="settings-row-desc">Update extractors without reinstalling app</span>
+                  </div>
+                </div>
+                <button id="checkOtaScraperBtn" class="btn btn-secondary" style="font-size: 0.82rem; padding: 0.45rem 0.85rem;">Check Scraper Patch</button>
+              </div>
+
+              <div class="settings-row">
+                <div class="settings-row-left">
+                  <div class="settings-row-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="12" y1="16" x2="12" y2="12"/>
+                      <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                  </div>
+                  <div class="settings-row-texts">
+                    <span class="settings-row-label">Skyc Version</span>
+                    <span id="settingsAppVersion" class="settings-row-desc">v1.0.0</span>
+                  </div>
+                </div>
+                <button id="checkAppUpdateBtn" class="btn btn-secondary" style="font-size: 0.82rem; padding: 0.45rem 0.85rem;">Check for Updates</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Dock Navigation Bar -->
+    <nav class="bottom-nav-dock">
+      <button class="nav-tab-btn active" data-tab="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Home</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="gallery">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        <span>Gallery</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="history">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span>History</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+        </svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Floating Download Bubble Widget -->
+  <div id="floatingDownloadWidget" class="floating-download-widget" style="display: none;">
+    <!-- Dropup Tray -->
+    <div id="bubbleDropupTray" class="bubble-dropup-tray">
+      <div class="tray-header">
+        <span class="tray-title">Active Downloads</span>
+      </div>
+      <div id="trayTasksList" class="tray-tasks-list"></div>
+    </div>
+
+    <!-- Bubble Trigger Button with Circular SVG Progress -->
+    <div id="bubbleTriggerBtn" class="bubble-trigger-btn">
+      <svg class="bubble-progress-svg" viewBox="0 0 52 52">
+        <circle class="bubble-progress-track" cx="26" cy="26" r="22"/>
+        <circle id="bubbleProgressBar" class="bubble-progress-bar" cx="26" cy="26" r="22"/>
+      </svg>
+      <div class="bubble-inner-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+        </svg>
+      </div>
+      <span id="bubbleBadgeCount" class="bubble-badge-count">1</span>
+    </div>
+  </div>
+
+  <!-- Batch Multi-Link Modal -->
+  <div id="batchModal" class="modal-backdrop-overlay">
+    <div class="modal-dialog-panel">
+      <div class="modal-header-row">
+        <h2 class="modal-title">Batch Multi-Link Queue</h2>
+        <button id="batchModalCloseBtn" class="btn-icon">✕</button>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-secondary);">Paste multiple media links (one per line). Skyc will process and download them in parallel.</p>
+      <textarea id="batchUrlsTextarea" class="batch-textarea" placeholder="https://www.tiktok.com/@user/video/123&#10;https://www.instagram.com/p/abc&#10;https://open.spotify.com/track/xyz"></textarea>
+      <button id="batchSubmitBtn" class="btn btn-primary" style="width: 100%;">Enqueue & Download</button>
+    </div>
+  </div>
+
+  <!-- PIN Lock Numeric Keypad Modal -->
+  <div id="pinLockModal" class="modal-backdrop-overlay">
+    <div class="modal-dialog-panel" style="max-width: 340px;">
+      <div class="modal-header-row">
+        <h2 id="pinLockTitle" class="modal-title">Enter PIN</h2>
+        <button id="pinLockCloseBtn" class="btn-icon">✕</button>
+      </div>
+      <div class="pin-pad-container">
+        <div class="pin-dots-display">
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+        </div>
+        <div class="pin-keypad-grid">
+          <button class="pin-key-btn" data-key="1">1</button>
+          <button class="pin-key-btn" data-key="2">2</button>
+          <button class="pin-key-btn" data-key="3">3</button>
+          <button class="pin-key-btn" data-key="4">4</button>
+          <button class="pin-key-btn" data-key="5">5</button>
+          <button class="pin-key-btn" data-key="6">6</button>
+          <button class="pin-key-btn" data-key="7">7</button>
+          <button class="pin-key-btn" data-key="8">8</button>
+          <button class="pin-key-btn" data-key="9">9</button>
+          <div></div>
+          <button class="pin-key-btn" data-key="0">0</button>
+          <button class="pin-key-btn" data-key="backspace" title="Delete">⌫</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Media Player Modal -->
+  <div id="playerModal" class="modal-backdrop-overlay">
+    <div class="modal-dialog-panel player-modal-panel">
+      <div class="modal-header-row">
+        <h2 id="playerModalTitle" class="modal-title" style="color: #FAF9F5;">Media Player</h2>
+        <button id="playerCloseBtn" class="btn-icon" style="color: #FAF9F5;">✕</button>
+      </div>
+      <div class="player-video-viewport">
+        <video id="modalVideoPlayer" controls playsinline></video>
+        <audio id="modalAudioPlayer" controls style="display: none; width: 90%;"></audio>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Main ES6 Entrypoint -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

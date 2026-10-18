@@ -1,0 +1,32 @@
+{
+  "name": "@elskyx/skyc",
+  "version": "1.0.0",
+  "description": "Universal client-side media downloader CLI with a Claude-inspired theme. Save anything, from anywhere. No watermarks. No tracking.",
+  "type": "module",
+  "bin": {
+    "skyc": "index.js"
+  },
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "engine.js",
+    "bundle.js",
+    "scrapers-version.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "elskyx",
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elskyx/Skyc.git"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "picocolors": "^1.1.0",
+    "pdf-lib": "^1.17.1"
+  }
+}

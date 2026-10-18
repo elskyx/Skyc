@@ -1,0 +1,95 @@
+/* public/css/variables.css */
+:root,
+[data-theme="light"] {
+  /* Latar Belakang Hangat Khas Claude (Warm Parchment & Alabaster) */
+  --bg-primary: #F4F3EE;
+  --bg-surface: #FAF9F5;
+  --bg-elevated: #ECEAE2;
+  --bg-glass: rgba(250, 249, 245, 0.88);
+  --bg-input: #FFFFFF;
+
+  /* Tipografi & Kontras Teks */
+  --text-primary: #141413;
+  --text-secondary: #5E5D59;
+  --text-muted: #8C8A84;
+  --text-inverse: #FAF9F5;
+
+  /* Warna Aksen Khas Claude (Terracotta / Clay) */
+  --accent-primary: #D97757;
+  --accent-hover: #C6613F;
+  --accent-subtle: rgba(217, 119, 87, 0.12);
+  --accent-border: rgba(217, 119, 87, 0.35);
+
+  /* Garis Tepi & Bayangan Halus */
+  --border-subtle: #E5E3DA;
+  --border-strong: #D1CEBF;
+  --border-focus: #D97757;
+  --shadow-card: 0 2px 12px rgba(20, 20, 19, 0.04), 0 1px 2px rgba(20, 20, 19, 0.06);
+  --shadow-floating: 0 8px 28px rgba(20, 20, 19, 0.12);
+  --shadow-glow: 0 0 20px rgba(217, 119, 87, 0.18);
+
+  /* Warna Status Semantik */
+  --status-success: #2E6F40;
+  --status-success-bg: rgba(46, 111, 64, 0.12);
+  --status-warning: #B86B14;
+  --status-warning-bg: rgba(184, 107, 20, 0.12);
+  --status-danger: #C93B2B;
+  --status-danger-bg: rgba(201, 59, 43, 0.12);
+
+  /* Sistem Tipografi */
+  --font-serif: 'Instrument Serif', 'Newsreader', Georgia, Cambria, serif;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, monospace;
+
+  /* Radius Sudut Membulat Halus */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 9999px;
+
+  /* Transisi & Gerakan */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+}
+
+[data-theme="dark"] {
+  /* Mode Gelap Hangat Khas Claude (Warm Charcoal / Obsidian) */
+  --bg-primary: #191918;
+  --bg-surface: #232220;
+  --bg-elevated: #2D2C29;
+  --bg-glass: rgba(35, 34, 32, 0.88);
+  --bg-input: #1D1C1B;
+
+  /* Tipografi Mode Gelap */
+  --text-primary: #ECE9E0;
+  --text-secondary: #A6A39B;
+  --text-muted: #6E6C66;
+  --text-inverse: #191918;
+
+  /* Aksen Terracotta Tetap Hangat & Jelas */
+  --accent-primary: #D97757;
+  --accent-hover: #E3886B;
+  --accent-subtle: rgba(217, 119, 87, 0.18);
+  --accent-border: rgba(217, 119, 87, 0.45);
+
+  /* Garis Tepi & Bayangan Mode Gelap */
+  --border-subtle: #32312E;
+  --border-strong: #42403B;
+  --border-focus: #D97757;
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-floating: 0 10px 32px rgba(0, 0, 0, 0.55);
+  --shadow-glow: 0 0 24px rgba(217, 119, 87, 0.25);
+
+  /* Status Semantik Mode Gelap */
+  --status-success: #4CAE6A;
+  --status-success-bg: rgba(76, 174, 106, 0.16);
+  --status-warning: #E09638;
+  --status-warning-bg: rgba(224, 150, 56, 0.16);
+  --status-danger: #E25D4E;
+  --status-danger-bg: rgba(226, 93, 78, 0.16);
+}

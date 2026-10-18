@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#D97757</item>
+        <item name="colorPrimaryDark">#C6613F</item>
+        <item name="colorAccent">#D97757</item>
+        <item name="android:windowBackground">#F4F3EE</item>
+    </style>
+
+    <style name="AppTheme.NoActionBarLaunch" parent="AppTheme">
+        <item name="android:windowBackground">#F4F3EE</item>
+    </style>
+
+    <style name="Theme.AppCompat.Translucent.NoTitleBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.5</item>
+    </style>
+</resources>

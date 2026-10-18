@@ -1,0 +1,227 @@
+/* landing/style.css */
+:root {
+  --bg-primary: #F4F3EE;
+  --bg-surface: #FAF9F5;
+  --bg-elevated: #ECEAE2;
+  --text-primary: #141413;
+  --text-secondary: #5E5D59;
+  --text-muted: #8C8A84;
+  --accent: #D97757;
+  --accent-hover: #C6613F;
+  --accent-subtle: rgba(217, 119, 87, 0.12);
+  --border-subtle: #E5E3DA;
+  --border-strong: #D1CEBF;
+  --shadow-card: 0 4px 20px rgba(20, 20, 19, 0.05);
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.landing-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 6rem;
+}
+
+/* Header */
+.landing-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 2rem;
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.logo-badge {
+  width: 36px;
+  height: 36px;
+  background-color: var(--accent);
+  color: #FAF9F5;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-title {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+/* Hero */
+.landing-hero {
+  text-align: center;
+  padding: 4rem 0 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.hero-tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background-color: var(--accent-subtle);
+  color: var(--accent);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  max-width: 800px;
+}
+
+.hero-description {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+}
+
+/* Download Cards Grid */
+.download-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+
+.download-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.75rem;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.download-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+}
+
+.card-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.card-title {
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.card-desc {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--accent);
+  color: #FAF9F5;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-pill);
+  transition: background-color 0.15s ease;
+}
+
+.btn-download:hover {
+  background-color: var(--accent-hover);
+}
+
+/* Features Grid */
+.features-section {
+  padding: 4rem 0 2rem;
+}
+
+.section-heading {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-box {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.feature-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.feature-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+/* Footer */
+.landing-footer {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 2rem;
+  margin-top: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}

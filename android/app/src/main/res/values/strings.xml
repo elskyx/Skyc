@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Skyc</string>
+    <string name="title_activity_main">Skyc</string>
+    <string name="package_name">com.skyc.downloader</string>
+    <string name="custom_url_scheme">skyc</string>
+</resources>

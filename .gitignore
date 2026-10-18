@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+dist/
+build/
+bin/
+*.apk
+*.aab
+*.exe
+*.msi
+*.dmg
+*.zip
+*.tar.gz
+
+# Android
+android/.gradle/
+android/app/build/
+android/app/.cxx/
+android/local.properties
+*.iml
+
+# Rust & Tauri
+src-tauri/target/
+src-tauri/Cargo.lock
+
+# Environment & logs
+.env
+.env.local
+*.log
+npm-debug.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+Desktop.ini
