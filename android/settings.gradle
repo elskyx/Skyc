@@ -1,2 +1,13 @@
 include ':app'
 rootProject.name = 'android'
+
+def capacitorAndroidDir = new File(settingsDir, '../node_modules/@capacitor/android/capacitor')
+if (capacitorAndroidDir.exists()) {
+    include ':capacitor-android'
+    project(':capacitor-android').projectDir = capacitorAndroidDir
+}
+
+def capacitorSettings = new File(settingsDir, 'capacitor.settings.gradle')
+if (capacitorSettings.exists()) {
+    apply from: 'capacitor.settings.gradle'
+}
