@@ -30,7 +30,8 @@ Seluruh paket instalasi siap pakai tersedia di halaman **GitHub Releases** dan *
 | Platform | Paket Tersedia | Metode Instalasi |
 | :--- | :--- | :--- |
 | **Android (Universal / x64)** | [**`Skyc-v1.0.0.apk`**](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc-v1.0.0.apk) | [Unduh Langsung APK](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc-v1.0.0.apk) *(Sideload)* |
-| **Windows Desktop (x64 / x86)** | [**`Skyc-Setup.exe`**](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc_1.0.0_x64-setup.exe) / [**`.msi`**](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc_1.0.0_x64_en-US.msi) | [Unduh Installer .exe](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc_1.0.0_x64-setup.exe) *(NSIS / WiX)* |
+| **Windows Desktop (64-bit x64)** | [**`Skyc_1.0.0_x64-setup.exe`**](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc_1.0.0_x64-setup.exe) / [**`.msi`**](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc_1.0.0_x64_en-US.msi) | [Unduh Installer .exe](https://github.com/elskyx/Skyc/releases/download/v1.0.0/Skyc_1.0.0_x64-setup.exe) *(NSIS / WiX)* |
+| **Windows Desktop (32-bit x86)** | [**`Skyc_1.0.0_x86-setup.exe`**](https://github.com/elskyx/Skyc/releases/tag/v1.0.0) | Tersedia di [GitHub Releases](https://github.com/elskyx/Skyc/releases/tag/v1.0.0) |
 | **Web App (Browser)** | [**Buka Skyc Web**](https://github.com/elskyx/Skyc) | Akses langsung via browser *(Zero Install)* |
 | **CLI (Terminal)** | [`npx @elskyx/skyc`](https://www.npmjs.com/package/@elskyx/skyc) | Jalankan via Node.js / npm (`skyc <URL>`) |
 
