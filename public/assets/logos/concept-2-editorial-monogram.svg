@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <!-- Skyc Logo Concept 2: The Editorial Serif Monogram -->
+  <defs>
+    <linearGradient id="editorial-copper" x1="64" y1="48" x2="192" y2="208" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#D97757" />
+      <stop offset="100%" stop-color="#B84B29" />
+    </linearGradient>
+  </defs>
+
+  <!-- Editorial Serif S with Dynamic Spine -->
+  <path d="M 174 72 
+           C 168 52 148 38 124 38 
+           C 92 38 72 58 72 88 
+           C 72 134 184 122 184 176 
+           C 184 212 152 226 122 226 
+           C 92 226 68 210 62 188" 
+        stroke="url(#editorial-copper)" 
+        stroke-width="28" 
+        stroke-linecap="round" />
+
+  <!-- Ball Terminal Top Bead -->
+  <circle cx="178" cy="72" r="16" fill="#191918" />
+
+  <!-- The Local Vault Catch Cradle (Bottom) -->
+  <path d="M 88 188 L 128 206 L 168 188" 
+        stroke="#191918" 
+        stroke-width="8" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Media Beacon Dot -->
+  <circle cx="128" cy="164" r="9" fill="#D97757" />
+</svg>

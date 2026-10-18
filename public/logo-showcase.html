@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skyc — Brand Identity & Logo Suite</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-parchment: #F4F3EE;
+      --bg-obsidian: #191918;
+      --bg-surface: #222220;
+      --text-obsidian: #191918;
+      --text-parchment: #F4F3EE;
+      --text-muted: #8E8D8A;
+      --accent-terracotta: #D97757;
+      --accent-copper: #C55B39;
+      --border-subtle: rgba(25, 25, 24, 0.12);
+      --border-dark: rgba(244, 243, 238, 0.12);
+      --font-serif: 'Instrument Serif', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-parchment);
+      color: var(--text-obsidian);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      padding: 3rem 1.5rem;
+    }
+
+    body.dark-preview {
+      background-color: var(--bg-obsidian);
+      color: var(--text-parchment);
+      --border-subtle: var(--border-dark);
+    }
+
+    .container { max-width: 1140px; margin: 0 auto; }
+
+    header {
+      margin-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1.5rem;
+    }
+
+    .title-group h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 5vw, 4.25rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .title-group p {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+    }
+
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0,0,0,0.05);
+      border: 1px solid var(--border-subtle);
+      color: inherit;
+      padding: 0.6rem 1.25rem;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    body.dark-preview .theme-toggle-btn { background: rgba(255,255,255,0.08); }
+    .theme-toggle-btn:hover { border-color: var(--accent-terracotta); color: var(--accent-terracotta); }
+
+    /* Concept Grid */
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .concept-card {
+      background: rgba(0,0,0,0.02);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+    }
+    body.dark-preview .concept-card { background: rgba(255,255,255,0.03); }
+
+    .concept-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-terracotta);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+    }
+
+    .badge-primary {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: var(--accent-terracotta);
+      color: #fff;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .logo-frame {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.03);
+    }
+    body.dark-preview .logo-frame { background: rgba(0,0,0,0.4); }
+
+    .logo-frame img, .logo-frame svg {
+      max-width: 120px;
+      max-height: 120px;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.08));
+    }
+
+    .concept-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.625rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .concept-style {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-terracotta);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.875rem;
+    }
+
+    .concept-card p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .download-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-action {
+      flex: 1;
+      text-align: center;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-svg { background: var(--text-obsidian); color: var(--bg-parchment); }
+    body.dark-preview .btn-svg { background: var(--bg-parchment); color: var(--text-obsidian); }
+    .btn-svg:hover { opacity: 0.9; }
+
+    /* Scalability Section */
+    .scale-section {
+      background: rgba(0,0,0,0.02);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 2.5rem;
+      margin-bottom: 4rem;
+    }
+    body.dark-preview .scale-section { background: rgba(255,255,255,0.02); }
+
+    .scale-section h2 {
+      font-family: var(--font-serif);
+      font-size: 2.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .scale-section > p {
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      font-size: 0.9375rem;
+    }
+
+    .scale-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 2.5rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .scale-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .scale-item span {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .scale-item img {
+      border-radius: 22%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Mockups Grid */
+    .mockup-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .mockup-card {
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1.75rem;
+      background: rgba(0,0,0,0.02);
+    }
+    body.dark-preview .mockup-card { background: rgba(0,0,0,0.3); }
+
+    .mockup-card h4 {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      margin-bottom: 0.5rem;
+    }
+    .mockup-card p {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .taskbar-sim {
+      background: #111110;
+      border-radius: 10px;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .sim-app { width: 36px; height: 36px; border-radius: 8px; }
+    .sim-app.active { position: relative; }
+    .sim-app.active::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 3px;
+      background: var(--accent-terracotta);
+      border-radius: 2px;
+    }
+
+    footer {
+      text-align: center;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-group">
+        <h1>Skyc Logo & Visual Identity</h1>
+        <p>Curated Studio Concepts &bull; Anti-Slop Principles &bull; Client-Side Craft</p>
+      </div>
+      <button class="theme-toggle-btn" onclick="document.body.classList.toggle('dark-preview')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        Toggle Obsidian / Parchment
+      </button>
+    </header>
+
+    <!-- 4 Logo Concepts -->
+    <div class="concepts-grid">
+      
+      <!-- Concept 4 (Master Recommendation) -->
+      <div class="concept-card">
+        <div class="badge-primary">Master Pick</div>
+        <div class="logo-frame">
+          <img src="assets/logos/concept-4-sky-capsule.svg" alt="Sky Capsule Logo">
+        </div>
+        <h3>The Sky Capsule</h3>
+        <div class="concept-style">Minimalist App Icon Tile</div>
+        <p>Squircle presisi tinggi berlatar Obsidian dengan S-collector ribbon terracotta beraksen ivory core. Dirancang khusus untuk launcher Android & Windows taskbar.</p>
+        <div class="download-actions">
+          <a href="assets/logos/concept-4-sky-capsule.svg" download class="btn-action btn-svg">Download SVG</a>
+          <a href="assets/logos/png/skyc-app-icon-512.png" download class="btn-action btn-svg" style="background:var(--accent-terracotta);color:#fff;">512px PNG</a>
+        </div>
+      </div>
+
+      <!-- Concept 1 -->
+      <div class="concept-card">
+        <div class="logo-frame">
+          <img src="assets/logos/concept-1-aperture.svg" alt="Precision Aperture Logo">
+        </div>
+        <h3>The Vault Aperture</h3>
+        <div class="concept-style">Precision Line Monogram</div>
+        <p>Dua lengkungan geometris kontinu yang mengalir membentuk huruf 'S' sekaligus membingkai downlink arrow tersembunyi di negative space tengah.</p>
+        <div class="download-actions">
+          <a href="assets/logos/concept-1-aperture.svg" download class="btn-action btn-svg">Download SVG</a>
+        </div>
+      </div>
+
+      <!-- Concept 2 -->
+      <div class="concept-card">
+        <div class="logo-frame">
+          <img src="assets/logos/concept-2-editorial-monogram.svg" alt="Editorial Serif Logo">
+        </div>
+        <h3>Editorial Serif Vault</h3>
+        <div class="concept-style">Typographical Heritage</div>
+        <p>Bentuk serif berkarakter tegas (terinspirasi Instrument Serif) dengan ball terminal dan dudukan bawah yang menangkap media beacon dot.</p>
+        <div class="download-actions">
+          <a href="assets/logos/concept-2-editorial-monogram.svg" download class="btn-action btn-svg">Download SVG</a>
+        </div>
+      </div>
+
+      <!-- Concept 3 -->
+      <div class="concept-card">
+        <div class="logo-frame">
+          <img src="assets/logos/concept-3-ribbon-downlink.svg" alt="Swiss Ribbon Logo">
+        </div>
+        <h3>The Horizon Downlink</h3>
+        <div class="concept-style">Swiss Geometric Ribbon</div>
+        <p>Pita kontinu bersudut 45 derajat gaya Bauhaus dengan dua tone warna tegas. Sangat mudah dikenali pada resolusi super kecil 16px favicon.</p>
+        <div class="download-actions">
+          <a href="assets/logos/concept-3-ribbon-downlink.svg" download class="btn-action btn-svg">Download SVG</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Scalability Stress Test -->
+    <div class="scale-section">
+      <h2>Uji Skalabilitas Multi-Resolusi</h2>
+      <p>Logo yang baik mempertahankan kejelasan optik (optical clarity) di setiap skala, dari favicon 16px hingga banner toko 512px tanpa kehilangan bentuk.</p>
+      
+      <div class="scale-row">
+        <div class="scale-item">
+          <img src="assets/logos/png/skyc-app-icon-16.png" width="16" height="16" alt="16px">
+          <span>16 &times; 16</span>
+        </div>
+        <div class="scale-item">
+          <img src="assets/logos/png/skyc-app-icon-32.png" width="32" height="32" alt="32px">
+          <span>32 &times; 32</span>
+        </div>
+        <div class="scale-item">
+          <img src="assets/logos/png/skyc-app-icon-64.png" width="64" height="64" alt="64px">
+          <span>64 &times; 64</span>
+        </div>
+        <div class="scale-item">
+          <img src="assets/logos/png/skyc-app-icon-128.png" width="128" height="128" alt="128px">
+          <span>128 &times; 128</span>
+        </div>
+        <div class="scale-item">
+          <img src="assets/logos/png/skyc-app-icon-256.png" width="180" height="180" alt="256px">
+          <span>256 &times; 256</span>
+        </div>
+      </div>
+
+      <!-- Mockups Preview -->
+      <div class="mockup-grid">
+        <div class="mockup-card">
+          <h4>Simulasi Windows 11 Taskbar</h4>
+          <p>Bagaimana ikon Skyc tampil berdampingan dengan aplikasi native lainnya di taskbar Windows.</p>
+          <div class="taskbar-sim">
+            <div style="background:#0078D4;width:32px;height:32px;border-radius:6px;opacity:0.4;"></div>
+            <div style="background:#555;width:32px;height:32px;border-radius:6px;opacity:0.4;"></div>
+            <div class="sim-app active">
+              <img src="assets/logos/png/skyc-app-icon-32.png" width="36" height="36" style="border-radius:8px;">
+            </div>
+            <div style="background:#E04E39;width:32px;height:32px;border-radius:6px;opacity:0.4;"></div>
+          </div>
+        </div>
+
+        <div class="mockup-card">
+          <h4>Simulasi Android App Drawer</h4>
+          <p>Tampilan rounded squircle adaptif pada grid aplikasi ponsel Android.</p>
+          <div style="display:flex;gap:1.5rem;align-items:center;background:rgba(0,0,0,0.1);padding:1rem;border-radius:12px;">
+            <div style="text-align:center;">
+              <img src="assets/logos/png/skyc-app-icon-64.png" width="56" height="56" style="border-radius:14px;box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+              <div style="font-size:0.75rem;margin-top:0.35rem;font-weight:500;">Skyc</div>
+            </div>
+            <div style="font-size:0.8125rem;color:var(--text-muted);line-height:1.4;">
+              Mendukung adaptif icon Android 8+ hingga Android 14 dengan silhouette tegas dan kontras tinggi.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 Skyc &bull; 100% Zero-Cloud Client-Side Media Downloader Suite</p>
+    </footer>
+  </div>
+</body>
+</html>
