@@ -335,6 +335,14 @@ var __SkycScraperEngine = (() => {
           url: `youtube_resolve:mp4:${videoId}`
         },
         {
+          id: "yt_360p",
+          label: "Video (360p SD MP4)",
+          quality: "360p",
+          type: "video",
+          ext: "mp4",
+          url: `youtube_resolve:360p:${videoId}`
+        },
+        {
           id: "yt_mp3",
           label: "Audio Only (MP3 320kbps)",
           quality: "320kbps",

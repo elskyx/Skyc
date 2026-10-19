@@ -34,7 +34,7 @@
         <span class="brand-tag">Zero-Cloud</span>
       </div>
       <div class="header-actions">
-        <span id="headerOtaStatus" class="badge badge-neutral">Core v1.1.5</span>
+        <span id="headerOtaStatus" class="badge badge-neutral">Core v1.1.6</span>
       </div>
     </header>
 
@@ -91,6 +91,20 @@
                 </svg>
                 <span>Analyze</span>
               </button>
+            </div>
+
+            <!-- Inline Live Status & Feedback Banner -->
+            <div id="composerStatusBanner" class="composer-status-banner">
+              <div class="composer-status-left">
+                <span id="composerStatusIcon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin-icon">
+                    <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+                    <path d="M12 2a10 10 0 0110 10"/>
+                  </svg>
+                </span>
+                <span id="composerStatusText" class="composer-status-text">Connecting to media endpoint...</span>
+              </div>
+              <button id="composerRetryBtn" class="composer-status-retry-btn" style="display: none;">Retry</button>
             </div>
           </div>
 

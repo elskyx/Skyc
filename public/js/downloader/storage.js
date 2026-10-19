@@ -20,16 +20,40 @@ export async function downloadAndSaveMediaStream({
 
   // 1. Windows Tauri Desktop Native Streaming (Reqwest -> Tokio File)
   if (window.__TAURI__?.core?.invoke) {
+    let unlisten = null;
     try {
-      onProgress(15, "Connecting native desktop stream...");
-      const savedPath = await window.__TAURI__.core.invoke("download_media_stream", {
+      onProgress(10, "Connecting native desktop stream...");
+
+      // Listen for chunk-by-chunk real-time progress events from Rust
+      if (window.__TAURI__?.event?.listen) {
+        unlisten = await window.__TAURI__.event.listen("skyc://download-progress", (event) => {
+          const payload = event.payload;
+          if (payload && payload.filename === filename) {
+            if (payload.total && payload.total > 0) {
+              const mbDownloaded = (payload.downloaded / 1048576).toFixed(1);
+              const mbTotal = (payload.total / 1048576).toFixed(1);
+              onProgress(payload.percent, `Downloading ${mbDownloaded} / ${mbTotal} MB`);
+            } else {
+              const mbDownloaded = (payload.downloaded / 1048576).toFixed(1);
+              onProgress(payload.percent || 0, `Streaming ${mbDownloaded} MB...`);
+            }
+          }
+        });
+      }
+
+      const res = await window.__TAURI__.core.invoke("download_media_stream", {
         url,
         filename,
         subfolder,
       });
+
+      if (unlisten) unlisten();
       onProgress(100, "Saved to device");
-      return { success: true, path: savedPath };
+      const savedPath = typeof res === "object" && res !== null ? res.path : res;
+      const fileSize = typeof res === "object" && res !== null ? res.file_size : 0;
+      return { success: true, path: savedPath, fileSize };
     } catch (tauriErr) {
+      if (unlisten) unlisten();
       console.warn("[Skyc Storage] Tauri native stream failed, attempting memory fallback:", tauriErr);
     }
   }
@@ -120,7 +144,8 @@ export async function saveMediaFile({
         recursive: true,
       });
 
-      return { success: true, path: fullPath };
+      const dataSize = data.size || (data.byteLength ? data.byteLength : 0);
+      return { success: true, path: fullPath, fileSize: dataSize };
     } catch (androidErr) {
       console.warn("[Skyc Storage] Capacitor Filesystem failed, falling back:", androidErr);
     }
@@ -136,7 +161,7 @@ export async function saveMediaFile({
         subfolder,
         bytes,
       });
-      return { success: true, path: res };
+      return { success: true, path: res, fileSize: bytes.length };
     } catch (tauriErr) {
       console.warn("[Skyc Storage] Tauri native write failed:", tauriErr);
     }
@@ -153,5 +178,5 @@ export async function saveMediaFile({
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(objectUrl), 4000);
 
-  return { success: true, path: filename };
+  return { success: true, path: filename, fileSize: blob.size };
 }

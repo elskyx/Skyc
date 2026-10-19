@@ -116,13 +116,24 @@ export function renderHistory() {
           <div class="history-item-title" title="${item.title}">${item.title}</div>
           <div class="history-item-sub">
             <span class="badge badge-terracotta">${getPlatformDisplayName(item.platform)}</span>
-            <span>${formatBytes(item.fileSize)}</span>
+            <span>${item.fileSize ? formatBytes(item.fileSize) : (item.savedPath ? "Saved" : "Downloaded")}</span>
             <span>•</span>
             <span>${formatRelativeTime(item.timestamp)}</span>
+            ${item.savedPath ? `<span class="history-path-badge" title="${item.savedPath}">📁 ${item.savedPath.split(/[\\/]/).pop()}</span>` : ""}
           </div>
         </div>
       </div>
       <div class="history-actions-right">
+        ${
+          item.savedPath
+            ? `
+        <button class="btn-icon open-folder-btn" title="Open file in Explorer / Folder" data-path="${item.savedPath.replace(/"/g, "&quot;")}">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+          </svg>
+        </button>`
+            : ""
+        }
         <button class="btn-icon delete-history-btn" title="Delete from history" data-id="${item.id}">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
@@ -133,6 +144,27 @@ export function renderHistory() {
   `
     )
     .join("");
+
+  // Attach open folder buttons
+  historyContainer.querySelectorAll(".open-folder-btn").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const filePath = btn.getAttribute("data-path");
+      if (!filePath) return;
+
+      if (window.__TAURI__?.core?.invoke) {
+        try {
+          await window.__TAURI__.core.invoke("open_in_explorer", { path: filePath });
+          triggerHaptic("light");
+        } catch (err) {
+          console.warn("[Skyc] Unable to open explorer:", err);
+          showToast(`File: ${filePath}`, "info");
+        }
+      } else {
+        showToast(`File: ${filePath}`, "info");
+      }
+    });
+  });
 
   // Attach delete buttons
   historyContainer.querySelectorAll(".delete-history-btn").forEach((btn) => {

@@ -1,6 +1,6 @@
 [package]
 name = "skyc"
-version = "1.1.5"
+version = "1.1.6"
 description = "Skyc Client-Side Media Downloader for Windows"
 authors = ["elskyx"]
 edition = "2021"

@@ -74,12 +74,26 @@ export function initClipboardWatcher(urlInputEl) {
         if (text) {
           urlInputEl.value = cleanUrl(text);
           urlInputEl.dispatchEvent(new Event("input", { bubbles: true }));
+          urlInputEl.focus();
           triggerHaptic("light");
           showToast("Pasted from clipboard");
         }
       } catch (e) {
         showToast("Unable to read clipboard", "warning");
       }
+    });
+  }
+
+  // Auto-clean pasted URLs in input
+  if (urlInputEl) {
+    urlInputEl.addEventListener("paste", () => {
+      setTimeout(() => {
+        const cleaned = cleanUrl(urlInputEl.value);
+        if (cleaned !== urlInputEl.value) {
+          urlInputEl.value = cleaned;
+          urlInputEl.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+      }, 50);
     });
   }
 }

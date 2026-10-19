@@ -12,6 +12,7 @@ export async function postProcessDownload({
   platform,
   filename,
   fileSize,
+  savedPath = "",
   mediaType = "video",
   thumbnailUrl = ""
 }) {
@@ -30,6 +31,7 @@ export async function postProcessDownload({
     platform: platform || "generic",
     filename,
     fileSize: fileSize || 0,
+    savedPath: savedPath || "",
     mediaType,
     thumbnailUrl,
     timestamp: Date.now()

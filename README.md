@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-v1.1.5-D97757?style=flat-square" alt="Version">
+  <img src="https://img.shields.io/badge/Version-v1.1.6-D97757?style=flat-square" alt="Version">
   <img src="https://img.shields.io/badge/Platform-Android%20%7C%20Windows%20%7C%20CLI-191918?style=flat-square" alt="Platform">
   <img src="https://img.shields.io/badge/Theme-Claude%20Editorial-F4F3EE?style=flat-square&labelColor=191918&color=D97757" alt="Theme">
   <img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=flat-square" alt="License">
@@ -29,7 +29,9 @@ Menyimpan media dengan **Skyc** hanya membutuhkan tiga langkah sederhana:
 
 1. **Salin Tautan (*Copy Link*)**: Salin tautan video, foto, atau musik dari aplikasi favorit Anda (TikTok, Instagram, YouTube, Spotify, X/Twitter, dll.).
 2. **Buka Skyc**: Skyc secara otomatis mendeteksi tautan dari *clipboard* Anda dan langsung menganalisisnya. Pada perangkat Android, Anda juga cukup menekan tombol **Share (Bagikan)** di aplikasi mana pun lalu memilih **Skyc** untuk mengunduh lewat *overlay* cepat tanpa berpindah aplikasi.
-3. **Unduh (*Download*)**: Pilih kualitas yang diinginkan (Video HD tanpa *watermark*, audio MP3, galeri foto, atau gabungkan ke PDF) lalu ketuk **Download**. Media langsung tersimpan rapi di folder `Movies/Skyc`, `Music/Skyc`, atau `Pictures/Skyc`.
+3. **Unduh (*Download*)**: Pilih kualitas yang diinginkan (Video HD tanpa *watermark*, audio MP3, galeri foto, atau gabungkan ke PDF) lalu ketuk **Download**. Media langsung tersimpan rapi di folder perangkat Anda:
+   - **Windows**: `Videos\Skyc` (Video), `Music\Skyc` (Audio), `Pictures\Skyc` (Foto/PDF). Anda juga dapat membuka folder langsung dari menu Riwayat.
+   - **Android**: `Internal Storage/Movies/Skyc`, `Music/Skyc`, atau `Pictures/Skyc` (langsung terindeks di Galeri / MediaStore).
 
 ---
 
@@ -39,9 +41,9 @@ Seluruh paket instalasi siap pakai tersedia di halaman **GitHub Releases** dan *
 
 | Platform | Paket Tersedia | Metode Instalasi |
 | :--- | :--- | :--- |
-| **Android (Universal / x64)** | [**`Skyc-v1.1.5.apk`**](https://github.com/elskyx/Skyc/releases/download/v1.1.5/Skyc-v1.1.5.apk) | [Unduh Langsung APK](https://github.com/elskyx/Skyc/releases/download/v1.1.5/Skyc-v1.1.5.apk) *(Sideload)* |
-| **Windows Desktop (64-bit x64)** | [**`Skyc_1.1.5_x64-setup.exe`**](https://github.com/elskyx/Skyc/releases/download/v1.1.5/Skyc_1.1.5_x64-setup.exe) / [**`.msi`**](https://github.com/elskyx/Skyc/releases/download/v1.1.5/Skyc_1.1.5_x64_en-US.msi) | [Unduh Installer .exe](https://github.com/elskyx/Skyc/releases/download/v1.1.5/Skyc_1.1.5_x64-setup.exe) *(NSIS / WiX)* |
-| **Windows Desktop (32-bit x86)** | [**`Skyc_1.1.5_x86-setup.exe`**](https://github.com/elskyx/Skyc/releases/tag/v1.1.5) | Tersedia di [GitHub Releases](https://github.com/elskyx/Skyc/releases/tag/v1.1.5) |
+| **Android (Universal / x64)** | [**`Skyc-v1.1.6.apk`**](https://github.com/elskyx/Skyc/releases/download/v1.1.6/Skyc-v1.1.6.apk) | [Unduh Langsung APK](https://github.com/elskyx/Skyc/releases/download/v1.1.6/Skyc-v1.1.6.apk) *(Sideload)* |
+| **Windows Desktop (64-bit x64)** | [**`Skyc_1.1.6_x64-setup.exe`**](https://github.com/elskyx/Skyc/releases/download/v1.1.6/Skyc_1.1.6_x64-setup.exe) / [**`.msi`**](https://github.com/elskyx/Skyc/releases/download/v1.1.6/Skyc_1.1.6_x64_en-US.msi) | [Unduh Installer .exe](https://github.com/elskyx/Skyc/releases/download/v1.1.6/Skyc_1.1.6_x64-setup.exe) *(NSIS / WiX)* |
+| **Windows Desktop (32-bit x86)** | [**`Skyc_1.1.6_x86-setup.exe`**](https://github.com/elskyx/Skyc/releases/tag/v1.1.6) | Tersedia di [GitHub Releases](https://github.com/elskyx/Skyc/releases/tag/v1.1.6) |
 | **Web App (Browser)** | [**Buka Skyc Web**](https://github.com/elskyx/Skyc) | Akses langsung via browser *(Zero Install)* |
 | **CLI (Terminal)** | [`npx @elskyx/skyc`](https://www.npmjs.com/package/@elskyx/skyc) | Jalankan via Node.js / npm (`skyc <URL>`) |
 

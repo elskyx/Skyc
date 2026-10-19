@@ -150,6 +150,83 @@
   transform: translateY(0);
 }
 
+.composer-submit-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Spinner Animation */
+@keyframes skyc-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-icon {
+  animation: skyc-spin 0.8s linear infinite;
+  display: inline-block;
+  transform-origin: center;
+}
+
+/* Composer Inline Feedback Banner */
+.composer-status-banner {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.95rem;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  margin-top: 0.5rem;
+  animation: fadeIn var(--duration-fast) var(--ease-smooth);
+}
+
+.composer-status-banner.status-loading {
+  display: flex;
+  background-color: var(--accent-subtle);
+  border: 1px solid rgba(217, 119, 87, 0.25);
+  color: var(--accent-primary);
+}
+
+.composer-status-banner.status-error {
+  display: flex;
+  background-color: rgba(220, 53, 69, 0.08);
+  border: 1px solid rgba(220, 53, 69, 0.25);
+  color: #c92a2a;
+}
+
+.composer-status-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.composer-status-text {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.composer-status-retry-btn {
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: inherit;
+  transition: opacity var(--duration-fast);
+}
+
+.composer-status-retry-btn:hover {
+  opacity: 0.8;
+}
+
 /* Platform Icons Pills Carousel */
 .platforms-ticker-container {
   display: flex;

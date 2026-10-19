@@ -17,17 +17,21 @@ export function initDownloadController() {
   const analyzeBtn = document.getElementById("analyzeBtn");
   const urlInput = document.getElementById("composerUrlInput");
   const clearBtn = document.getElementById("composerClearBtn");
+  const retryBtn = document.getElementById("composerRetryBtn");
 
   if (urlInput) {
     urlInput.addEventListener("input", () => {
       const val = urlInput.value.trim();
       if (clearBtn) clearBtn.style.display = val ? "inline-flex" : "none";
+      clearStatusBanner();
     });
 
     urlInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        if (analyzeBtn) analyzeBtn.click();
+        if (analyzeBtn && !analyzeBtn.disabled) {
+          analyzeBtn.click();
+        }
       }
     });
   }
@@ -36,8 +40,15 @@ export function initDownloadController() {
     clearBtn.addEventListener("click", () => {
       urlInput.value = "";
       clearBtn.style.display = "none";
+      clearStatusBanner();
       hideResultCard();
       triggerHaptic("light");
+    });
+  }
+
+  if (retryBtn && analyzeBtn) {
+    retryBtn.addEventListener("click", () => {
+      if (!analyzeBtn.disabled) analyzeBtn.click();
     });
   }
 
@@ -46,30 +57,51 @@ export function initDownloadController() {
       const raw = urlInput.value.trim();
       if (!raw) {
         showToast("Please paste a link first", "warning");
+        urlInput.focus();
         return;
       }
 
       // Clear previous analysis state immediately so old card is never displayed
       hideResultCard();
+      clearStatusBanner();
       currentAnalysisData = null;
       selectedFormatIndex = 0;
       currentSlideIndex = 0;
 
       const targetUrl = cleanUrl(raw);
-      setAnalyzingState(true);
+      setAnalyzingState(true, "Connecting to media source...");
+
+      // Status transition timer for responsive visual feedback
+      const stepTimer = setTimeout(() => {
+        updateStatusText("Extracting media streams & metadata...");
+      }, 1200);
+
+      // 25s timeout safeguard to guarantee UI never gets stuck
+      let isTimedOut = false;
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => {
+          isTimedOut = true;
+          reject(new Error("Analysis timed out. The server or platform took too long to respond."));
+        }, 25000);
+      });
 
       try {
-        const data = await analyzeUrl(targetUrl);
+        const data = await Promise.race([analyzeUrl(targetUrl), timeoutPromise]);
+        clearTimeout(stepTimer);
         currentAnalysisData = data;
         selectedFormatIndex = 0;
         currentSlideIndex = 0;
         renderAnalysisResult(data);
+        clearStatusBanner();
         triggerHaptic("medium");
       } catch (err) {
+        clearTimeout(stepTimer);
         console.error("[Skyc Analysis Error]", err);
         hideResultCard();
         currentAnalysisData = null;
-        showToast(err.message || "Unable to extract media from this link.", "danger");
+        const msg = err.message || "Unable to extract media from this link.";
+        setAnalyzingError(msg);
+        showToast(msg, "danger");
         triggerHaptic("error");
       } finally {
         setAnalyzingState(false);
@@ -96,27 +128,82 @@ export function initDownloadController() {
   }
 }
 
-function setAnalyzingState(isAnalyzing) {
+function setAnalyzingState(isAnalyzing, statusMsg = "Analyzing link...") {
   const btn = document.getElementById("analyzeBtn");
-  if (!btn) return;
+  const banner = document.getElementById("composerStatusBanner");
+  const statusText = document.getElementById("composerStatusText");
+  const statusIcon = document.getElementById("composerStatusIcon");
+  const retryBtn = document.getElementById("composerRetryBtn");
 
-  if (isAnalyzing) {
-    btn.disabled = true;
-    btn.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin-icon">
-        <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
-        <path d="M12 2a10 10 0 0110 10"/>
-      </svg>
-      <span>Analyzing...</span>
-    `;
-  } else {
-    btn.disabled = false;
-    btn.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-      </svg>
-      <span>Analyze</span>
-    `;
+  if (btn) {
+    btn.disabled = isAnalyzing;
+    if (isAnalyzing) {
+      btn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin-icon">
+          <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+          <path d="M12 2a10 10 0 0110 10"/>
+        </svg>
+        <span>Analyzing...</span>
+      `;
+    } else {
+      btn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+        </svg>
+        <span>Analyze</span>
+      `;
+    }
+  }
+
+  if (banner) {
+    if (isAnalyzing) {
+      banner.className = "composer-status-banner status-loading";
+      if (statusText) statusText.textContent = statusMsg;
+      if (statusIcon) {
+        statusIcon.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin-icon">
+            <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+            <path d="M12 2a10 10 0 0110 10"/>
+          </svg>
+        `;
+      }
+      if (retryBtn) retryBtn.style.display = "none";
+    }
+  }
+}
+
+function updateStatusText(msg) {
+  const statusText = document.getElementById("composerStatusText");
+  if (statusText) statusText.textContent = msg;
+}
+
+function setAnalyzingError(errorMessage) {
+  const banner = document.getElementById("composerStatusBanner");
+  const statusText = document.getElementById("composerStatusText");
+  const statusIcon = document.getElementById("composerStatusIcon");
+  const retryBtn = document.getElementById("composerRetryBtn");
+
+  if (banner) {
+    banner.className = "composer-status-banner status-error";
+    if (statusText) statusText.textContent = errorMessage;
+    if (statusIcon) {
+      statusIcon.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      `;
+    }
+    if (retryBtn) retryBtn.style.display = "inline-flex";
+  }
+}
+
+function clearStatusBanner() {
+  const banner = document.getElementById("composerStatusBanner");
+  if (banner) {
+    banner.className = "composer-status-banner";
+    banner.style.display = "none";
   }
 }
 
@@ -260,7 +347,7 @@ async function executeSingleDownload() {
 
     if (startBtn) startBtn.textContent = "Saving to device...";
 
-    await downloadAndSaveMediaStream({
+    const saveResult = await downloadAndSaveMediaStream({
       url: dlUrl,
       filename,
       subfolder,
@@ -275,7 +362,8 @@ async function executeSingleDownload() {
       sourceUrl: dlUrl,
       platform: currentAnalysisData.platform,
       filename,
-      fileSize: 0,
+      fileSize: saveResult?.fileSize || 0,
+      savedPath: saveResult?.path || "",
       mediaType: selectedFormat.type || "video",
       thumbnailUrl: currentAnalysisData.thumbnail,
     });

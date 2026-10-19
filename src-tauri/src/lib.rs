@@ -3,6 +3,21 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::str::FromStr;
+use tauri::Emitter;
+
+#[derive(Serialize, Clone)]
+struct DownloadProgressPayload {
+    filename: String,
+    downloaded: u64,
+    total: Option<u64>,
+    percent: u8,
+}
+
+#[derive(Serialize)]
+struct DownloadResult {
+    path: String,
+    file_size: u64,
+}
 
 #[derive(Deserialize)]
 struct HttpRequestPayload {
@@ -76,15 +91,19 @@ async fn tauri_http_request(
 
 #[tauri::command]
 async fn save_media_file(filename: String, subfolder: String, bytes: Vec<u8>) -> Result<String, String> {
-    let base_dir = if subfolder.contains("Music") {
-        dirs::audio_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
-    } else if subfolder.contains("Pictures") {
-        dirs::picture_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+    let target_dir = if std::path::Path::new(&subfolder).is_absolute() {
+        std::path::PathBuf::from(&subfolder)
     } else {
-        dirs::video_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+        let base_dir = if subfolder.contains("Music") || subfolder.contains("Audio") {
+            dirs::audio_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+        } else if subfolder.contains("Pictures") || subfolder.contains("Photo") {
+            dirs::picture_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+        } else {
+            dirs::video_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+        };
+        base_dir.join("Skyc")
     };
 
-    let target_dir = base_dir.join("Skyc");
     fs::create_dir_all(&target_dir).map_err(|e| e.to_string())?;
 
     let target_file = target_dir.join(&filename);
@@ -108,16 +127,25 @@ fn open_in_explorer(path: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-async fn download_media_stream(url: String, filename: String, subfolder: String) -> Result<String, String> {
-    let base_dir = if subfolder.contains("Music") {
-        dirs::audio_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
-    } else if subfolder.contains("Pictures") {
-        dirs::picture_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+async fn download_media_stream(
+    app: tauri::AppHandle,
+    url: String,
+    filename: String,
+    subfolder: String,
+) -> Result<DownloadResult, String> {
+    let target_dir = if std::path::Path::new(&subfolder).is_absolute() {
+        std::path::PathBuf::from(&subfolder)
     } else {
-        dirs::video_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+        let base_dir = if subfolder.contains("Music") || subfolder.contains("Audio") {
+            dirs::audio_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+        } else if subfolder.contains("Pictures") || subfolder.contains("Photo") {
+            dirs::picture_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+        } else {
+            dirs::video_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+        };
+        base_dir.join("Skyc")
     };
 
-    let target_dir = base_dir.join("Skyc");
     fs::create_dir_all(&target_dir).map_err(|e| e.to_string())?;
 
     let target_file = target_dir.join(&filename);
@@ -135,15 +163,61 @@ async fn download_media_stream(url: String, filename: String, subfolder: String)
         return Err(format!("Download failed with HTTP {}", status));
     }
 
+    let total_bytes = response.content_length();
+    let mut downloaded_bytes = 0u64;
+    let mut last_percent = 0u8;
+
     use tokio::io::AsyncWriteExt;
     let mut file = tokio::fs::File::create(&target_file).await.map_err(|e| e.to_string())?;
 
-    while let Some(chunk) = response.chunk().await.map_err(|e| e.to_string())? {
-        file.write_all(&chunk).await.map_err(|e| e.to_string())?;
-    }
-    file.flush().await.map_err(|e| e.to_string())?;
+    let mut stream_failed = false;
+    let mut stream_err = String::new();
 
-    Ok(target_file.to_string_lossy().to_string())
+    while let Some(chunk) = response.chunk().await.unwrap_or(None) {
+        if let Err(e) = file.write_all(&chunk).await {
+            stream_failed = true;
+            stream_err = e.to_string();
+            break;
+        }
+        downloaded_bytes += chunk.len() as u64;
+
+        if let Some(total) = total_bytes {
+            if total > 0 {
+                let pct = ((downloaded_bytes as f64 / total as f64) * 100.0).min(100.0) as u8;
+                if pct != last_percent {
+                    last_percent = pct;
+                    let _ = app.emit("skyc://download-progress", DownloadProgressPayload {
+                        filename: filename.clone(),
+                        downloaded: downloaded_bytes,
+                        total: Some(total),
+                        percent: pct,
+                    });
+                }
+            }
+        } else {
+            let _ = app.emit("skyc://download-progress", DownloadProgressPayload {
+                filename: filename.clone(),
+                downloaded: downloaded_bytes,
+                total: None,
+                percent: 0,
+            });
+        }
+    }
+
+    if stream_failed {
+        let _ = tokio::fs::remove_file(&target_file).await;
+        return Err(format!("Stream write failed: {}", stream_err));
+    }
+
+    if let Err(e) = file.flush().await {
+        let _ = tokio::fs::remove_file(&target_file).await;
+        return Err(format!("Stream flush failed: {}", e));
+    }
+
+    Ok(DownloadResult {
+        path: target_file.to_string_lossy().to_string(),
+        file_size: downloaded_bytes,
+    })
 }
 
 pub fn run() {
