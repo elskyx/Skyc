@@ -1,0 +1,5 @@
+# robots.txt for Skyc Landing
+User-agent: *
+Allow: /
+
+Sitemap: https://skyc.vercel.app/sitemap.xml

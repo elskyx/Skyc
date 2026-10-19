@@ -1,130 +1,1276 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skyc — Universal Client-Side Media Downloader</title>
-  <meta name="description" content="Download watermark-free videos, photos, and music from 16+ platforms for Android, Windows, and CLI. 100% Client-Side." />
+  <title>Skyc · Universal Client-Side Media Downloader (Android, Windows, CLI)</title>
+  <meta name="description" content="Download watermark-free videos, high-resolution photos, and MP3 music from 16+ platforms. 100% Zero-Cloud, client-side, ad-free, and open source for Android, Windows, and CLI." />
+  <meta name="keywords" content="skyc, media downloader, no watermark, client-side downloader, zero-cloud, android media downloader, windows tauri downloader, cli media downloader, open source downloader, mori" />
+  <meta name="author" content="Skyc Project / elskyx" />
+  <meta name="theme-color" content="#F4F3EE" id="meta-theme-color" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://github.com/elskyx/Skyc" />
+
+  <!-- Open Graph / Social Meta -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Skyc · Save anything, from anywhere." />
+  <meta property="og:description" content="Universal, Zero-Cloud, Client-Side Media Downloader for Android, Windows Desktop & CLI. 16+ platforms, no watermarks, no ads." />
+  <meta property="og:image" content="logo.svg" />
+  <meta property="og:url" content="https://github.com/elskyx/Skyc" />
+  <meta property="og:site_name" content="Skyc" />
+
+  <!-- Twitter / X Meta -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Skyc · Save anything, from anywhere." />
+  <meta name="twitter:description" content="Universal Zero-Cloud media downloader for Android, Windows, and CLI. 100% client-side, zero tracking." />
+  <meta name="twitter:image" content="logo.svg" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+
+  <!-- Google Fonts: Instrument Serif, Plus Jakarta Sans, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://github.com/elskyx/Skyc#website",
+        "url": "https://github.com/elskyx/Skyc",
+        "name": "Skyc",
+        "description": "Universal Zero-Cloud Client-Side Media Downloader for Android, Windows Desktop & CLI.",
+        "inLanguage": "en-US"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://github.com/elskyx/Skyc#software",
+        "name": "Skyc",
+        "operatingSystem": "Android, Windows, Linux, macOS",
+        "applicationCategory": "MultimediaApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "downloadUrl": "https://github.com/elskyx/Skyc/releases",
+        "softwareVersion": "2.0.1",
+        "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+        "author": {
+          "@type": "Organization",
+          "name": "Skyc Project (elskyx)",
+          "url": "https://github.com/elskyx/Skyc"
+        },
+        "description": "Save watermark-free videos, high-resolution photos, and audio from 16+ platforms directly on your device."
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://github.com/elskyx/Skyc#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Skyc and how does Zero-Cloud architecture work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Skyc is an open-source media downloader suite. Zero-Cloud architecture means scraping, token resolution, and video processing run 100% on your device hardware without passing through external proxy servers."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Skyc really free and open source?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, Skyc is 100% free, free of ads, free of tracking, and licensed under the GNU General Public License v3.0 (GPL-3.0)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What happens when a social platform updates its algorithms or breaks scrapers?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Skyc includes an OTA (Over-The-Air) scraper hot-patching system that pulls updated extractor scripts silently in the background without requiring full app updates."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Where do downloaded files get stored?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "On Android, files save to Movies/Skyc, Music/Skyc, or Pictures/Skyc with native MediaStore gallery indexing. On Windows, files save to Videos\\Skyc, Music\\Skyc, and Pictures\\Skyc."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
-  <div class="landing-container">
-    <!-- Header -->
-    <header class="landing-header">
-      <a href="#" class="logo-row">
-        <div class="logo-badge">
-          <img src="logo.svg" alt="Skyc Logo" width="36" height="36" />
+  <!-- Ambient Botanical / Petal Canvas (Inspired by getmori.vercel.app with 21st.dev touch) -->
+  <canvas id="ambient-canvas" aria-hidden="true"></canvas>
+
+  <!-- Navigation Bar -->
+  <nav id="navbar" class="navbar" role="navigation" aria-label="Main Navigation">
+    <div class="nav-container">
+      <a href="#" class="brand-link" aria-label="Skyc Home">
+        <div class="brand-logo-frame">
+          <img src="logo.svg" alt="Skyc Logo" width="34" height="34" />
         </div>
-        <span class="logo-title">Skyc</span>
+        <div class="brand-text-group">
+          <span class="brand-name">Skyc</span>
+          <span class="brand-badge">v2.0.1</span>
+        </div>
       </a>
-      <div style="display: flex; gap: 1rem; align-items: center;">
-        <a href="https://github.com/elskyx/Skyc" target="_blank" style="text-decoration:none; color:var(--text-secondary); font-weight:500; font-size:0.92rem;">GitHub</a>
-        <a href="#downloads" class="btn-download" style="padding: 0.5rem 1rem; font-size:0.85rem;">Get Skyc</a>
+
+      <!-- Desktop Links -->
+      <ul class="nav-links" role="list">
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#simulator">Live Simulator</a></li>
+        <li><a href="#platforms">Platforms</a></li>
+        <li><a href="#showcase">Showcase</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#downloads">Downloads</a></li>
+        <li><a href="#creator">Creator</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="btn-icon" aria-label="Toggle Color Theme" title="Switch Theme">
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- Canvas Toggle Button -->
+        <button id="canvas-toggle" class="btn-icon" aria-label="Toggle ambient canvas particles" title="Ambient Particles">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+        </button>
+
+        <!-- GitHub Stars Button -->
+        <a href="https://github.com/elskyx/Skyc" target="_blank" rel="noopener" class="btn-github" aria-label="View on GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>Star</span>
+          <span class="gh-counter js-github-stars" id="gh-star-count">★</span>
+        </a>
+
+        <!-- Primary CTA -->
+        <a href="#downloads" class="btn btn-primary nav-cta">Get Skyc</a>
+
+        <!-- Hamburger for Mobile -->
+        <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-drawer">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-drawer" id="mobile-drawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation" aria-hidden="true">
+    <div class="drawer-header">
+      <div class="brand-link">
+        <img src="logo.svg" alt="Skyc Logo" width="30" height="30" />
+        <span class="brand-name">Skyc</span>
+      </div>
+      <button class="drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <ul class="drawer-links" role="list">
+      <li><a href="#how-it-works" class="drawer-link">How It Works</a></li>
+      <li><a href="#simulator" class="drawer-link">Live Simulator</a></li>
+      <li><a href="#platforms" class="drawer-link">Platforms</a></li>
+      <li><a href="#showcase" class="drawer-link">Showcase</a></li>
+      <li><a href="#architecture" class="drawer-link">Architecture</a></li>
+      <li><a href="#downloads" class="drawer-link">Downloads</a></li>
+      <li><a href="#creator" class="drawer-link">Creator</a></li>
+      <li><a href="#faq" class="drawer-link">FAQ</a></li>
+    </ul>
+    <div class="drawer-footer">
+      <a href="#downloads" class="btn btn-primary btn-block drawer-link">Download Skyc</a>
+      <a href="https://github.com/elskyx/Skyc" target="_blank" rel="noopener" class="btn btn-secondary btn-block">GitHub Repository</a>
+    </div>
+  </div>
+
+  <main class="page-main">
+    <!-- Hero Section -->
+    <header class="hero-section">
+      <div class="hero-container">
+        <!-- Floating Status Pill -->
+        <div class="hero-pill-badge" data-spotlight>
+          <span class="status-pulse"></span>
+          <span class="hero-pill-text">Zero-Cloud Architecture • 100% Free & Open Source</span>
+        </div>
+
+        <!-- Master Title -->
+        <h1 class="hero-title">
+          Save anything,<br />
+          <span class="hero-serif-accent">from anywhere.</span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="hero-lead">
+          The privacy-first media downloader suite for <strong>Android</strong>, <strong>Windows Desktop</strong>, and <strong>Terminal CLI</strong>. Designed with a warm Claude Editorial aesthetic. No watermarks, no middleman servers, and zero ads.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="hero-actions">
+          <a href="#downloads" class="btn btn-primary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            <span>Download Skyc</span>
+          </a>
+
+          <a href="#simulator" class="btn btn-secondary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            <span>Try Live Simulator</span>
+          </a>
+        </div>
+
+        <!-- Terminal Quick Run Snippet -->
+        <div class="hero-cli-bar">
+          <div class="cli-prompt-symbol">$</div>
+          <code class="cli-command" id="hero-cli-code">npx @elskyx/skyc</code>
+          <button class="cli-copy-btn" id="hero-cli-copy" aria-label="Copy CLI Command" title="Copy Command">
+            <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span class="copied-text">Copied!</span>
+          </button>
+        </div>
+
+        <!-- Key Capability Badges -->
+        <div class="hero-metrics-grid">
+          <div class="metric-item">
+            <span class="metric-val">16+</span>
+            <span class="metric-lbl">Supported Platforms</span>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="metric-item">
+            <span class="metric-val">100%</span>
+            <span class="metric-lbl">Client-Side Scrapers</span>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="metric-item">
+            <span class="metric-val">0</span>
+            <span class="metric-lbl">Tracking or Cloud Logs</span>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="metric-item">
+            <span class="metric-val">OTA</span>
+            <span class="metric-lbl">Hot-Patch Updates</span>
+          </div>
+        </div>
       </div>
     </header>
 
-    <!-- Hero -->
-    <section class="landing-hero">
-      <span class="hero-tag">Zero-Cloud Architecture • 100% Free & Open Source</span>
-      <h1 class="hero-title">Save anything, from anywhere.</h1>
-      <p class="hero-description">The privacy-first media downloader for Android, Windows Desktop, and Terminal. No ads, no cloud servers, and no watermark restrictions.</p>
+    <!-- Interactive Simulator Section (21st.dev Component) -->
+    <section id="simulator" class="section simulator-section">
+      <div class="section-container">
+        <div class="section-badge-center">
+          <span class="badge-tag">Interactive Demo</span>
+        </div>
+        <h2 class="section-title text-center">Experience the Zero-Cloud Engine</h2>
+        <p class="section-subtitle text-center">
+          See how Skyc decodes media tokens and resolves multi-stream assets directly on your device without routing through external proxy servers.
+        </p>
+
+        <!-- Simulator Shell Card -->
+        <div class="simulator-card" data-spotlight>
+          <div class="simulator-topbar">
+            <div class="window-controls">
+              <span class="win-dot dot-red"></span>
+              <span class="win-dot dot-yellow"></span>
+              <span class="win-dot dot-green"></span>
+            </div>
+            <div class="simulator-address">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span>skyc://client-resolver.local</span>
+            </div>
+            <div class="engine-badge">Local Engine Active</div>
+          </div>
+
+          <div class="simulator-body">
+            <!-- Simulated Input Form -->
+            <form id="sim-form" class="sim-input-row" onsubmit="event.preventDefault();">
+              <div class="sim-input-wrapper">
+                <svg class="link-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                </svg>
+                <input type="url" id="sim-url-input" class="sim-input" placeholder="Paste link from TikTok, Instagram, YouTube, Spotify, Pinterest..." value="https://www.tiktok.com/@creator/video/7281920391823" aria-label="Media URL input" />
+              </div>
+              <button type="button" id="sim-btn-analyze" class="btn btn-primary sim-submit-btn">
+                <span class="btn-text">Inspect & Resolve</span>
+                <span class="spinner" aria-hidden="true"></span>
+              </button>
+            </form>
+
+            <!-- Quick Preset Chips -->
+            <div class="preset-chips-row">
+              <span class="preset-label">Try Samples:</span>
+              <button class="preset-chip active" data-url="https://www.tiktok.com/@creator/video/7281920391823" data-platform="tiktok">
+                <span class="chip-platform">TikTok</span> Video (No-WM)
+              </button>
+              <button class="preset-chip" data-url="https://www.instagram.com/p/C8k9L1pA7x/" data-platform="instagram">
+                <span class="chip-platform">Instagram</span> 8-Photo Carousel
+              </button>
+              <button class="preset-chip" data-url="https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT" data-platform="spotify">
+                <span class="chip-platform">Spotify</span> 320kbps Audio
+              </button>
+              <button class="preset-chip" data-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" data-platform="youtube">
+                <span class="chip-platform">YouTube</span> 1080p60 Video
+              </button>
+              <button class="preset-chip" data-url="https://www.pinterest.com/pin/1042865232456789/" data-platform="pinterest">
+                <span class="chip-platform">Pinterest</span> 4K Artwork
+              </button>
+            </div>
+
+            <!-- Simulator Output Box -->
+            <div id="sim-output-box" class="sim-output-box state-resolved">
+              <!-- Live Diagnostics Stream -->
+              <div class="diagnostics-panel">
+                <div class="diag-header">
+                  <span class="diag-title">Client-Side Resolution Log</span>
+                  <span class="diag-status" id="sim-status-tag">Ready (Zero-Cloud)</span>
+                </div>
+                <div class="diag-terminal" id="sim-terminal">
+                  <div class="log-line"><span class="log-ts">[0.00s]</span> Ready for local extraction. Clipboard listener active.</div>
+                  <div class="log-line"><span class="log-ts">[0.03s]</span> Extractor: TikTok WebScraper v2.4 initialized.</div>
+                  <div class="log-line"><span class="log-ts">[0.11s]</span> Token bypassed: Watermark-free CDN stream resolved (1080x1920 @ 60fps).</div>
+                  <div class="log-line success"><span class="log-ts">[0.18s]</span> Done! Media assets ready for offline download.</div>
+                </div>
+              </div>
+
+              <!-- Media Preview & Format Card -->
+              <div class="sim-result-card" id="sim-result-card">
+                <div class="result-media-preview">
+                  <div class="media-thumb-box" id="sim-thumb-box">
+                    <img id="sim-thumb-img" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=480&q=80" alt="Media Preview Thumbnail" />
+                    <span class="media-duration" id="sim-media-duration">00:48</span>
+                    <span class="platform-icon-stamp" id="sim-platform-stamp">TikTok</span>
+                  </div>
+                </div>
+
+                <div class="result-details">
+                  <div class="result-header-row">
+                    <div>
+                      <h3 class="result-title" id="sim-result-title">Creative Urban Motion Graphics & Sound Design Reel</h3>
+                      <p class="result-author" id="sim-result-author">@designcraft · 1.4M views · 1080p Original</p>
+                    </div>
+                  </div>
+
+                  <!-- Format Tabs -->
+                  <div class="result-formats">
+                    <span class="format-header-lbl">Available Client-Side Streams:</span>
+                    <div class="format-options-grid" id="sim-format-grid">
+                      <label class="format-option active">
+                        <input type="radio" name="sim-format" value="video_hd" checked />
+                        <div class="format-card-content">
+                          <span class="format-badge">MP4</span>
+                          <span class="format-name">1080p HD (No Watermark)</span>
+                          <span class="format-size">28.4 MB</span>
+                        </div>
+                      </label>
+                      <label class="format-option">
+                        <input type="radio" name="sim-format" value="audio_mp3" />
+                        <div class="format-card-content">
+                          <span class="format-badge">MP3</span>
+                          <span class="format-name">Original Audio (320 kbps)</span>
+                          <span class="format-size">3.8 MB</span>
+                        </div>
+                      </label>
+                      <label class="format-option">
+                        <input type="radio" name="sim-format" value="pdf_bundle" />
+                        <div class="format-card-content">
+                          <span class="format-badge">PDF</span>
+                          <span class="format-name">Merged Photo Album</span>
+                          <span class="format-size">12.1 MB</span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Action Row -->
+                  <div class="result-action-row">
+                    <button type="button" class="btn btn-primary" id="sim-btn-download">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                      </svg>
+                      <span id="sim-dl-text">Simulate Save to Device</span>
+                    </button>
+                    <span class="save-path-hint" id="sim-save-path">Saved to: <code>Videos\Skyc\TikTok_7281920.mp4</code></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- Download Options Grid -->
-    <section id="downloads" class="download-grid">
-      <!-- Android -->
-      <div class="download-card">
-        <div class="card-icon-box">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-            <line x1="12" y1="18" x2="12.01" y2="18"/>
-          </svg>
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="section how-section">
+      <div class="section-container">
+        <div class="section-badge-center">
+          <span class="badge-tag">Workflow</span>
         </div>
-        <div>
-          <h2 class="card-title">Android APK</h2>
-          <p class="card-desc">Features Android Share menu Quick Save overlay, background downloads with wake-lock, and offline media gallery.</p>
-        </div>
-        <a href="https://github.com/elskyx/Skyc/releases/latest" class="btn-download">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-          </svg>
-          <span>Download Skyc.apk</span>
-        </a>
-      </div>
+        <h2 class="section-title text-center">Three Steps. Zero Waiting.</h2>
+        <p class="section-subtitle text-center">
+          Engineered to be completely unobtrusive. You don't even have to open the app manually on Android.
+        </p>
 
-      <!-- Windows Desktop -->
-      <div class="download-card">
-        <div class="card-icon-box">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-            <line x1="8" y1="21" x2="16" y2="21"/>
-            <line x1="12" y1="17" x2="12" y2="21"/>
-          </svg>
-        </div>
-        <div>
-          <h2 class="card-title">Windows Desktop</h2>
-          <p class="card-desc">Lightweight Rust Tauri v2 desktop application with native HTTP streaming directly to Videos\Skyc and Music\Skyc.</p>
-        </div>
-        <a href="https://github.com/elskyx/Skyc/releases/latest" class="btn-download">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-          </svg>
-          <span>Download .exe / .msi</span>
-        </a>
-      </div>
+        <div class="steps-grid">
+          <!-- Step 1 -->
+          <div class="step-card" data-spotlight>
+            <div class="step-number">01</div>
+            <div class="step-icon-box">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+            </div>
+            <h3 class="step-title">Copy Link or Tap Share</h3>
+            <p class="step-desc">
+              Copy any media link from TikTok, Instagram, YouTube, or Spotify. On Android, simply tap <strong>Share</strong> inside any app and select <strong>Skyc</strong> for a floating quick-save overlay.
+            </p>
+          </div>
 
-      <!-- CLI Terminal -->
-      <div class="download-card">
-        <div class="card-icon-box">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="4 17 10 11 4 5"/>
-            <line x1="12" y1="19" x2="20" y2="19"/>
-          </svg>
-        </div>
-        <div>
-          <h2 class="card-title">Terminal CLI</h2>
-          <p class="card-desc">Instant command line utility with interactive REPL, multi-threading, format selectors, and slash commands.</p>
-        </div>
-        <div style="background:var(--bg-elevated); padding:0.65rem 0.85rem; border-radius:var(--radius-md); font-family:var(--font-mono); font-size:0.85rem; color:var(--accent); user-select:all;">
-          npx @elskyx/skyc
-        </div>
-      </div>
-    </section>
+          <!-- Step 2 -->
+          <div class="step-card" data-spotlight>
+            <div class="step-number">02</div>
+            <div class="step-icon-box">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 14 14"></polyline>
+              </svg>
+            </div>
+            <h3 class="step-title">Instant Client-Side Parse</h3>
+            <p class="step-desc">
+              Skyc's built-in JavaScript engine executes scraper modules directly on your device CPU. Tokens are resolved, watermarks stripped, and CDN signatures unlocked in under 200ms.
+            </p>
+          </div>
 
-    <!-- Key Features -->
-    <section class="features-section">
-      <h2 class="section-heading">Engineered for speed, privacy, and simplicity</h2>
-      <div class="features-grid">
-        <div class="feature-box">
-          <h3 class="feature-title">Zero-Cloud Architecture</h3>
-          <p class="feature-desc">All scraping, token parsing, and network requests run locally on your own hardware. Your IP, your privacy, zero server bottlenecks.</p>
-        </div>
-
-        <div class="feature-box">
-          <h3 class="feature-title">OTA Scraper Hot-Patching</h3>
-          <p class="feature-desc">When platforms change their API signatures, Skyc pulls updated extractor bundles in the background without needing app reinstalls.</p>
-        </div>
-
-        <div class="feature-box">
-          <h3 class="feature-title">Instant Photo-to-PDF</h3>
-          <p class="feature-desc">Convert TikTok slides, Instagram carousels, and Pixiv manga chapters into clean, readable PDF documents on the fly.</p>
-        </div>
-
-        <div class="feature-box">
-          <h3 class="feature-title">Vault Security</h3>
-          <p class="feature-desc">Secure your download history and media vault with a 4-digit PIN code or biometric authentication.</p>
+          <!-- Step 3 -->
+          <div class="step-card" data-spotlight>
+            <div class="step-number">03</div>
+            <div class="step-icon-box">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <h3 class="step-title">Native Storage & Gallery</h3>
+            <p class="step-desc">
+              Files are streamed directly into your operating system's standard directories. On Android, videos instantly index into Google Photos / Gallery. On Windows, they organize cleanly in your media library.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="landing-footer">
-      <span>© 2026 Skyc Project (elskyx/Skyc). GNU General Public License v3.0.</span>
-      <span>Adapted from coflyn/Mori.</span>
-    </footer>
+    <!-- Supported Platforms Grid (16+ Platforms) -->
+    <section id="platforms" class="section platforms-section">
+      <div class="section-container">
+        <div class="section-badge-center">
+          <span class="badge-tag">Compatibility</span>
+        </div>
+        <h2 class="section-title text-center">16+ Platforms. One Unified Suite.</h2>
+        <p class="section-subtitle text-center">
+          No separate tools for different sites. Skyc unifies multi-platform scraping into a single private client.
+        </p>
+
+        <!-- Category Filter Tabs -->
+        <div class="platform-filters" role="tablist">
+          <button class="filter-btn active" data-filter="all">All Platforms (16)</button>
+          <button class="filter-btn" data-filter="video">Shorts & Video</button>
+          <button class="filter-btn" data-filter="audio">Music & Audio</button>
+          <button class="filter-btn" data-filter="photo">Photos & Carousel PDF</button>
+        </div>
+
+        <!-- Platform Grid -->
+        <div class="platforms-grid" id="platforms-grid">
+          <!-- TikTok -->
+          <div class="platform-card" data-category="video audio photo" data-spotlight>
+            <div class="platform-card-header">
+              <div class="platform-badge-logo">TK</div>
+              <span class="platform-status">OTA Active</span>
+            </div>
+            <h3 class="platform-name">TikTok & Douyin</h3>
+            <p class="platform-detail">HD videos without watermark, slide photos, audio extraction, and original captions.</p>
+            <div class="platform-tags">
+              <span class="tag">No-Watermark</span>
+              <span class="tag">MP3 Audio</span>
+              <span class="tag">Photo Album</span>
+            </div>
+          </div>
+
+          <!-- Instagram -->
+          <div class="platform-card" data-category="video photo" data-spotlight>
+            <div class="platform-card-header">
+              <div class="platform-badge-logo">IG</div>
+              <span class="platform-status">OTA Active</span>
+            </div>
+            <h3 class="platform-name">Instagram & Threads</h3>
+            <p class="platform-detail">Reels, Stories, full carousels with multi-photo download, and Instant Merge to PDF.</p>
+            <div class="platform-tags">
+              <span class="tag">Reels HD</span>
+              <span class="tag">Carousel to PDF</span>
+              <span class="tag">Stories</span>
+            </div>
+          </div>
+
+          <!-- YouTube -->
+          <div class="platform-card" data-category="video audio" data-spotlight>
+            <div class="platform-card-header">
+              <div class="platform-badge-logo">YT</div>
+              <span class="platform-status">OTA Active</span>
+            </div>
+            <h3 class="platform-name">YouTube & Shorts</h3>
+            <p class="platform-detail">Shorts, 1080p/4K video formats, auto-demuxing audio tracks, and chapter metadata.</p>
+            <div class="platform-tags">
+              <span class="tag">Shorts</span>
+              <span class="tag">Up to 4K</span>
+              <span class="tag">Opus/MP3</span>
+            </div>
+          </div>
+
+          <!-- Spotify -->
+          <div class="platform-card" data-category="audio" data-spotlight>
+            <div class="platform-card-header">
+              <div class="platform-badge-logo">SP</div>
+              <span class="platform-status">OTA Active</span>
+            </div>
+            <h3 class="platform-name">Spotify Music</h3>
+            <p class="platform-detail">Tracks, albums, and playlists with embedded ID3 tags, artist metadata, and cover art.</p>
+            <div class="platform-tags">
+              <span class="tag">320kbps MP3</span>
+              <span class="tag">Cover Art</span>
+              <span class="tag">ID3 Tags</span>
+            </div>
+          </div>
+
+          <!-- Pinterest -->
+          <div class="platform-card" data-category="photo video" data-spotlight>
+            <div class="platform-card-header">
+              <div class="platform-badge-logo">PI</div>
+              <span class="platform-status">OTA Active</span>
+            </div>
+            <h3 class="platform-name">Pinterest</h3>
+            <p class="platform-detail">Original uncompressed resolution images, animated GIFs, and video pins.</p>
+            <div class="platform-tags">
+              <span class="tag">Original 4K</span>
+              <span class="tag">GIFs</span>
+              <span class="tag">Video Pins</span>
+            </div>
+          </div>
+
+          <!-- X / Twitter -->
+          <div class="platform-card" data-category="video photo" data-spotlight>
+            <div class="platform-card-header">
+              <div class="platform-badge-logo">X</div>
+              <span class="platform-status">OTA Active</span>
+            </div>
+            <h3 class="platform-name">X (Twitter)</h3>
+            <p class="platform-detail">High bitrate video streams, photo sets, GIFs, and media quote threads.</p>
+            <div class="platform-tags">
+              <span class="tag">MP4 Video</span>
+              <span class="tag">HD Photos</span>
+              <span class="tag">GIFs</span>
+            </div>
+          </div>
+
+          <!-- Reddit -->
+          <div class="platform-card" data-category="video photo" data-spotlight>
+            <div class="platform-card-header">
+              <div class="platform-badge-logo">RD</div>
+              <span class="platform-status">OTA Active</span>
+            </div>
+            <h3 class="platform-name">Reddit</h3>
+            <p class="platform-detail">DASH audio+video stream merging, galleries, and high-res image albums.</p>
+            <div class="platform-tags">
+              <span class="tag">DASH Merge</span>
+              <span class="tag">Galleries</span>
+              <span class="tag">Audio</span>
+            </div>
+          </div>
+
+          <!-- Pixiv -->
+          <div class="platform-card" data-category="photo" data-spotlight>
+            <div class="platform-card-header">
+              <div class="platform-badge-logo">PX</div>
+              <span class="platform-status">OTA Active</span>
+            </div>
+            <h3 class="platform-name">Pixiv & Manga</h3>
+            <p class="platform-detail">High-res illustrations, multi-page manga chapters, and automated PDF merging.</p>
+            <div class="platform-tags">
+              <span class="tag">Manga to PDF</span>
+              <span class="tag">Original Artwork</span>
+            </div>
+          </div>
+
+          <!-- Bilibili -->
+          <div class="platform-card" data-category="video audio" data-spotlight>
+            <div class="platform-card-header">
+              <div class="platform-badge-logo">BL</div>
+              <span class="platform-status">OTA Active</span>
+            </div>
+            <h3 class="platform-name">Bilibili</h3>
+            <p class="platform-detail">Anime clips, multi-part video streams, and audio extraction with zero geographic blocks.</p>
+            <div class="platform-tags">
+              <span class="tag">Multi-Part</span>
+              <span class="tag">1080p</span>
+            </div>
+          </div>
+
+          <!-- SoundCloud -->
+          <div class="platform-card" data-category="audio" data-spotlight>
+            <div class="platform-card-header">
+              <div class="platform-badge-logo">SC</div>
+              <span class="platform-status">OTA Active</span>
+            </div>
+            <h3 class="platform-name">SoundCloud</h3>
+            <p class="platform-detail">Independent mixes, lossless HLS stream captures, and full track metadata.</p>
+            <div class="platform-tags">
+              <span class="tag">HQ MP3</span>
+              <span class="tag">DJ Sets</span>
+            </div>
+          </div>
+
+          <!-- Facebook -->
+          <div class="platform-card" data-category="video photo" data-spotlight>
+            <div class="platform-card-header">
+              <div class="platform-badge-logo">FB</div>
+              <span class="platform-status">OTA Active</span>
+            </div>
+            <h3 class="platform-name">Facebook Watch</h3>
+            <p class="platform-detail">Public reels, HD video posts, and full-resolution photo posts.</p>
+            <div class="platform-tags">
+              <span class="tag">Reels</span>
+              <span class="tag">HD Quality</span>
+            </div>
+          </div>
+
+          <!-- Bluesky -->
+          <div class="platform-card" data-category="video photo" data-spotlight>
+            <div class="platform-card-header">
+              <div class="platform-badge-logo">BS</div>
+              <span class="platform-status">OTA Active</span>
+            </div>
+            <h3 class="platform-name">Bluesky</h3>
+            <p class="platform-detail">AT Protocol video posts, image attachments, and media feeds.</p>
+            <div class="platform-tags">
+              <span class="tag">HLS Video</span>
+              <span class="tag">Full-Res Photos</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- App Showcase & Workflow Tabs -->
+    <section id="showcase" class="section showcase-section">
+      <div class="section-container">
+        <div class="section-badge-center">
+          <span class="badge-tag">Platforms & Devices</span>
+        </div>
+        <h2 class="section-title text-center">Tailored for Every Environment</h2>
+        <p class="section-subtitle text-center">
+          Whether you want a background Android overlay, a sleek native desktop client, or a lightweight terminal CLI.
+        </p>
+
+        <!-- Showcase Tabs -->
+        <div class="showcase-tabs" role="tablist">
+          <button class="showcase-tab active" data-tab="tab-android">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+              <line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+            <span>Android Mobile</span>
+          </button>
+          <button class="showcase-tab" data-tab="tab-windows">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+            <span>Windows Desktop</span>
+          </button>
+          <button class="showcase-tab" data-tab="tab-cli">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="4 17 10 11 4 5"/>
+              <line x1="12" y1="19" x2="20" y2="19"/>
+            </svg>
+            <span>Terminal CLI</span>
+          </button>
+        </div>
+
+        <!-- Tab Contents -->
+        <div class="showcase-content-box">
+          <!-- Android Tab -->
+          <div class="showcase-panel active" id="tab-android">
+            <div class="showcase-grid">
+              <div class="showcase-info">
+                <span class="sub-badge">Capacitor Native Bridge</span>
+                <h3 class="panel-heading">Seamless Android Share Menu Integration</h3>
+                <p class="panel-desc">
+                  Never leave your feed. When watching a reel or TikTok on your phone, simply tap <strong>Share &rarr; Skyc</strong>. A minimalist floating bottom sheet lets you select quality and download immediately in the background with native CPU wake-locks.
+                </p>
+                <ul class="panel-feature-list">
+                  <li><strong>Native MediaStore Indexing:</strong> Downloaded videos and photos show up in your default Gallery immediately without re-scanning.</li>
+                  <li><strong>Encrypted Vault Mode:</strong> Keep sensitive downloads safe behind a 4-digit PIN code or biometric fingerprint.</li>
+                  <li><strong>Custom Storage Folders:</strong> Store to internal storage or micro-SD cards seamlessly.</li>
+                </ul>
+                <div class="panel-cta">
+                  <a href="#downloads" class="btn btn-primary">Download APK (v2.0.1)</a>
+                </div>
+              </div>
+              <div class="showcase-mockup">
+                <div class="phone-frame">
+                  <div class="phone-camera-notch"></div>
+                  <div class="phone-screen">
+                    <div class="app-ui-header">
+                      <span class="app-ui-logo">Skyc</span>
+                      <span class="app-ui-badge">OTA 2.0.1</span>
+                    </div>
+                    <div class="app-ui-card">
+                      <div class="app-ui-chip">Clipboard Link Detected</div>
+                      <p class="app-ui-link">https://www.tiktok.com/@creative/video/729...</p>
+                      <div class="app-ui-action-btn">Download 1080p No-Watermark</div>
+                    </div>
+                    <div class="app-ui-recent">
+                      <div class="app-ui-recent-title">Recent Downloads</div>
+                      <div class="recent-row">
+                        <span class="file-icon">&#x1F3AC;</span>
+                        <span class="file-name">TikTok_Sunset_Loop.mp4</span>
+                        <span class="file-size">14.2 MB</span>
+                      </div>
+                      <div class="recent-row">
+                        <span class="file-icon">&#x1F4F8;</span>
+                        <span class="file-name">Instagram_Architect_Album.pdf</span>
+                        <span class="file-size">8.7 MB</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Windows Tab -->
+          <div class="showcase-panel" id="tab-windows">
+            <div class="showcase-grid">
+              <div class="showcase-info">
+                <span class="sub-badge">Rust + Tauri v2 Architecture</span>
+                <h3 class="panel-heading">Blazing Fast Native Windows Desktop Client</h3>
+                <p class="panel-desc">
+                  Built on Tauri v2 with a compiled Rust backend. Skyc uses less than 40MB of RAM—unlike heavy Electron apps that consume gigabytes. Features direct asynchronous file streaming and background system tray integration.
+                </p>
+                <ul class="panel-feature-list">
+                  <li><strong>Native File Streaming:</strong> High-bandwidth chunked HTTP streaming directly to <code>Videos\Skyc</code> and <code>Music\Skyc</code>.</li>
+                  <li><strong>System Tray Daemon:</strong> Minimizes cleanly to the Windows notification tray with clipboard monitoring.</li>
+                  <li><strong>Multi-threaded Batching:</strong> Download entire creator playlists and album archives concurrently.</li>
+                </ul>
+                <div class="panel-cta">
+                  <a href="#downloads" class="btn btn-primary">Download Windows .exe / .msi</a>
+                </div>
+              </div>
+              <div class="showcase-mockup">
+                <div class="desktop-frame">
+                  <div class="desktop-titlebar">
+                    <span class="win-title">Skyc Desktop — v2.0.1 (x64)</span>
+                    <div class="desktop-win-btns">
+                      <span>&minus;</span><span>&#x25A2;</span><span>&times;</span>
+                    </div>
+                  </div>
+                  <div class="desktop-screen-body">
+                    <div class="desktop-nav">
+                      <span class="active">Downloader</span>
+                      <span>History</span>
+                      <span>Vault</span>
+                      <span>Settings</span>
+                    </div>
+                    <div class="desktop-inner-card">
+                      <div class="inner-search-bar">
+                        <span>https://open.spotify.com/album/4vS7...</span>
+                        <button class="btn btn-primary" style="padding:0.35rem 0.75rem; font-size:0.8rem;">Resolve</button>
+                      </div>
+                      <div class="desktop-table">
+                        <div class="t-row t-head">
+                          <span>Track Title</span>
+                          <span>Bitrate</span>
+                          <span>Progress</span>
+                        </div>
+                        <div class="t-row">
+                          <span>01. Midnight Horizons.mp3</span>
+                          <span>320 kbps</span>
+                          <span style="color:var(--accent);">100% (Done)</span>
+                        </div>
+                        <div class="t-row">
+                          <span>02. Electric Resonance.mp3</span>
+                          <span>320 kbps</span>
+                          <span style="color:var(--accent);">100% (Done)</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CLI Tab -->
+          <div class="showcase-panel" id="tab-cli">
+            <div class="showcase-grid">
+              <div class="showcase-info">
+                <span class="sub-badge">Node.js / Terminal REPL</span>
+                <h3 class="panel-heading">Lightweight Power for Engineers & Power Users</h3>
+                <p class="panel-desc">
+                  Run media extractions instantly from your favorite terminal or automation scripts. No installation required via <code>npx</code>, or install globally via <code>npm</code>.
+                </p>
+                <ul class="panel-feature-list">
+                  <li><strong>Interactive REPL Mode:</strong> Type <code>npx @elskyx/skyc</code> to launch the interactive prompt with format choices.</li>
+                  <li><strong>Headless Flag Support:</strong> Perfect for shell scripts, cron jobs, and custom webhooks (<code>--format mp4 --no-wm</code>).</li>
+                  <li><strong>Zero External Native Binaries:</strong> 100% pure JavaScript stream pipeline without requiring ffmpeg installations.</li>
+                </ul>
+                <div class="panel-cta">
+                  <button class="btn btn-primary" id="btn-copy-cli-tab">Copy <code>npx @elskyx/skyc</code></button>
+                </div>
+              </div>
+              <div class="showcase-mockup">
+                <div class="terminal-frame">
+                  <div class="term-header">
+                    <span class="win-dot dot-red"></span>
+                    <span class="win-dot dot-yellow"></span>
+                    <span class="win-dot dot-green"></span>
+                    <span class="term-title">bash — skyc-cli</span>
+                  </div>
+                  <pre class="term-code"><code><span class="c-dim"># Run instantly without installing:</span>
+<span class="c-accent">$</span> npx @elskyx/skyc https://tiktok.com/@dev/video/72891
+
+<span class="c-dim">[13:05:01]</span> <span class="c-bold">Skyc CLI v2.0.1</span> — Zero-Cloud Engine
+<span class="c-dim">[13:05:02]</span> <span class="c-green">&#10003;</span> Extracted: TikTok (No-Watermark)
+<span class="c-dim">[13:05:02]</span> Quality: 1080x1920 (Original Stream)
+<span class="c-dim">[13:05:03]</span> Streaming &rarr; <span class="c-accent">./downloads/tiktok_72891.mp4</span>
+<span class="c-dim">[====================]</span> 100% [24.1 MB / 24.1 MB]
+<span class="c-green">&#10004; Complete! Saved in 1.42s.</span></code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Comparison Section -->
+    <section id="architecture" class="section comparison-section">
+      <div class="section-container">
+        <div class="section-badge-center">
+          <span class="badge-tag">Security & Architecture</span>
+        </div>
+        <h2 class="section-title text-center">Zero-Cloud vs. Traditional Downloaders</h2>
+        <p class="section-subtitle text-center">
+          Most online web downloaders route your requests through private cloud servers, log IP addresses, and bombard you with shady redirect ads. Skyc eliminates the middleman entirely.
+        </p>
+
+        <div class="comparison-table-wrapper" data-spotlight>
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th class="th-feature">Architecture Feature</th>
+                <th class="th-skyc">
+                  <div class="th-brand">
+                    <img src="logo.svg" alt="Skyc" width="22" height="22" />
+                    <span>Skyc Suite</span>
+                  </div>
+                </th>
+                <th class="th-cloud">Traditional Cloud Downloaders</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-feat">Network Traffic Route</td>
+                <td class="td-good"><span class="badge-good">100% Direct</span> Your Device &rarr; Official CDN</td>
+                <td class="td-bad"><span class="badge-bad">Proxy Middleman</span> Your Device &rarr; Shady Server &rarr; CDN</td>
+              </tr>
+              <tr>
+                <td class="td-feat">Privacy & Logging</td>
+                <td class="td-good"><span class="badge-good">Zero Logs</span> No cookies, accounts, or telemetry</td>
+                <td class="td-bad"><span class="badge-bad">High Risk</span> IP logged, URLs tracked, ad retargeting</td>
+              </tr>
+              <tr>
+                <td class="td-feat">Advertisements & Pop-ups</td>
+                <td class="td-good"><span class="badge-good">0 Ads</span> Forever clean, open source, ad-free</td>
+                <td class="td-bad"><span class="badge-bad">Aggressive</span> Crypto faucets, redirect loops, banners</td>
+              </tr>
+              <tr>
+                <td class="td-feat">Rate Limits & Queueing</td>
+                <td class="td-good"><span class="badge-good">Unlimited</span> Depends purely on your device bandwidth</td>
+                <td class="td-bad"><span class="badge-bad">Capped</span> "Wait 30s for next download" or paid VIP</td>
+              </tr>
+              <tr>
+                <td class="td-feat">Scraper Updates</td>
+                <td class="td-good"><span class="badge-good">OTA Hot-Patch</span> Background fix without reinstalls</td>
+                <td class="td-bad"><span class="badge-bad">Brittle</span> Down for days whenever TikTok changes API</td>
+              </tr>
+              <tr>
+                <td class="td-feat">Photo-to-PDF Conversion</td>
+                <td class="td-good"><span class="badge-good">Built-in</span> Native client-side PDF document compiler</td>
+                <td class="td-bad"><span class="badge-bad">None</span> Cluttered .zip files full of separate images</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Download Portal Matrix -->
+    <section id="downloads" class="section downloads-section">
+      <div class="section-container">
+        <div class="section-badge-center">
+          <span class="badge-tag">Download Portal</span>
+        </div>
+        <h2 class="section-title text-center">Get Skyc for Your Device</h2>
+        <p class="section-subtitle text-center">
+          Always free. Always open source. All release binaries are signed and verified on GitHub Releases.
+        </p>
+
+        <div class="download-cards-grid">
+          <!-- Android Card -->
+          <div class="portal-card" data-spotlight>
+            <div class="portal-icon-header">
+              <div class="platform-icon-circle">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                  <line x1="12" y1="18" x2="12.01" y2="18"/>
+                </svg>
+              </div>
+              <span class="portal-version-pill">v2.0.1 Stable</span>
+            </div>
+
+            <h3 class="portal-card-title">Android</h3>
+            <p class="portal-card-desc">
+              Universal APK supporting Android 8.0 through Android 15+. Includes Share menu integration, MediaStore gallery indexing, and background wake-locks.
+            </p>
+
+            <div class="portal-links-stack">
+              <a href="https://github.com/elskyx/Skyc/releases/download/v2.0.1/Skyc-v2.0.1.apk" class="btn btn-primary btn-block">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                <span>Download Skyc-v2.0.1.apk</span>
+              </a>
+              <div class="file-checksum-note">
+                <span>Architecture: Universal (arm64, v7a, x86_64)</span>
+                <span>Size: ~4.1 MB · Direct Sideload</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Windows Card -->
+          <div class="portal-card" data-spotlight>
+            <div class="portal-icon-header">
+              <div class="platform-icon-circle">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                  <line x1="8" y1="21" x2="16" y2="21"/>
+                  <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+              </div>
+              <span class="portal-version-pill">v2.0.1 Stable</span>
+            </div>
+
+            <h3 class="portal-card-title">Windows Desktop</h3>
+            <p class="portal-card-desc">
+              Lightweight native Tauri v2 desktop application for Windows 10 & 11 (64-bit and 32-bit). Direct streaming to your Videos and Music folders.
+            </p>
+
+            <div class="portal-links-stack">
+              <a href="https://github.com/elskyx/Skyc/releases/download/v2.0.1/Skyc_2.0.1_x64-setup.exe" class="btn btn-primary btn-block">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                <span>Download Installer (.exe)</span>
+              </a>
+              <div class="alt-downloads-row">
+                <a href="https://github.com/elskyx/Skyc/releases/download/v2.0.1/Skyc_2.0.1_x64_en-US.msi" class="alt-link">.MSI Installer</a>
+                <span class="dot-sep">&bull;</span>
+                <a href="https://github.com/elskyx/Skyc/releases/latest" class="alt-link">Portable ZIP</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- CLI Card -->
+          <div class="portal-card" data-spotlight>
+            <div class="portal-icon-header">
+              <div class="platform-icon-circle">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="4 17 10 11 4 5"/>
+                  <line x1="12" y1="19" x2="20" y2="19"/>
+                </svg>
+              </div>
+              <span class="portal-version-pill">npm registry</span>
+            </div>
+
+            <h3 class="portal-card-title">Terminal CLI</h3>
+            <p class="portal-card-desc">
+              Instant command-line runner for Linux, macOS, and Windows. No installation required with <code>npx</code>, or install globally for continuous script use.
+            </p>
+
+            <div class="portal-links-stack">
+              <div class="cli-box-interactive">
+                <code>npx @elskyx/skyc</code>
+                <button class="cli-copy-btn js-copy-trigger" data-copy="npx @elskyx/skyc" aria-label="Copy Command">
+                  <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span class="copied-text">Copied!</span>
+                </button>
+              </div>
+              <div class="cli-box-interactive secondary">
+                <code>npm i -g @elskyx/skyc</code>
+                <button class="cli-copy-btn js-copy-trigger" data-copy="npm i -g @elskyx/skyc" aria-label="Copy Global Command">
+                  <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span class="copied-text">Copied!</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Creator & Philosophy Section (Inspired by coflyn.my.id) -->
+    <section id="creator" class="section creator-section">
+      <div class="section-container">
+        <div class="creator-card" data-spotlight>
+          <div class="creator-left">
+            <div class="section-badge-center" style="justify-content: flex-start; margin-bottom: 0.75rem;">
+              <span class="badge-tag">Developer &amp; Ethos</span>
+            </div>
+            <h2 class="creator-heading">Crafted with care by elskyx</h2>
+            <p class="creator-bio">
+              Just a developer passionate about crafting tools that empower users rather than exploit their attention. Skyc was created as an open-source answer to the ad-ridden, privacy-invasive state of traditional media downloaders.
+            </p>
+            <div class="creator-links-row">
+              <a href="https://github.com/elskyx" target="_blank" rel="noopener" class="btn btn-primary">
+                <span>View GitHub Profile</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+              <a href="https://github.com/elskyx/Skyc" target="_blank" rel="noopener" class="btn btn-secondary">
+                <span>Contribute to Skyc</span>
+              </a>
+            </div>
+          </div>
+          <div class="creator-right">
+            <div class="creator-quote-box">
+              &ldquo;Software shouldn&rsquo;t spy on you to save a video. Essential digital tools should be transparent, lightweight, and 100% on your device.&rdquo;
+            </div>
+            <div style="margin-top: 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+              <div class="brand-logo-frame" style="width: 32px; height: 32px;">
+                <img src="logo.svg" alt="Skyc Logo" width="32" height="32" />
+              </div>
+              <div>
+                <strong style="display: block; font-size: 0.95rem;">elskyx / Skyc Project</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">Free &amp; Open Source under GPL-3.0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion Section -->
+    <section id="faq" class="section faq-section">
+      <div class="section-container">
+        <div class="section-badge-center">
+          <span class="badge-tag">Got Questions?</span>
+        </div>
+        <h2 class="section-title text-center">Frequently Asked Questions</h2>
+        <p class="section-subtitle text-center">
+          Everything you need to know about Skyc, security, platform compatibility, and updates.
+        </p>
+
+        <div class="faq-accordion-wrapper">
+          <!-- FAQ 1 -->
+          <details class="faq-item" open>
+            <summary class="faq-question">
+              <span>Is Skyc really 100% free with no catch?</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>Yes. There is no catch, no VIP tier, and no advertisement. Skyc is an open-source hobby project distributed under the GNU General Public License v3.0 (GPL-3.0). Because it runs client-side on your own device, there are no expensive middleman servers to monetize.</p>
+            </div>
+          </details>
+
+          <!-- FAQ 2 -->
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>How does Zero-Cloud client-side downloading work?</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>Traditional downloader websites make you paste a link, send it to their server, scrape the file on their machine, and then re-stream it to you. Skyc embeds the scraper algorithms directly inside the application runtime. Your device talks directly to the official content delivery network (CDN) without any intermediary.</p>
+            </div>
+          </details>
+
+          <!-- FAQ 3 -->
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>What happens when a platform updates its code and breaks a scraper?</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>Skyc features an integrated <strong>Over-The-Air (OTA) Hot-Patching</strong> engine. When TikTok, Instagram, or YouTube alter their token signatures, the community updates the scraper bundle in the official GitHub repository. Skyc downloads this micro-bundle silently on app launch, restoring functionality without requiring full APK or .exe reinstallations.</p>
+            </div>
+          </details>
+
+          <!-- FAQ 4 -->
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Where do downloaded media files get saved on my device?</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>On Android, files are organized into standard system folders: <code>Movies/Skyc</code> for videos, <code>Music/Skyc</code> for audio, and <code>Pictures/Skyc</code> for images and PDFs, instantly recognized by your Gallery. On Windows, files save to your user profile's default <code>Videos\Skyc</code> and <code>Music\Skyc</code> folders.</p>
+            </div>
+          </details>
+
+          <!-- FAQ 5 -->
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>How does the Instant Photo-to-PDF feature work?</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>When you download an Instagram carousel post or a multi-page TikTok photo story, Skyc allows you to either save individual JPG files or compile them sequentially into a clean, paginated PDF document. This is ideal for saving comic chapters, design slides, and educational infographics.</p>
+            </div>
+          </details>
+
+          <!-- FAQ 6 -->
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Can I inspect or build Skyc from source code?</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>Absolutely. The complete source code, build scripts, scraper compilations, and release pipelines are published transparently on <a href="https://github.com/elskyx/Skyc" target="_blank" rel="noopener">GitHub (elskyx/Skyc)</a>. Pull requests and scraper enhancements are always welcome!</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Global Toast Notification -->
+  <div id="toast-notification" class="toast-notification" role="status" aria-live="polite">
+    <span class="toast-icon">&#10003;</span>
+    <span class="toast-message" id="toast-text">Action completed successfully.</span>
   </div>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <div class="footer-container">
+      <div class="footer-top-row">
+        <div class="footer-brand">
+          <div class="brand-logo-frame">
+            <img src="logo.svg" alt="Skyc Logo" width="32" height="32" />
+          </div>
+          <span class="footer-title">Skyc</span>
+          <p class="footer-desc">
+            Universal, Zero-Cloud, Client-Side Media Downloader for Android, Windows Desktop & Terminal CLI.
+          </p>
+        </div>
+
+        <div class="footer-links-group">
+          <div class="footer-col">
+            <span class="footer-heading">Product</span>
+            <ul>
+              <li><a href="#simulator">Live Simulator</a></li>
+              <li><a href="#how-it-works">How It Works</a></li>
+              <li><a href="#platforms">Supported Platforms</a></li>
+              <li><a href="#showcase">Desktop & Mobile</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <span class="footer-heading">Downloads</span>
+            <ul>
+              <li><a href="https://github.com/elskyx/Skyc/releases/download/v2.0.1/Skyc-v2.0.1.apk">Android APK</a></li>
+              <li><a href="https://github.com/elskyx/Skyc/releases/download/v2.0.1/Skyc_2.0.1_x64-setup.exe">Windows Installer</a></li>
+              <li><a href="https://www.npmjs.com/package/@elskyx/skyc" target="_blank" rel="noopener">npm Package</a></li>
+              <li><a href="https://github.com/elskyx/Skyc/releases">Release Notes</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <span class="footer-heading">Open Source</span>
+            <ul>
+              <li><a href="https://github.com/elskyx/Skyc" target="_blank" rel="noopener">GitHub Repository</a></li>
+              <li><a href="https://github.com/elskyx/Skyc/issues" target="_blank" rel="noopener">Report Issue</a></li>
+              <li><a href="https://github.com/elskyx/Skyc/blob/main/LICENSE" target="_blank" rel="noopener">GPL-3.0 License</a></li>
+              <li><a href="https://github.com/coflyn/Mori" target="_blank" rel="noopener">Inspired by Mori</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom-row">
+        <span>&copy; 2026 Skyc Project (<a href="https://github.com/elskyx/Skyc" target="_blank" rel="noopener">elskyx/Skyc</a>). Licensed under GNU General Public License v3.0.</span>
+        <span>Crafted with Claude Editorial &amp; 21st.dev Design Engineering.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
 </body>
 </html>
