@@ -1,11 +1,20 @@
 // public/js/scrapers/httpHelper.js
 import { getUserAgent } from "../utils/index.js";
 
+function safeGetLocalStorage(key) {
+  try {
+    if (typeof localStorage !== "undefined" && typeof localStorage.getItem === "function") {
+      return localStorage.getItem(key);
+    }
+  } catch (_) {}
+  return null;
+}
+
 /**
  * Gets the configured HTTP timeout in milliseconds (defaults to 30s)
  */
 export function getRequestTimeout() {
-  const custom = parseInt(localStorage.getItem("skyc_request_timeout"), 10);
+  const custom = parseInt(safeGetLocalStorage("skyc_request_timeout"), 10);
   if (!isNaN(custom) && custom >= 5 && custom <= 180) {
     return custom * 1000;
   }
@@ -43,7 +52,7 @@ export async function scraperFetch(options, serverName = "Scraper") {
   }
 
   // Header spoofing
-  if (localStorage.getItem("skyc_header_spoofing") !== "false") {
+  if (safeGetLocalStorage("skyc_header_spoofing") !== "false") {
     try {
       const parsedUrl = new URL(options.url);
       if (!headers["Referer"]) headers["Referer"] = `${parsedUrl.protocol}//${parsedUrl.hostname}/`;
@@ -63,7 +72,7 @@ export async function scraperFetch(options, serverName = "Scraper") {
   }
 
   // 1. Android Native OkHttp Bridge (Bypasses WebView CORS completely)
-  if (window.SkycNativeHttp?.request) {
+  if (typeof window !== "undefined" && window.SkycNativeHttp?.request) {
     try {
       const payload = JSON.stringify({
         url: options.url,
@@ -84,7 +93,7 @@ export async function scraperFetch(options, serverName = "Scraper") {
   }
 
   // 2. Windows Desktop Tauri v2 Reqwest Bridge (Bypasses CORS completely)
-  if (window.__TAURI__?.core?.invoke) {
+  if (typeof window !== "undefined" && window.__TAURI__?.core?.invoke) {
     try {
       const res = await window.__TAURI__.core.invoke("tauri_http_request", {
         url: options.url,

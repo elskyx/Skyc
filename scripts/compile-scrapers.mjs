@@ -32,7 +32,7 @@ async function build() {
       sourcemap: false,
       platform: "neutral",
       footer: {
-        js: "\nif (typeof module !== 'undefined' && module.exports) { module.exports = __SkycScraperEngine; }\nif (typeof window !== 'undefined') { window.__SkycScraperEngine = __SkycScraperEngine; }\n",
+        js: "\nif (typeof module !== 'undefined' && module.exports) { module.exports = __SkycScraperEngine; }\nif (typeof window !== 'undefined') { window.__SkycScraperEngine = __SkycScraperEngine; }\nif (typeof globalThis !== 'undefined') { globalThis.__SkycScraperEngine = __SkycScraperEngine; }\n",
       },
     });
     compiledCode = fs.readFileSync(outPublic, "utf-8");

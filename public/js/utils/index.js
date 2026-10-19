@@ -4,8 +4,12 @@ export const DEFAULT_USER_AGENT =
   "Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36";
 
 export function getUserAgent() {
-  const custom = localStorage.getItem("skyc_custom_user_agent");
-  if (custom && custom.trim()) return custom.trim();
+  try {
+    if (typeof localStorage !== "undefined" && typeof localStorage.getItem === "function") {
+      const custom = localStorage.getItem("skyc_custom_user_agent");
+      if (custom && custom.trim()) return custom.trim();
+    }
+  } catch (_) {}
   return DEFAULT_USER_AGENT;
 }
 

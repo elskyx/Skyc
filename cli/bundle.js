@@ -1062,4 +1062,5 @@ var __SkycScraperEngine = (() => {
 
 if (typeof module !== 'undefined' && module.exports) { module.exports = __SkycScraperEngine; }
 if (typeof window !== 'undefined') { window.__SkycScraperEngine = __SkycScraperEngine; }
+if (typeof globalThis !== 'undefined') { globalThis.__SkycScraperEngine = __SkycScraperEngine; }
 

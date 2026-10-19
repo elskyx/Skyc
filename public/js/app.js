@@ -15,27 +15,35 @@ import { triggerHaptic, showToast } from "./utils/index.js";
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🚀 Booting Skyc Media Downloader...");
 
+  const safeInit = (name, fn) => {
+    try {
+      fn();
+    } catch (err) {
+      console.error(`[Skyc Boot] Failed to init ${name}:`, err);
+    }
+  };
+
   // 1. Live Background Ambient Animation
-  initBgAnimation();
+  safeInit("bgAnimation", initBgAnimation);
 
   // 2. Navigation Tabs Router
-  initNavigationRouter();
+  safeInit("navRouter", initNavigationRouter);
 
   // 3. Controllers & Features
-  initDownloadController();
-  initGallery();
-  renderHistory();
-  initSettings();
-  initAuthListeners();
-  initPlayerControls();
-  initDownloadBubble();
+  safeInit("downloadController", initDownloadController);
+  safeInit("gallery", initGallery);
+  safeInit("history", renderHistory);
+  safeInit("settings", initSettings);
+  safeInit("authListeners", initAuthListeners);
+  safeInit("playerControls", initPlayerControls);
+  safeInit("downloadBubble", initDownloadBubble);
 
   // 4. Clipboard Intent Watcher
   const urlInput = document.getElementById("composerUrlInput");
-  initClipboardWatcher(urlInput);
+  safeInit("clipboardWatcher", () => initClipboardWatcher(urlInput));
 
   // 5. Batch Mode Modal Listeners
-  initBatchModal();
+  safeInit("batchModal", initBatchModal);
 
   // 6. History Action Buttons
   const clearHistBtn = document.getElementById("clearHistoryBtn");
@@ -46,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 7. Background OTA Scraper Patch Check (silent)
   setTimeout(() => {
-    checkOtaScraperUpdate(false);
+    safeInit("otaCheck", () => checkOtaScraperUpdate(false));
   }, 3500);
 });
 
