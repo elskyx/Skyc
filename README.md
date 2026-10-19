@@ -82,8 +82,7 @@ skyc
 - **Unduhan Paralel Berkecepatan Tinggi**: Mengunduh *playlist* musik, album, dan galeri foto *carousel* secara bersamaan hingga 5 *worker thread* paralel.
 - **Menu *Quick Save* Android**: Unduh video langsung dari menu *Share* Android melalui tampilan *overlay* ringan tanpa meninggalkan aplikasi yang sedang dibuka.
 - **Konversi Foto ke PDF Instan**: Gabungkan postingan multi-foto menjadi satu dokumen PDF menggunakan `pdf-lib` untuk dibaca secara luring.
-- **Kunci Privasi PIN & Sidik Jari**: Lindungi riwayat unduhan dan galeri media menggunakan PIN 4 digit atau sensor biometrik Android.
-- **100% Privat & Tanpa Server Eksternal**: Seluruh permintaan jaringan dan penguraian HTML/API dieksekusi langsung di perangkat lokal Anda.
+- **Arsitektur Klien Terdesentralisasi (Zero Skyc Backend)**: Skyc tidak memiliki server backend, database terpusat, pelacak analitik, maupun server proxy perantara milik Skyc. Seluruh permintaan metadata dan pengunduhan stream dieksekusi langsung dari perangkat klien Anda ke endpoint platform atau node resolver terdesentralisasi (seperti instance Cobalt v10 / YtMp3 / Piped). Anda juga dapat menentukan alamat instance Cobalt/resolver privat milik Anda sendiri di menu **Settings** untuk kedaulatan data penuh.
 
 ---
 

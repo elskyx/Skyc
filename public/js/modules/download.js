@@ -2,7 +2,7 @@
 import { analyzeUrl } from "../scrapers/index.js";
 import { cleanUrl, getPlatformDisplayName } from "../utils/urlUtils.js";
 import { resolveDownloadUrl, needsAsyncResolving } from "../downloader/resolver.js";
-import { saveMediaFile } from "../downloader/storage.js";
+import { saveMediaFile, downloadAndSaveMediaStream } from "../downloader/storage.js";
 import { sanitizeFilename, getMediaTargetDirectory } from "../downloader/filename.js";
 import { postProcessDownload } from "../downloader/postProcess.js";
 import { compileImagesToPdf } from "../utils/pdfHelper.js";
@@ -49,6 +49,12 @@ export function initDownloadController() {
         return;
       }
 
+      // Clear previous analysis state immediately so old card is never displayed
+      hideResultCard();
+      currentAnalysisData = null;
+      selectedFormatIndex = 0;
+      currentSlideIndex = 0;
+
       const targetUrl = cleanUrl(raw);
       setAnalyzingState(true);
 
@@ -61,6 +67,8 @@ export function initDownloadController() {
         triggerHaptic("medium");
       } catch (err) {
         console.error("[Skyc Analysis Error]", err);
+        hideResultCard();
+        currentAnalysisData = null;
         showToast(err.message || "Unable to extract media from this link.", "danger");
         triggerHaptic("error");
       } finally {
@@ -237,22 +245,29 @@ async function executeSingleDownload() {
     let dlUrl = selectedFormat.url;
     if (needsAsyncResolving(dlUrl)) {
       showToast("Resolving stream link...", "info");
-      dlUrl = await resolveDownloadUrl({ url: dlUrl });
+      dlUrl = await resolveDownloadUrl({
+        url: dlUrl,
+        updateProgress: (pct, msg) => {
+          if (startBtn) startBtn.textContent = `${msg} (${pct}%)`;
+        },
+      });
     }
 
-    const res = await fetch(dlUrl);
-    if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
-    const blob = await res.blob();
-
-    const ext = selectedFormat.ext || "mp4";
+    const ext = selectedFormat.ext || (selectedFormat.type === "audio" ? "mp3" : "mp4");
     const filename = `${sanitizeFilename(currentAnalysisData.title)}.${ext}`;
     const subfolder = getMediaTargetDirectory(selectedFormat.type || "video");
+    const mimeType = selectedFormat.type === "audio" ? "audio/mpeg" : "video/mp4";
 
-    await saveMediaFile({
-      data: blob,
+    if (startBtn) startBtn.textContent = "Saving to device...";
+
+    await downloadAndSaveMediaStream({
+      url: dlUrl,
       filename,
       subfolder,
-      mimeType: blob.type || "video/mp4",
+      mimeType,
+      onProgress: (pct, msg) => {
+        if (startBtn) startBtn.textContent = `${msg} (${pct}%)`;
+      },
     });
 
     await postProcessDownload({
@@ -260,7 +275,7 @@ async function executeSingleDownload() {
       sourceUrl: dlUrl,
       platform: currentAnalysisData.platform,
       filename,
-      fileSize: blob.size,
+      fileSize: 0,
       mediaType: selectedFormat.type || "video",
       thumbnailUrl: currentAnalysisData.thumbnail,
     });

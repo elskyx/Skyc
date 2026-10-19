@@ -4,10 +4,13 @@ import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.webkit.JavascriptInterface;
 import com.getcapacitor.BridgeActivity;
 import org.json.JSONObject;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import okhttp3.Headers;
@@ -98,6 +101,75 @@ public class MainActivity extends BridgeActivity {
                     (path, uri) -> {}
                 );
             } catch (Exception ignored) {}
+        }
+
+        @JavascriptInterface
+        public String downloadFileNative(String jsonPayload) {
+            try {
+                JSONObject payload = new JSONObject(jsonPayload);
+                String url = payload.getString("url");
+                String filename = payload.getString("filename");
+                String subfolder = payload.optString("subfolder", "Movies/Skyc");
+
+                File baseDir;
+                if (subfolder.contains("Music")) {
+                    baseDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+                } else if (subfolder.contains("Pictures")) {
+                    baseDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                } else {
+                    baseDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+                }
+                File targetDir = new File(baseDir, "Skyc");
+                if (!targetDir.exists()) {
+                    targetDir.mkdirs();
+                }
+                File targetFile = new File(targetDir, filename);
+
+                Request request = new Request.Builder()
+                        .url(url)
+                        .header("User-Agent", "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36")
+                        .build();
+
+                try (Response response = httpClient.newCall(request).execute()) {
+                    if (!response.isSuccessful()) {
+                        JSONObject err = new JSONObject();
+                        err.put("success", false);
+                        err.put("error", "HTTP " + response.code());
+                        return err.toString();
+                    }
+
+                    try (InputStream in = response.body().byteStream();
+                         FileOutputStream out = new FileOutputStream(targetFile)) {
+                        byte[] buffer = new byte[65536];
+                        int read;
+                        while ((read = in.read(buffer)) != -1) {
+                            out.write(buffer, 0, read);
+                        }
+                        out.flush();
+                    }
+                }
+
+                MediaScannerConnection.scanFile(
+                        context,
+                        new String[]{ targetFile.getAbsolutePath() },
+                        null,
+                        (path, uri) -> {}
+                );
+
+                JSONObject result = new JSONObject();
+                result.put("success", true);
+                result.put("path", targetFile.getAbsolutePath());
+                return result.toString();
+            } catch (Exception e) {
+                try {
+                    JSONObject err = new JSONObject();
+                    err.put("success", false);
+                    err.put("error", e.getMessage());
+                    return err.toString();
+                } catch (Exception ignored) {
+                    return "{\"success\":false,\"error\":\"Unknown download error\"}";
+                }
+            }
         }
     }
 }

@@ -31,6 +31,9 @@ async function build() {
       minify: false,
       sourcemap: false,
       platform: "neutral",
+      footer: {
+        js: "\nif (typeof module !== 'undefined' && module.exports) { module.exports = __SkycScraperEngine; }\nif (typeof window !== 'undefined') { window.__SkycScraperEngine = __SkycScraperEngine; }\n",
+      },
     });
     compiledCode = fs.readFileSync(outPublic, "utf-8");
   } catch (err) {

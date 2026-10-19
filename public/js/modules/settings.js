@@ -72,6 +72,28 @@ export function initSettings() {
     });
   }
 
+  // Custom Cobalt Resolver Settings
+  const cobaltInput = document.getElementById("customCobaltInput");
+  const saveCobaltBtn = document.getElementById("saveCobaltBtn");
+  if (cobaltInput) {
+    cobaltInput.value = localStorage.getItem("skyc_cobalt_instance") || "";
+  }
+  if (saveCobaltBtn && cobaltInput) {
+    saveCobaltBtn.addEventListener("click", () => {
+      const val = cobaltInput.value.trim();
+      if (!val) {
+        localStorage.removeItem("skyc_cobalt_instance");
+        showToast("Custom Cobalt instance cleared (using default nodes)", "info");
+      } else if (!val.startsWith("http://") && !val.startsWith("https://")) {
+        showToast("Please enter a valid URL starting with https://", "warning");
+      } else {
+        localStorage.setItem("skyc_cobalt_instance", val);
+        showToast("Custom Cobalt instance saved", "success");
+      }
+      triggerHaptic("medium");
+    });
+  }
+
   // Check OTA Scraper Update Button
   const otaBtn = document.getElementById("checkOtaScraperBtn");
   if (otaBtn) {

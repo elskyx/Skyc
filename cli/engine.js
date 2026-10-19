@@ -117,31 +117,50 @@ export async function scrapeUrl(url) {
 
   // YouTube
   if (platform === "youtube") {
-    const idMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/))([a-zA-Z0-9_-]{11})/i);
+    const idMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/|live\/))([a-zA-Z0-9_-]{11})/i);
     const videoId = idMatch ? idMatch[1] : null;
+
+    let title = `YouTube Video (${videoId || "Stream"})`;
+    let author = "YouTube Creator";
+    let thumbnail = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : "";
+
+    if (videoId) {
+      try {
+        const oRes = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`, {
+          headers: { "User-Agent": CHROME_UA, Accept: "application/json" },
+        });
+        if (oRes.ok) {
+          const oData = await oRes.json();
+          if (oData.title) title = oData.title;
+          if (oData.author_name) author = oData.author_name;
+          if (oData.thumbnail_url) thumbnail = oData.thumbnail_url;
+        }
+      } catch (_) {}
+    }
+
     return {
       platform: "youtube",
-      title: `YouTube Video (${videoId || "Stream"})`,
-      author: "YouTube Creator",
-      thumbnail: videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : "",
+      title,
+      author,
+      thumbnail,
       duration: 0,
       formats: [
         {
           id: "yt_video",
-          label: "Video (Auto HD)",
-          quality: "HD",
+          label: "Video (720p HD MP4)",
+          quality: "720p",
           type: "video",
           ext: "mp4",
-          url: `https://invidious.jing.rocks/latest_version?id=${videoId}&itag=22`,
+          url: `youtube_resolve:mp4:${videoId}`,
         },
         {
           id: "yt_audio",
-          label: "Audio Only (MP3)",
-          quality: "Audio 128k",
+          label: "Audio Only (MP3 320kbps)",
+          quality: "320kbps",
           type: "audio",
           ext: "mp3",
-          url: `https://invidious.jing.rocks/latest_version?id=${videoId}&itag=140`,
-        }
+          url: `youtube_resolve:mp3:${videoId}`,
+        },
       ],
       photos: [],
     };
@@ -194,11 +213,82 @@ export async function scrapeUrl(url) {
   throw new Error(`Extraction for ${platform} is not currently responding. Try again or check the URL.`);
 }
 
+export async function resolveStreamUrl(url, onProgress = () => {}) {
+  if (url.startsWith("youtube_resolve:")) {
+    const parts = url.split(":");
+    const format = parts[1] || "mp4";
+    const videoId = parts[2];
+
+    onProgress(15, 0, 100);
+
+    // ymcdn converter
+    try {
+      const ymHeaders = {
+        Origin: "https://ytmp3.mobi",
+        Referer: "https://ytmp3.mobi/en8/",
+        "User-Agent": CHROME_UA,
+        Accept: "*/*",
+      };
+      const initRes = await fetch(`https://a.ymcdn.org/api/v1/init?p=y&23=1llum1n471&_=${Math.random()}`, { headers: ymHeaders });
+      const initData = await initRes.json();
+
+      if (initData?.convertURL) {
+        let convRes = await fetch(`${initData.convertURL}&v=${videoId}&f=${format}&_=${Math.random()}`, { headers: ymHeaders });
+        let convData = await convRes.json();
+
+        while (convData?.redirect > 0 && convData.redirectURL) {
+          convRes = await fetch(`${convData.redirectURL}&v=${videoId}&f=${format}&_=${Math.random()}`, { headers: ymHeaders });
+          convData = await convRes.json();
+        }
+
+        if (convData && !convData.error) {
+          let progress = 0;
+          let finalUrl = convData.downloadURL;
+          let attempts = 0;
+          while (progress < 3 && attempts < 12) {
+            await new Promise((r) => setTimeout(r, 1200));
+            attempts++;
+            if (convData.progressURL) {
+              const pRes = await fetch(`${convData.progressURL}&_=${Math.random()}`, { headers: ymHeaders });
+              const pData = await pRes.json();
+              progress = pData?.progress ?? 0;
+              if (pData?.downloadURL) finalUrl = pData.downloadURL;
+              if (progress >= 3) break;
+            }
+          }
+          if (finalUrl) {
+            return finalUrl.startsWith("//") ? `https:${finalUrl}` : finalUrl;
+          }
+        }
+      }
+    } catch (_) {}
+
+    // Piped API progressive stream fallback
+    try {
+      const pRes = await fetch(`https://api.piped.private.coffee/streams/${videoId}`, { headers: { "User-Agent": CHROME_UA } });
+      if (pRes.ok) {
+        const pData = await pRes.json();
+        if (format === "mp3") {
+          const audio = pData.audioStreams?.[0];
+          if (audio?.url) return audio.url;
+        } else {
+          const vid = pData.videoStreams?.find((s) => s.format === "MPEG_4" || s.quality?.includes("720") || s.quality?.includes("360")) || pData.videoStreams?.[0];
+          if (vid?.url) return vid.url;
+        }
+      }
+    } catch (_) {}
+
+    throw new Error("Unable to resolve YouTube stream. Please try again.");
+  }
+  return url;
+}
+
 export async function downloadMediaFile(downloadUrl, destPath, onProgress = () => {}) {
   const dir = path.dirname(destPath);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const res = await fetch(downloadUrl, { headers: { "User-Agent": CHROME_UA } });
+  const targetUrl = await resolveStreamUrl(downloadUrl, onProgress);
+  const res = await fetch(targetUrl, { headers: { "User-Agent": CHROME_UA } });
   if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
 
   const totalBytes = parseInt(res.headers.get("content-length") || "0", 10);

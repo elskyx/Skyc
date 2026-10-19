@@ -2,6 +2,90 @@
 import { showToast } from "../utils/index.js";
 
 /**
+ * High-performance streaming media downloader and storage coordinator.
+ * Uses native OS streaming transports when available to avoid CORS restrictions
+ * and eliminate large JavaScript memory buffers:
+ * 1. Windows Tauri Desktop: Reqwest native chunk streaming directly to user folder
+ * 2. Android: OkHttp native bridge streaming directly to public media storage + MediaScanner
+ * 3. Web: fetch blob with automatic anchor download fallback for CORS-isolated hosts
+ */
+export async function downloadAndSaveMediaStream({
+  url,
+  filename,
+  subfolder = "Movies/Skyc",
+  mimeType = "video/mp4",
+  onProgress = () => {},
+}) {
+  if (!url) throw new Error("No download URL provided");
+
+  // 1. Windows Tauri Desktop Native Streaming (Reqwest -> Tokio File)
+  if (window.__TAURI__?.core?.invoke) {
+    try {
+      onProgress(15, "Connecting native desktop stream...");
+      const savedPath = await window.__TAURI__.core.invoke("download_media_stream", {
+        url,
+        filename,
+        subfolder,
+      });
+      onProgress(100, "Saved to device");
+      return { success: true, path: savedPath };
+    } catch (tauriErr) {
+      console.warn("[Skyc Storage] Tauri native stream failed, attempting memory fallback:", tauriErr);
+    }
+  }
+
+  // 2. Android Native Bridge Streaming (OkHttp -> Public Media File)
+  if (window.SkycNativeHttp?.downloadFileNative) {
+    try {
+      onProgress(15, "Connecting Android native stream...");
+      const payload = JSON.stringify({ url, filename, subfolder });
+      const rawRes = window.SkycNativeHttp.downloadFileNative(payload);
+      const res = JSON.parse(rawRes);
+      if (res && res.success) {
+        onProgress(100, "Saved to device");
+        return { success: true, path: res.path };
+      }
+      console.warn("[Skyc Storage] Android native download returned non-success:", res?.error);
+    } catch (androidErr) {
+      console.warn("[Skyc Storage] Android native download exception:", androidErr);
+    }
+  }
+
+  // 3. Web & WebView Hybrid Fallback
+  // Try fetching blob for seamless local save; if CORS restricts fetch, trigger browser download
+  try {
+    onProgress(20, "Fetching media stream...");
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+    const blob = await res.blob();
+    onProgress(85, "Saving media file...");
+
+    return await saveMediaFile({
+      data: blob,
+      filename,
+      subfolder,
+      mimeType: blob.type || mimeType,
+      onProgress,
+    });
+  } catch (fetchErr) {
+    console.warn("[Skyc Storage] Direct fetch failed (likely CORS), falling back to browser download dispatch:", fetchErr);
+    onProgress(90, "Triggering browser direct download...");
+
+    // Browser navigation download dispatch (bypasses CORS restrictions)
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    return { success: true, path: filename, isExternalDispatch: true };
+  }
+}
+
+/**
  * Saves a Blob or ArrayBuffer to the user's device filesystem
  */
 export async function saveMediaFile({
@@ -9,7 +93,7 @@ export async function saveMediaFile({
   filename,
   subfolder = "Movies/Skyc",
   mimeType = "video/mp4",
-  onProgress = () => {}
+  onProgress = () => {},
 }) {
   // 1. Android Capacitor Environment
   if (window.Capacitor?.Plugins?.Filesystem) {
@@ -21,7 +105,7 @@ export async function saveMediaFile({
       const base64Data = await new Promise((resolve, reject) => {
         reader.onloadend = () => {
           const res = reader.result;
-          const base64 = res.split(",")[1];
+          const base64 = typeof res === "string" ? res.split(",")[1] : "";
           resolve(base64);
         };
         reader.onerror = reject;
@@ -33,7 +117,7 @@ export async function saveMediaFile({
         path: fullPath,
         data: base64Data,
         directory: Directory.Documents,
-        recursive: true
+        recursive: true,
       });
 
       return { success: true, path: fullPath };
@@ -50,7 +134,7 @@ export async function saveMediaFile({
       const res = await window.__TAURI__.core.invoke("save_media_file", {
         filename,
         subfolder,
-        bytes
+        bytes,
       });
       return { success: true, path: res };
     } catch (tauriErr) {
@@ -58,7 +142,7 @@ export async function saveMediaFile({
     }
   }
 
-  // 3. Web Browser Fallback (Anchor Download)
+  // 3. Web Browser Fallback (Anchor Download via Object URL)
   const blob = data instanceof Blob ? data : new Blob([data], { type: mimeType });
   const objectUrl = URL.createObjectURL(blob);
   const a = document.createElement("a");

@@ -107,11 +107,51 @@ fn open_in_explorer(path: String) -> Result<(), String> {
     Ok(())
 }
 
+#[tauri::command]
+async fn download_media_stream(url: String, filename: String, subfolder: String) -> Result<String, String> {
+    let base_dir = if subfolder.contains("Music") {
+        dirs::audio_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+    } else if subfolder.contains("Pictures") {
+        dirs::picture_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+    } else {
+        dirs::video_dir().unwrap_or_else(|| dirs::download_dir().unwrap_or_default())
+    };
+
+    let target_dir = base_dir.join("Skyc");
+    fs::create_dir_all(&target_dir).map_err(|e| e.to_string())?;
+
+    let target_file = target_dir.join(&filename);
+
+    let client = reqwest::Client::builder()
+        .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36")
+        .redirect(reqwest::redirect::Policy::limited(10))
+        .timeout(std::time::Duration::from_secs(300))
+        .build()
+        .map_err(|e| e.to_string())?;
+
+    let mut response = client.get(&url).send().await.map_err(|e| e.to_string())?;
+    let status = response.status();
+    if !status.is_success() {
+        return Err(format!("Download failed with HTTP {}", status));
+    }
+
+    use tokio::io::AsyncWriteExt;
+    let mut file = tokio::fs::File::create(&target_file).await.map_err(|e| e.to_string())?;
+
+    while let Some(chunk) = response.chunk().await.map_err(|e| e.to_string())? {
+        file.write_all(&chunk).await.map_err(|e| e.to_string())?;
+    }
+    file.flush().await.map_err(|e| e.to_string())?;
+
+    Ok(target_file.to_string_lossy().to_string())
+}
+
 pub fn run() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             tauri_http_request,
             save_media_file,
+            download_media_stream,
             open_in_explorer
         ])
         .run(tauri::generate_context!())
