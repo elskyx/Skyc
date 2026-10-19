@@ -44,7 +44,6 @@ Seluruh paket instalasi siap pakai tersedia di halaman **GitHub Releases** dan *
 | **Android (Universal / x64)** | [**`Skyc-v1.6.7.apk`**](https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc-v1.6.7.apk) | [Unduh Langsung APK](https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc-v1.6.7.apk) *(Sideload)* |
 | **Windows Desktop (64-bit x64)** | [**`Skyc_1.6.7_x64-setup.exe`**](https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc_1.6.7_x64-setup.exe) / [**`.msi`**](https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc_1.6.7_x64.msi) | [Unduh Installer .exe](https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc_1.6.7_x64-setup.exe) *(NSIS / WiX)* |
 | **Windows Desktop (32-bit x86)** | [**`Skyc_1.6.7_x86-setup.exe`**](https://github.com/elskyx/Skyc/releases/tag/v1.6.7) | Tersedia di [GitHub Releases](https://github.com/elskyx/Skyc/releases/tag/v1.6.7) |
-| **Web App (Browser)** | [**Buka Skyc Web**](https://elskyx.github.io/About-Skyc/) | Akses langsung via browser *(Zero Install)* |
 | **CLI (Terminal)** | [`npx @elskyx/skyc`](https://www.npmjs.com/package/@elskyx/skyc) | Jalankan via Node.js / npm (`skyc <URL>`) |
 
 ---
