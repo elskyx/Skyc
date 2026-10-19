@@ -17,7 +17,7 @@ import {
   DEFAULT_DOWNLOAD_DIR,
 } from "./engine.js";
 
-const CLI_VERSION = "1.0.0";
+const CLI_VERSION = "1.1.5";
 
 // Dynamic clack and picocolors with graceful fallback
 let p = null;

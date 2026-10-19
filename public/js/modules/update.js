@@ -1,7 +1,7 @@
 // public/js/modules/update.js
 import { showToast } from "../utils/index.js";
 
-export const APP_CURRENT_VERSION = "1.0.0";
+export const APP_CURRENT_VERSION = "1.1.5";
 
 /**
  * Checks GitHub Releases API for newer version
