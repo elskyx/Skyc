@@ -1,6 +1,6 @@
 {
   "name": "skyc",
-  "version": "2.0.1",
+  "version": "1.6.7",
   "description": "Client-side media downloader app for Android, Windows, and CLI with a Claude-inspired theme.",
   "private": true,
   "repository": {

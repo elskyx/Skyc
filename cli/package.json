@@ -1,6 +1,6 @@
 {
   "name": "@elskyx/skyc",
-  "version": "2.0.1",
+  "version": "1.6.7",
   "description": "Universal client-side media downloader CLI with a Claude-inspired theme. Save anything, from anywhere. No watermarks. No tracking.",
   "type": "module",
   "bin": {
