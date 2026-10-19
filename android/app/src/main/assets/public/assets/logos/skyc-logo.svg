@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <!-- Skyc Logo Concept 4: The Sky Capsule (Master App Icon) -->
+  <defs>
+    <!-- Background Gradient: Subtle Obsidian Sheen -->
+    <linearGradient id="bg-obsidian" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#232321" />
+      <stop offset="100%" stop-color="#141413" />
+    </linearGradient>
+
+    <!-- Terracotta Vivid Gradient -->
+    <linearGradient id="terracotta-core" x1="72" y1="56" x2="184" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E28466" />
+      <stop offset="100%" stop-color="#C55B39" />
+    </linearGradient>
+
+    <!-- Subtle Radial Glow Behind Core (Anti-slop: 0.15 opacity max) -->
+    <radialGradient id="soft-glow" cx="128" cy="128" r="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#D97757" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#D97757" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Squircle Base Tile -->
+  <rect x="8" y="8" width="240" height="240" rx="58" fill="url(#bg-obsidian)" />
+  <rect x="8" y="8" width="240" height="240" rx="58" stroke="#333330" stroke-width="1.5" />
+
+  <!-- Ambient Light Reflection -->
+  <circle cx="128" cy="128" r="90" fill="url(#soft-glow)" />
+
+  <!-- Primary Glyph: The S-Collector Arc -->
+  <path d="M 172 78 
+           C 166 60 148 48 126 48 
+           C 92 48 68 74 68 108 
+           C 68 156 188 136 188 184 
+           C 188 214 162 232 128 232 
+           C 98 232 76 216 70 196" 
+        stroke="url(#terracotta-core)" 
+        stroke-width="24" 
+        stroke-linecap="round" />
+
+  <!-- Center Vault Inset Arrow / Catch Node -->
+  <path d="M 128 106 L 128 142 M 116 130 L 128 142 L 140 130" 
+        stroke="#F4F3EE" 
+        stroke-width="8" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Corner Precision Accent -->
+  <circle cx="186" cy="74" r="5" fill="#F4F3EE" opacity="0.9" />
+</svg>

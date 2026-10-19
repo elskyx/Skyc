@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "build:scrapers": "node scripts/compile-scrapers.mjs",
+    "build:icons": "python scripts/generate-all-installer-logos.py",
     "serve": "npx serve public -l 3000",
     "cli": "node cli/index.js",
     "android:sync": "npm run build:scrapers && npx cap sync android",

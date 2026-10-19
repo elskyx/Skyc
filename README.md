@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/assets/logos/concept-4-sky-capsule.svg" width="112" height="112" alt="Skyc Official Logo" />
+  <img src="public/logo.svg" width="112" height="112" alt="Skyc Official Logo" />
 </p>
 
 <h1 align="center">Skyc</h1>

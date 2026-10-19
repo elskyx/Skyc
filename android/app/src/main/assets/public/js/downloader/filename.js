@@ -1,0 +1,42 @@
+// public/js/downloader/filename.js
+
+/**
+ * Sanitizes a title string into a safe file name across Android, Windows, and Linux
+ */
+export function sanitizeFilename(title, maxLength = 80) {
+  if (!title || typeof title !== "string") {
+    return `skyc_${Date.now()}`;
+  }
+
+  // Remove invalid file name characters across Windows/Android/Linux: \ / : * ? " < > |
+  let clean = title
+    .replace(/[\\/:*?"<>|]/g, "_")
+    .replace(/[\x00-\x1f\x80-\x9f]/g, "")
+    .trim();
+
+  // Strip excessive spaces or underscores
+  clean = clean.replace(/\s+/g, " ").replace(/_+/g, "_");
+
+  if (clean.length > maxLength) {
+    clean = clean.substring(0, maxLength).trim();
+  }
+
+  return clean || `skyc_${Date.now()}`;
+}
+
+/**
+ * Determines target folder based on media type (Movies/Skyc, Music/Skyc, Pictures/Skyc)
+ */
+export function getMediaTargetDirectory(mediaType) {
+  const custom = localStorage.getItem("skyc_custom_storage_dir");
+  if (custom && custom.trim()) return custom.trim();
+
+  const type = (mediaType || "").toLowerCase();
+  if (type === "audio" || type === "music" || type === "mp3") {
+    return "Music/Skyc";
+  }
+  if (type === "photo" || type === "image" || type === "pdf") {
+    return "Pictures/Skyc";
+  }
+  return "Movies/Skyc";
+}

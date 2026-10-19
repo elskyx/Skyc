@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <!-- Skyc Logo Concept 1: The Precision Aperture & Vault -->
+  <defs>
+    <linearGradient id="terracotta-accent" x1="48" y1="36" x2="208" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E28466" />
+      <stop offset="100%" stop-color="#C55B39" />
+    </linearGradient>
+    <linearGradient id="obsidian-shade" x1="48" y1="136" x2="208" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2D2D2B" />
+      <stop offset="100%" stop-color="#141413" />
+    </linearGradient>
+  </defs>
+
+  <!-- Upper Arc / Hook (Terracotta) -->
+  <path d="M 188 64 
+           C 188 44 168 28 128 28 
+           C 78 28 52 58 52 94 
+           C 52 136 112 144 146 156 
+           C 176 166 186 180 186 198 
+           C 186 218 166 228 132 228
+           C 96 228 72 214 66 194" 
+        stroke="url(#terracotta-accent)" 
+        stroke-width="26" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Downlink Inset Arrow Point in Negative Center -->
+  <path d="M 128 92 L 128 138 M 112 122 L 128 138 L 144 122" 
+        stroke="#191918" 
+        stroke-width="12" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Vault Accent Point -->
+  <circle cx="186" cy="64" r="7" fill="#F4F3EE" />
+</svg>
