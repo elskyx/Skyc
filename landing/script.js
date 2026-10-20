@@ -134,6 +134,65 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // -------------------------------------------------------------------------
+  // 2c. Random Letter Swap Navigation Micro-Interactions (21st.dev Component)
+  // -------------------------------------------------------------------------
+  (function initRandomLetterSwapNav() {
+    const targets = document.querySelectorAll(
+      '.nav-menu-link, .nav-menu-trigger > span, .nav-cta, .drawer-link'
+    );
+
+    targets.forEach((el) => {
+      if (el.dataset.rlsDone) return;
+      el.dataset.rlsDone = '1';
+
+      const originalText = el.textContent.trim();
+      if (!originalText) return;
+
+      const wordSpan = document.createElement('span');
+      wordSpan.className = 'rls-word';
+      wordSpan.setAttribute('aria-label', originalText);
+
+      // Stable randomized array of indices for staggered spring swap
+      const indices = Array.from({ length: originalText.length }, (_, i) => i);
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+
+      originalText.split('').forEach((char, idx) => {
+        const charSpan = document.createElement('span');
+        charSpan.className = 'rls-char';
+
+        if (char === ' ') {
+          charSpan.innerHTML = '&nbsp;';
+        } else {
+          const inner = document.createElement('span');
+          inner.className = 'rls-char-inner';
+          const delay = (indices.indexOf(idx) * 0.025).toFixed(3);
+          inner.style.transitionDelay = `${delay}s`;
+
+          const topChar = document.createElement('span');
+          topChar.className = 'rls-char-top';
+          topChar.textContent = char;
+
+          const bottomChar = document.createElement('span');
+          bottomChar.className = 'rls-char-bottom';
+          bottomChar.textContent = char;
+
+          inner.appendChild(topChar);
+          inner.appendChild(bottomChar);
+          charSpan.appendChild(inner);
+        }
+
+        wordSpan.appendChild(charSpan);
+      });
+
+      el.innerHTML = '';
+      el.appendChild(wordSpan);
+    });
+  })();
+
+  // -------------------------------------------------------------------------
   // 3. 21st.dev Specular Spotlight Card System ([data-spotlight])
   // -------------------------------------------------------------------------
   const spotlightElements = document.querySelectorAll('[data-spotlight]');
