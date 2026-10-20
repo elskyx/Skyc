@@ -605,7 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const cardTitle = (card.querySelector('.platform-name')?.textContent || '').toLowerCase();
       const cardDesc = (card.querySelector('.platform-desc, .platform-detail')?.textContent || '').toLowerCase();
 
-      const matchesCategory = currentCategory === 'all' || cardCategory === currentCategory;
+      const matchesCategory = currentCategory === 'all' || cardCategory.split(' ').includes(currentCategory);
       const matchesSearch = !q || cardTitle.includes(q) || cardDesc.includes(q);
 
       if (matchesCategory && matchesSearch) {

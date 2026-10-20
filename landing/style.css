@@ -1702,16 +1702,19 @@ h1, h2, h3, h4 {
 .platform-card {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  transition: transform var(--transition-normal), border-color var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-normal), border-color var(--transition-fast), box-shadow var(--transition-normal);
 }
 
 .platform-card:hover {
   transform: translateY(-3px);
   border-color: var(--border-medium);
+  box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.2);
 }
 
 .platform-card.hidden {
@@ -1726,18 +1729,63 @@ h1, h2, h3, h4 {
 }
 
 .platform-badge-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   background-color: var(--bg-elevated);
-  color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 700;
-  display: flex;
+  border: 1px solid var(--border-subtle);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
 }
+
+.platform-card:hover .platform-badge-logo {
+  transform: translateY(-1px) scale(1.04);
+}
+
+.platform-badge-logo svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* Individual Platform Logo Brand Tints (Claude Warm Editorial Theme) */
+.badge-tiktok { color: #EE1D52; background: rgba(238, 29, 82, 0.08); border-color: rgba(238, 29, 82, 0.22); }
+.badge-instagram { color: #E1306C; background: rgba(225, 48, 108, 0.08); border-color: rgba(225, 48, 108, 0.22); }
+.badge-youtube { color: #FF0000; background: rgba(255, 0, 0, 0.08); border-color: rgba(255, 0, 0, 0.22); }
+.badge-spotify { color: #1ED760; background: rgba(30, 215, 96, 0.08); border-color: rgba(30, 215, 96, 0.22); }
+.badge-applemusic { color: #FC3C44; background: rgba(252, 60, 68, 0.08); border-color: rgba(252, 60, 68, 0.22); }
+.badge-pinterest { color: #E60023; background: rgba(230, 0, 35, 0.08); border-color: rgba(230, 0, 35, 0.22); }
+.badge-x { color: var(--text-primary); background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.16); }
+.badge-reddit { color: #FF4500; background: rgba(255, 69, 0, 0.08); border-color: rgba(255, 69, 0, 0.22); }
+.badge-pixiv { color: #0096FA; background: rgba(0, 150, 250, 0.08); border-color: rgba(0, 150, 250, 0.22); }
+.badge-bilibili { color: #00A1D6; background: rgba(0, 161, 214, 0.08); border-color: rgba(0, 161, 214, 0.22); }
+.badge-soundcloud { color: #FF5500; background: rgba(255, 85, 0, 0.08); border-color: rgba(255, 85, 0, 0.22); }
+.badge-facebook { color: #0866FF; background: rgba(8, 102, 255, 0.08); border-color: rgba(8, 102, 255, 0.22); }
+.badge-bandcamp { color: #1DA0C3; background: rgba(29, 160, 195, 0.08); border-color: rgba(29, 160, 195, 0.22); }
+.badge-rednote { color: #FF2442; background: rgba(255, 36, 66, 0.08); border-color: rgba(255, 36, 66, 0.22); }
+.badge-bluesky { color: #0285FF; background: rgba(2, 133, 255, 0.08); border-color: rgba(2, 133, 255, 0.22); }
+.badge-terabox { color: #2E5B88; background: rgba(46, 91, 136, 0.1); border-color: rgba(46, 91, 136, 0.25); }
+
+.platform-card:hover .badge-tiktok { box-shadow: 0 0 16px rgba(238, 29, 82, 0.25); }
+.platform-card:hover .badge-instagram { box-shadow: 0 0 16px rgba(225, 48, 108, 0.25); }
+.platform-card:hover .badge-youtube { box-shadow: 0 0 16px rgba(255, 0, 0, 0.25); }
+.platform-card:hover .badge-spotify { box-shadow: 0 0 16px rgba(30, 215, 96, 0.25); }
+.platform-card:hover .badge-applemusic { box-shadow: 0 0 16px rgba(252, 60, 68, 0.25); }
+.platform-card:hover .badge-pinterest { box-shadow: 0 0 16px rgba(230, 0, 35, 0.25); }
+.platform-card:hover .badge-x { box-shadow: 0 0 16px rgba(255, 255, 255, 0.15); }
+.platform-card:hover .badge-reddit { box-shadow: 0 0 16px rgba(255, 69, 0, 0.25); }
+.platform-card:hover .badge-pixiv { box-shadow: 0 0 16px rgba(0, 150, 250, 0.25); }
+.platform-card:hover .badge-bilibili { box-shadow: 0 0 16px rgba(0, 161, 214, 0.25); }
+.platform-card:hover .badge-soundcloud { box-shadow: 0 0 16px rgba(255, 85, 0, 0.25); }
+.platform-card:hover .badge-facebook { box-shadow: 0 0 16px rgba(8, 102, 255, 0.25); }
+.platform-card:hover .badge-bandcamp { box-shadow: 0 0 16px rgba(29, 160, 195, 0.25); }
+.platform-card:hover .badge-rednote { box-shadow: 0 0 16px rgba(255, 36, 66, 0.25); }
+.platform-card:hover .badge-bluesky { box-shadow: 0 0 16px rgba(2, 133, 255, 0.25); }
+.platform-card:hover .badge-terabox { box-shadow: 0 0 16px rgba(46, 91, 136, 0.3); }
 
 .platform-status {
   font-family: var(--font-mono);
