@@ -11,21 +11,21 @@
   <meta name="robots" content="index, follow" />
 
   <!-- Canonical URL -->
-  <link rel="canonical" href="https://github.com/elskyx/Skyc" />
+  <link rel="canonical" href="https://elskyx.github.io/About-Skyc/" />
 
   <!-- Open Graph / Social Meta -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Skyc · Save anything, from anywhere." />
   <meta property="og:description" content="Universal, Zero-Cloud, Client-Side Media Downloader for Android, Windows Desktop & CLI. 16+ platforms, no watermarks, no ads." />
-  <meta property="og:image" content="logo.svg" />
-  <meta property="og:url" content="https://github.com/elskyx/Skyc" />
+  <meta property="og:image" content="https://elskyx.github.io/About-Skyc/favicon.png" />
+  <meta property="og:url" content="https://elskyx.github.io/About-Skyc/" />
   <meta property="og:site_name" content="Skyc" />
 
   <!-- Twitter / X Meta -->
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Skyc · Save anything, from anywhere." />
   <meta name="twitter:description" content="Universal Zero-Cloud media downloader for Android, Windows, and CLI. 100% client-side, zero tracking." />
-  <meta name="twitter:image" content="logo.svg" />
+  <meta name="twitter:image" content="https://elskyx.github.io/About-Skyc/favicon.png" />
 
   <!-- Favicon -->
   <link rel="icon" href="logo.svg" type="image/svg+xml" />
@@ -115,6 +115,9 @@
   </script>
 </head>
 <body>
+  <!-- Viewport Scroll Reading Progress Bar -->
+  <div id="scrollProgress" class="scroll-progress-bar"></div>
+
   <!-- Ambient Botanical / Petal Canvas (Inspired by getmori.vercel.app with 21st.dev touch) -->
   <canvas id="ambient-canvas" aria-hidden="true"></canvas>
 
@@ -374,11 +377,24 @@
 
               <!-- Media Preview & Format Card -->
               <div class="sim-result-card" id="sim-result-card">
-                <div class="result-media-preview">
-                  <div class="media-thumb-box" id="sim-thumb-box">
-                    <img id="sim-thumb-img" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=480&q=80" alt="Media Preview Thumbnail" />
-                    <span class="media-duration" id="sim-media-duration">00:48</span>
-                    <span class="platform-icon-stamp" id="sim-platform-stamp">TikTok</span>
+                <div class="result-media-preview" id="sim-media-container">
+                  <div class="tiktok-preview-card">
+                    <div class="tiktok-badge-top">
+                      <span class="tiktok-watermark-free-pill">✓ No Watermark</span>
+                      <span style="font-size: 0.75rem; background: rgba(0,0,0,0.6); padding: 2px 8px; border-radius: 9999px;">1080p 60fps</span>
+                    </div>
+                    <div class="tiktok-play-overlay" id="simTiktokPlayBtn" onclick="toggleTiktokPlay(this)">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="tiktok-footer-meta">
+                      <div class="tiktok-sound-track">
+                        <div class="tiktok-vinyl-disc">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="#D97757"><circle cx="12" cy="12" r="3"/></svg>
+                        </div>
+                        <span>Original Audio - Ambient Echoes</span>
+                      </div>
+                      <span style="font-family: var(--font-mono); font-size: 0.75rem;">00:48</span>
+                    </div>
                   </div>
                 </div>
 
@@ -430,6 +446,11 @@
                       <span id="sim-dl-text">Simulate Save to Device</span>
                     </button>
                     <span class="save-path-hint" id="sim-save-path">Saved to: <code>Videos\Skyc\TikTok_7281920.mp4</code></span>
+                  </div>
+
+                  <!-- Simulated Live Download Progress Bar -->
+                  <div class="sim-progress-container" id="simProgressBar">
+                    <div class="sim-progress-bar-fill" id="simProgressFill"></div>
                   </div>
                 </div>
               </div>
@@ -509,6 +530,18 @@
         <p class="section-subtitle text-center">
           No separate tools for different sites. Skyc unifies multi-platform scraping into a single private client.
         </p>
+
+        <!-- Platform Search Bar -->
+        <div class="platform-search-wrapper">
+          <div class="platform-search-bar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="platformSearchInput" class="platform-search-input" placeholder="Search platforms (e.g. TikTok, Spotify, Bilibili...)" aria-label="Search platforms" />
+            <span class="platform-search-count" id="platformSearchCount">16 of 16 platforms</span>
+          </div>
+        </div>
 
         <!-- Category Filter Tabs -->
         <div class="platform-filters" role="tablist">
@@ -756,7 +789,7 @@
                 </div>
               </div>
               <div class="showcase-mockup">
-                <div class="phone-frame">
+                <div class="phone-frame" data-tilt>
                   <div class="phone-camera-notch"></div>
                   <div class="phone-screen">
                     <div class="app-ui-header">
@@ -806,7 +839,7 @@
                 </div>
               </div>
               <div class="showcase-mockup">
-                <div class="desktop-frame">
+                <div class="desktop-frame" data-tilt>
                   <div class="desktop-titlebar">
                     <span class="win-title">Skyc Desktop — v1.6.7 (x64)</span>
                     <div class="desktop-win-btns">
@@ -868,7 +901,7 @@
                 </div>
               </div>
               <div class="showcase-mockup">
-                <div class="terminal-frame">
+                <div class="terminal-frame" data-tilt>
                   <div class="term-header">
                     <span class="win-dot dot-red"></span>
                     <span class="win-dot dot-yellow"></span>
@@ -967,7 +1000,7 @@
 
         <div class="download-cards-grid">
           <!-- Android Card -->
-          <div class="portal-card" data-spotlight>
+          <div class="portal-card" data-spotlight data-tilt>
             <div class="portal-icon-header">
               <div class="platform-icon-circle">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -998,7 +1031,7 @@
           </div>
 
           <!-- Windows Card -->
-          <div class="portal-card" data-spotlight>
+          <div class="portal-card" data-spotlight data-tilt>
             <div class="portal-icon-header">
               <div class="platform-icon-circle">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1031,7 +1064,7 @@
           </div>
 
           <!-- CLI Card -->
-          <div class="portal-card" data-spotlight>
+          <div class="portal-card" data-spotlight data-tilt>
             <div class="portal-icon-header">
               <div class="platform-icon-circle">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
