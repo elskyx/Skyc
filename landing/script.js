@@ -56,6 +56,84 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // -------------------------------------------------------------------------
+  // 2b. Navigation Menu & Morphing Mobile Drawer (shadcn navigation-menu-4)
+  // -------------------------------------------------------------------------
+  const navHamburger = document.getElementById('nav-hamburger');
+  const mobileDrawer = document.getElementById('mobile-drawer');
+  const drawerClose = document.getElementById('drawer-close');
+
+  function toggleMobileDrawer(open) {
+    if (!mobileDrawer) return;
+    const isOpen = open !== undefined ? open : !mobileDrawer.classList.contains('open');
+    if (isOpen) {
+      mobileDrawer.classList.add('open');
+      mobileDrawer.setAttribute('aria-hidden', 'false');
+      if (navHamburger) navHamburger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    } else {
+      mobileDrawer.classList.remove('open');
+      mobileDrawer.setAttribute('aria-hidden', 'true');
+      if (navHamburger) navHamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+  }
+
+  if (navHamburger) {
+    navHamburger.addEventListener('click', () => toggleMobileDrawer());
+  }
+
+  if (drawerClose) {
+    drawerClose.addEventListener('click', () => toggleMobileDrawer(false));
+  }
+
+  // Close drawer when clicking any link
+  document.querySelectorAll('.drawer-link').forEach((link) => {
+    link.addEventListener('click', () => toggleMobileDrawer(false));
+  });
+
+  // Close drawer on Escape key or outside click
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileDrawer && mobileDrawer.classList.contains('open')) {
+      toggleMobileDrawer(false);
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (mobileDrawer && mobileDrawer.classList.contains('open')) {
+      if (!mobileDrawer.contains(e.target) && navHamburger && !navHamburger.contains(e.target)) {
+        toggleMobileDrawer(false);
+      }
+    }
+  });
+
+  // Desktop Navigation Menu Dropdown keyboard & click toggles
+  const navDropdownTriggers = document.querySelectorAll('.nav-menu-item.has-dropdown .nav-menu-trigger');
+  navDropdownTriggers.forEach((trigger) => {
+    const parentItem = trigger.closest('.nav-menu-item');
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+      navDropdownTriggers.forEach((t) => {
+        t.setAttribute('aria-expanded', 'false');
+        t.closest('.nav-menu-item')?.classList.remove('open');
+      });
+      if (!isExpanded) {
+        trigger.setAttribute('aria-expanded', 'true');
+        parentItem?.classList.add('open');
+      }
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-menu-item.has-dropdown')) {
+      navDropdownTriggers.forEach((t) => {
+        t.setAttribute('aria-expanded', 'false');
+        t.closest('.nav-menu-item')?.classList.remove('open');
+      });
+    }
+  });
+
+  // -------------------------------------------------------------------------
   // 3. 21st.dev Specular Spotlight Card System ([data-spotlight])
   // -------------------------------------------------------------------------
   const spotlightElements = document.querySelectorAll('[data-spotlight]');

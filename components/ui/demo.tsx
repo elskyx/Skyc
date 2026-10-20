@@ -1,13 +1,13 @@
 "use client"
 
+import NavigationMenu4 from "@/components/ui/navigation-menu-4"
 import SculptureHero from "@/components/ui/liquid-sculpture-hero"
 import HalftoneWordmarkFooter from "@/components/ui/halftone-wordmark-footer"
 
 export default function Demo() {
-  // w-full matters: 21st centres demos in a flex wrapper, and a flex item
-  // left at width:auto shrinks the canvas to 0px wide.
   return (
     <div className="w-full flex flex-col min-h-screen bg-[#FAF9F5] text-[#141413]">
+      <NavigationMenu4 />
       <SculptureHero
         brand="Skyc®"
         eyebrow="Zero-Cloud Media Engine — v1.6.7"
@@ -21,7 +21,7 @@ export default function Demo() {
         src="./favicon.png"
         darkSrc="./favicon.png"
       />
-      <div className="w-full">
+      <div className="w-full mt-auto">
         <HalftoneWordmarkFooter wordmark="skyc" />
       </div>
     </div>
