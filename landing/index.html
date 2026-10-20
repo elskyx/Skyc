@@ -1251,55 +1251,53 @@
     <span class="toast-message" id="toast-text">Action completed successfully.</span>
   </div>
 
-  <!-- Footer -->
-  <footer class="page-footer">
-    <div class="footer-container">
-      <div class="footer-top-row">
-        <div class="footer-brand">
-          <div class="brand-logo-frame">
+  <!-- Halftone Wordmark Footer (21st.dev Design Engineering) -->
+  <footer id="halftone-footer" class="hwf-root" style="height: 560px; --hwf-bg: #0c0c0b; --hwf-ink: #FAF9F5; --hwf-warm: #D97757; --hwf-mono: 'JetBrains Mono', monospace;">
+    <canvas id="hwf-canvas" aria-hidden="true"></canvas>
+    <span class="hwf-sr">skyc</span>
+    <div class="hwf-top">
+      <div class="hwf-brand">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+          <div class="brand-logo-frame" style="width:32px; height:32px; border-radius:8px; border: 1px solid rgba(225, 185, 110, 0.4);">
             <img src="logo.svg" alt="Skyc Logo" width="32" height="32" />
           </div>
-          <span class="footer-title">Skyc</span>
-          <p class="footer-desc">
-            Universal, Zero-Cloud, Client-Side Media Downloader for Android, Windows Desktop & Terminal CLI.
-          </p>
+          <strong style="font-size: 13px; letter-spacing: 0.15em;">SKYC MEDIA SUITE</strong>
         </div>
-
-        <div class="footer-links-group">
-          <div class="footer-col">
-            <span class="footer-heading">Product</span>
-            <ul>
-              <li><a href="#simulator">Live Simulator</a></li>
-              <li><a href="#how-it-works">How It Works</a></li>
-              <li><a href="#platforms">Supported Platforms</a></li>
-              <li><a href="#showcase">Desktop & Mobile</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <span class="footer-heading">Downloads</span>
-            <ul>
-              <li><a href="https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc-v1.6.7.apk">Android APK</a></li>
-              <li><a href="https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc_1.6.7_x64-setup.exe">Windows Installer</a></li>
-              <li><a href="https://www.npmjs.com/package/@elskyx/skyc" target="_blank" rel="noopener">npm Package</a></li>
-              <li><a href="https://github.com/elskyx/Skyc/releases">Release Notes</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <span class="footer-heading">Open Source</span>
-            <ul>
-              <li><a href="https://github.com/elskyx/Skyc" target="_blank" rel="noopener">GitHub Repository</a></li>
-              <li><a href="https://github.com/elskyx/Skyc/issues" target="_blank" rel="noopener">Report Issue</a></li>
-              <li><a href="https://github.com/elskyx/Skyc/blob/main/LICENSE" target="_blank" rel="noopener">GPL-3.0 License</a></li>
-              <li><a href="https://github.com/coflyn/Mori" target="_blank" rel="noopener">Inspired by Mori</a></li>
-            </ul>
-          </div>
-        </div>
+        <span>©2026 · Client-Side · Zero-Cloud · v1.6.7</span>
       </div>
-
-      <div class="footer-bottom-row">
-        <span>&copy; 2026 Skyc Project (<a href="https://github.com/elskyx/Skyc" target="_blank" rel="noopener">elskyx/Skyc</a>). Licensed under GNU General Public License v3.0.</span>
-        <span>Crafted with Claude Editorial &amp; 21st.dev Design Engineering.</span>
-      </div>
+      <nav class="hwf-col" aria-label="Product">
+        <h3>Product</h3>
+        <ul>
+          <li><a href="#simulator">Live Simulator</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#platforms">Supported Platforms</a></li>
+          <li><a href="#showcase">Desktop & Mobile</a></li>
+        </ul>
+      </nav>
+      <nav class="hwf-col" aria-label="Downloads">
+        <h3>Downloads</h3>
+        <ul>
+          <li><a href="https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc-v1.6.7.apk">Android APK</a></li>
+          <li><a href="https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc_1.6.7_x64-setup.exe">Windows Setup</a></li>
+          <li><a href="https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc_1.6.7_x64_en-US.msi">MSI Installer</a></li>
+          <li><a href="https://www.npmjs.com/package/@elskyx/skyc" target="_blank" rel="noopener">npm CLI</a></li>
+        </ul>
+      </nav>
+      <nav class="hwf-col" aria-label="Open Source">
+        <h3>Open Source</h3>
+        <ul>
+          <li><a href="https://github.com/elskyx/Skyc" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://github.com/elskyx/Skyc/issues" target="_blank" rel="noopener">Report Issue</a></li>
+          <li><a href="https://github.com/elskyx/Skyc/blob/main/LICENSE" target="_blank" rel="noopener">GPL-3.0 License</a></li>
+          <li><a href="https://github.com/coflyn/Mori" target="_blank" rel="noopener">Inspired by Mori</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="hwf-rule">
+      <span class="hwf-hint" style="margin-right: auto; opacity: 0.45; font-size: 10px; text-transform: none; letter-spacing: normal;">Hover across dots to scatter on springs · Click to trigger shockwave ring</span>
+      <button type="button" class="hwf-up" id="hwf-back-to-top">
+        Back to top ↑
+      </button>
     </div>
   </footer>
 
