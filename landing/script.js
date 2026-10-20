@@ -966,4 +966,190 @@ document.addEventListener('DOMContentLoaded', () => {
     wake();
   })();
 
+  // -------------------------------------------------------------------------
+  // 10. 3D Cylindrical Tilted Grid Hero Engine (21st.dev Component with Skyc Snapshots)
+  // -------------------------------------------------------------------------
+  (function initTiltedGridHero() {
+    const container = document.getElementById('hero-tilted-grid');
+    if (!container) return;
+
+    const SKYC_SNAPSHOTS = [
+      {
+        src: 'assets/snapshots/skyc-home-dark.png',
+        alt: 'Skyc URL Composer • Claude Obsidian Dark Mode'
+      },
+      {
+        src: 'assets/snapshots/skyc-home-light.png',
+        alt: 'Skyc URL Composer • Warm Parchment Light Mode'
+      },
+      {
+        src: 'assets/snapshots/skyc-batch.png',
+        alt: 'Skyc Multi-Stream Batch Downloader Queue'
+      },
+      {
+        src: 'assets/snapshots/skyc-downloads.png',
+        alt: 'Skyc Media Player & Downloads Gallery'
+      },
+      {
+        src: 'assets/snapshots/skyc-platforms.png',
+        alt: 'Skyc 16+ Supported Social Media Platforms'
+      },
+      {
+        src: 'assets/snapshots/skyc-settings.png',
+        alt: 'Skyc Zero-Cloud Storage & OTA Settings'
+      }
+    ];
+
+    // Preload images
+    SKYC_SNAPSHOTS.forEach(item => {
+      const img = new Image();
+      img.src = item.src;
+    });
+
+    const SLICES = 16;
+    const CAMERA = 1.6;
+    const MAX_WIDTH = 55;
+    const tileHeight = 64; // % of hero container height
+    const aspectRatio = 16 / 9;
+    const gap = 8;
+    const axis = 50; // % vertical center
+    const curve = 72; // degrees
+    const fade = 12;
+    const speed = 4.5; // seconds per tile
+
+    const bend = (Math.min(85, Math.max(5, curve)) * Math.PI) / 180;
+
+    function arc(b) {
+      return (CAMERA - 1 + Math.cos(b)) / (2 * CAMERA * Math.sin(b));
+    }
+
+    function measure(width, height) {
+      const h = Math.min(
+        (tileHeight / 100) * height,
+        ((MAX_WIDTH / 100) * width) / aspectRatio
+      );
+      const radius = width * arc(bend);
+      if (!(h > 0) || !(radius > 0)) return { columns: 2, sweep: 0, unit: 0, limit: 0 };
+      const deg = (rad) => (rad * 180) / Math.PI;
+      const unit = deg(h / radius);
+      const pitch = (aspectRatio + gap / 100) * unit;
+      const limit = deg(bend) + (aspectRatio * unit) / 2;
+      const columns = Math.min(60, Math.max(2, Math.ceil((2 * limit) / pitch)));
+      const round = (n) => +n.toFixed(4);
+      const sweep = round((columns * pitch) / 2);
+      return { columns, sweep, unit: round(unit), limit: round(Math.min(sweep, limit)) };
+    }
+
+    let styleEl = document.getElementById('tgh-style-tag');
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'tgh-style-tag';
+      document.head.appendChild(styleEl);
+    }
+
+    const bandWrapper = document.createElement('div');
+    bandWrapper.className = 'tgh-band-wrapper';
+    bandWrapper.setAttribute('aria-hidden', 'true');
+    container.innerHTML = '';
+    container.appendChild(bandWrapper);
+
+    let currentCols = 0;
+    let currentSweep = 0;
+
+    function renderCylinder() {
+      const rect = container.getBoundingClientRect();
+      const width = rect.width || 1080;
+      const height = rect.height || 480;
+      const layout = measure(width, height);
+
+      if (layout.columns === currentCols && layout.sweep === currentSweep) {
+        return;
+      }
+      currentCols = layout.columns;
+      currentSweep = layout.sweep;
+
+      const { columns, sweep, unit, limit } = layout;
+      const r = 100 * arc(bend);
+      const radius = `${+r.toFixed(3)}cqw`;
+      const turn = (deg) => `translateZ(${radius}) rotateY(${+deg.toFixed(4)}deg) translateZ(-${radius})`;
+      const hide = +(((sweep - limit) / (2 * sweep || 1)) * 100).toFixed(4);
+      const orbit = 'tgh-orbit-hero';
+      const duration = columns * speed;
+      const share = aspectRatio / SLICES;
+
+      styleEl.textContent = `
+        @keyframes ${orbit} {
+          from { transform: ${turn(-sweep)}; }
+          to { transform: ${turn(sweep)}; }
+          0%, ${hide}%, ${100 - hide}%, 100% { visibility: hidden; }
+          ${hide + 0.001}%, ${100 - hide - 0.001}% { visibility: visible; }
+        }
+      `;
+
+      const mask = `linear-gradient(90deg, transparent, #000 ${fade}%, #000 ${100 - fade}%, transparent)`;
+      bandWrapper.style.perspective = `${+(r * CAMERA).toFixed(3)}cqw`;
+      bandWrapper.style.perspectiveOrigin = `50% ${axis}%`;
+      bandWrapper.style.maskImage = mask;
+      bandWrapper.style.webkitMaskImage = mask;
+      bandWrapper.style.opacity = '1';
+
+      bandWrapper.innerHTML = '';
+
+      const u = (n) => `calc(${+n.toFixed(4)} * min(${tileHeight}cqh, ${+(MAX_WIDTH / aspectRatio).toFixed(4)}cqw))`;
+
+      for (let t = 0; t < columns; t++) {
+        const first = columns - 1 - t;
+        const initialImg = SKYC_SNAPSHOTS[first % SKYC_SNAPSHOTS.length];
+
+        const tileEl = document.createElement('div');
+        tileEl.className = 'tgh-tile-hero';
+        tileEl.style.left = `calc(50% - ${u(aspectRatio / 2)})`;
+        tileEl.style.top = `calc(${axis}% - ${u(0.5)})`;
+        tileEl.style.width = u(aspectRatio);
+        tileEl.style.height = u(1);
+        tileEl.style.animation = `${orbit} ${duration}s linear ${-t * speed}s infinite`;
+
+        for (let k = 0; k < SLICES; k++) {
+          const sliceEl = document.createElement('div');
+          sliceEl.className = 'tgh-slice' + (k === 0 ? ' tgh-slice-first' : '') + (k === SLICES - 1 ? ' tgh-slice-last' : '');
+          sliceEl.style.left = u((aspectRatio - share) / 2);
+          sliceEl.style.width = k === SLICES - 1 ? u(share) : `calc(${u(share)} + 1px)`;
+          sliceEl.style.height = u(1);
+          sliceEl.style.transform = turn((aspectRatio / 2 - (k + 0.5) * share) * unit);
+
+          const imgEl = document.createElement('img');
+          imgEl.src = initialImg.src;
+          imgEl.alt = k === 0 ? (initialImg.alt || '') : '';
+          imgEl.draggable = false;
+          imgEl.style.left = u(-k * share);
+          imgEl.style.width = u(aspectRatio);
+          imgEl.style.height = u(1);
+
+          sliceEl.appendChild(imgEl);
+          tileEl.appendChild(sliceEl);
+        }
+
+        tileEl.addEventListener('animationiteration', (e) => {
+          const lap = Math.round(e.elapsedTime / duration);
+          const next = lap * columns + first;
+          const nextImg = SKYC_SNAPSHOTS[next % SKYC_SNAPSHOTS.length];
+          const imgElements = tileEl.querySelectorAll('img');
+          imgElements.forEach(img => {
+            img.src = nextImg.src;
+            if (img.alt) img.alt = nextImg.alt;
+          });
+        });
+
+        bandWrapper.appendChild(tileEl);
+      }
+    }
+
+    const ro = new ResizeObserver(() => {
+      renderCylinder();
+    });
+    ro.observe(container);
+
+    renderCylinder();
+  })();
+
 });
