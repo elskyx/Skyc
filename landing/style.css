@@ -123,16 +123,39 @@ body.canvas-disabled #ambient-canvas {
   opacity: 0;
 }
 
+/* Analog Film Grain Overlay (Anti-Slop Craft) */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 99999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
 /* Main Container Wrappers */
 .section-container,
 .nav-container,
-.hero-container,
 .footer-container {
   max-width: 1140px;
   margin: 0 auto;
   padding: 0 1.5rem;
   position: relative;
   z-index: 1;
+}
+
+.hero-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 /* Typography Utility */
@@ -211,7 +234,8 @@ h1, h2, h3, h4 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 72px;
+  height: 64px;
+  gap: 1.25rem;
 }
 
 .brand-link {
@@ -220,12 +244,13 @@ h1, h2, h3, h4 {
   gap: 0.75rem;
   text-decoration: none;
   color: var(--text-primary);
+  flex-shrink: 0;
 }
 
 .brand-logo-frame {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -233,6 +258,7 @@ h1, h2, h3, h4 {
   background-color: #191918;
   border: 1px solid #333330;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
 }
 
 .brand-logo-frame img {
@@ -245,13 +271,15 @@ h1, h2, h3, h4 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .brand-name {
   font-family: var(--font-serif);
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 500;
   letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
 .brand-badge {
@@ -262,18 +290,20 @@ h1, h2, h3, h4 {
   color: var(--accent);
   border-radius: var(--radius-pill);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 /* Desktop Navigation Menu (shadcn navigation-menu-4) */
 .nav-menu-wrapper {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .nav-menu-list {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.25rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -548,11 +578,11 @@ h1, h2, h3, h4 {
   transform: translateY(0) rotate(135deg);
 }
 
-/* Icon Buttons (Theme & Canvas toggle) */
+/* Icon Buttons (Theme toggle) */
 .btn-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-pill);
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
@@ -561,6 +591,7 @@ h1, h2, h3, h4 {
   justify-content: center;
   cursor: pointer;
   transition: all var(--transition-fast);
+  padding: 0;
 }
 
 .btn-icon:hover {
@@ -579,15 +610,17 @@ h1, h2, h3, h4 {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.5rem 0.9rem;
-  border-radius: var(--radius-pill);
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 8px;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
-  font-size: 0.88rem;
-  font-weight: 600;
+  font-size: 0.82rem;
+  font-weight: 500;
   text-decoration: none;
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
 .btn-github:hover {
@@ -597,11 +630,42 @@ h1, h2, h3, h4 {
 
 .gh-counter {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   background-color: var(--bg-elevated);
-  padding: 0.1rem 0.45rem;
-  border-radius: var(--radius-pill);
+  padding: 0.1rem 0.4rem;
+  border-radius: 6px;
   color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Restrained, Studio-Grade Nav CTA (Anti-Slop Craft) */
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border-radius: 8px;
+  background-color: var(--accent);
+  color: #FFFFFF;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.nav-cta:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(217, 119, 87, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.nav-cta:active {
+  transform: translateY(0);
 }
 
 /* CTA Buttons */
@@ -786,9 +850,22 @@ h1, h2, h3, h4 {
    Hero Section
    ========================================================================== */
 .hero-section {
-  padding: 5rem 0 4rem;
-  text-align: center;
+  padding: 5.5rem 0 4rem;
   position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 760px;
+  height: 520px;
+  background: radial-gradient(ellipse at center, rgba(217, 119, 87, 0.08) 0%, rgba(217, 119, 87, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .hero-pill-badge {
@@ -836,10 +913,10 @@ h1, h2, h3, h4 {
 }
 
 .hero-lead {
-  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  font-size: clamp(1.05rem, 2vw, 1.22rem);
   color: var(--text-secondary);
   max-width: 720px;
-  margin: 0 auto 2.5rem;
+  margin: 0 auto 2.25rem;
   line-height: 1.65;
 }
 
@@ -854,7 +931,66 @@ h1, h2, h3, h4 {
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 2.25rem;
+  margin-bottom: 2rem;
+}
+
+/* Primary Hero Action Button */
+.hero-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  height: 44px;
+  padding: 0 1.6rem;
+  border-radius: 10px;
+  background-color: var(--accent);
+  color: #FFFFFF;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 8px rgba(217, 119, 87, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: all var(--transition-normal);
+}
+
+.hero-btn-primary:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(217, 119, 87, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.hero-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary Hero Action Button */
+.hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  height: 44px;
+  padding: 0 1.5rem;
+  border-radius: 10px;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid var(--border-medium);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all var(--transition-normal);
+}
+
+.hero-btn-secondary:hover {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-strong, rgba(255, 255, 255, 0.2));
+  transform: translateY(-2px);
+  color: var(--text-primary);
+}
+
+.hero-btn-secondary:active {
+  transform: translateY(0);
 }
 
 /* Hero CLI snippet bar */
@@ -864,12 +1000,12 @@ h1, h2, h3, h4 {
   gap: 0.75rem;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  padding: 0.5rem 1.1rem;
-  border-radius: var(--radius-pill);
+  padding: 0.45rem 1.1rem;
+  border-radius: 8px;
   font-family: var(--font-mono);
-  font-size: 0.88rem;
-  margin-bottom: 2.25rem;
-  box-shadow: var(--shadow-subtle);
+  font-size: 0.86rem;
+  margin: 0 auto 2.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .cli-prompt-symbol {
@@ -1027,44 +1163,52 @@ h1, h2, h3, h4 {
   50% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 8px var(--accent); }
 }
 
-/* Hero Metrics */
+/* Hero Metrics Bento Strip (Anti-Slop Craft) */
 .hero-metrics-grid {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  background-color: var(--bg-surface);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  max-width: 820px;
+  background-color: var(--border-subtle);
   border: 1px solid var(--border-subtle);
-  padding: 1.25rem 2.5rem;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-  flex-wrap: wrap;
+  overflow: hidden;
+  gap: 1px;
+  margin: 0 auto;
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.05);
 }
 
-.metric-item {
+.hero-metrics-grid .metric-item {
+  background-color: var(--bg-surface);
+  padding: 1.25rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.2rem;
+  justify-content: center;
+  gap: 0.35rem;
+  transition: background-color var(--transition-fast);
 }
 
-.metric-val {
+.hero-metrics-grid .metric-item:hover {
+  background-color: var(--bg-elevated);
+}
+
+.hero-metrics-grid .metric-val {
   font-family: var(--font-serif);
-  font-size: 1.85rem;
+  font-size: 2.1rem;
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
-.metric-lbl {
-  font-size: 0.82rem;
-  color: var(--text-muted);
+.hero-metrics-grid .metric-lbl {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   font-weight: 500;
-}
-
-.metric-divider {
-  width: 1px;
-  height: 36px;
-  background-color: var(--border-subtle);
 }
 
 /* ==========================================================================
@@ -2446,13 +2590,7 @@ h1, h2, h3, h4 {
 
 @media (max-width: 768px) {
   .hero-metrics-grid {
-    flex-direction: column;
-    gap: 1.25rem;
-    padding: 1.5rem;
-  }
-  .metric-divider {
-    width: 60px;
-    height: 1px;
+    grid-template-columns: repeat(2, 1fr);
   }
   .sim-input-row {
     flex-direction: column;

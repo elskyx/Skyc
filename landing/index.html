@@ -118,8 +118,8 @@
   <!-- Viewport Scroll Reading Progress Bar -->
   <div id="scrollProgress" class="scroll-progress-bar"></div>
 
-  <!-- Ambient Botanical / Petal Canvas (Inspired by getmori.vercel.app with 21st.dev touch) -->
-  <canvas id="ambient-canvas" aria-hidden="true"></canvas>
+  <!-- Analog Film Grain Overlay (Anti-Slop Craft) -->
+  <div class="grain-overlay" aria-hidden="true"></div>
 
   <!-- Navigation Bar -->
   <nav id="navbar" class="navbar" role="navigation" aria-label="Main Navigation">
@@ -259,13 +259,6 @@
           </svg>
         </button>
 
-        <!-- Canvas Toggle Button -->
-        <button id="canvas-toggle" class="btn-icon" aria-label="Toggle ambient canvas particles" title="Ambient Particles">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-          </svg>
-        </button>
-
         <!-- GitHub Stars Button -->
         <a href="https://github.com/elskyx/Skyc" target="_blank" rel="noopener" class="btn-github" aria-label="View on GitHub">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -276,7 +269,7 @@
         </a>
 
         <!-- Primary CTA -->
-        <a href="#downloads" class="btn btn-primary nav-cta">Get Skyc</a>
+        <a href="#downloads" class="nav-cta">Get Skyc</a>
 
         <!-- Morphing Hamburger for Mobile (shadcn popover trigger) -->
         <button class="nav-hamburger-morph" id="nav-hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-drawer">
@@ -367,20 +360,20 @@
 
         <!-- Subtitle -->
         <p class="hero-lead">
-          The privacy-first media downloader suite for <strong>Android</strong>, <strong>Windows Desktop</strong>, and <strong>Terminal CLI</strong>. Designed with a warm Claude Editorial aesthetic. No watermarks, no middleman servers, and zero ads.
+          Universal, zero-cloud media downloader for <strong>Android</strong>, <strong>Windows Desktop</strong>, and <strong>Terminal CLI</strong>. Pristine multi-stream extraction from 16+ platforms with zero watermarks, zero tracking, and no external servers.
         </p>
 
         <!-- Action Buttons -->
         <div class="hero-actions">
-          <a href="#downloads" class="btn btn-primary btn-lg">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <a href="#downloads" class="hero-btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
             </svg>
             <span>Download Skyc</span>
           </a>
 
-          <a href="#simulator" class="btn btn-secondary btn-lg">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <a href="#simulator" class="hero-btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="5 3 19 12 5 21 5 3"/>
             </svg>
             <span>Try Live Simulator</span>
@@ -392,7 +385,7 @@
           <div class="cli-prompt-symbol">$</div>
           <code class="cli-command" id="hero-cli-code">npx @elskyx/skyc</code>
           <button class="cli-copy-btn" id="hero-cli-copy" aria-label="Copy CLI Command" title="Copy Command">
-            <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
             </svg>
@@ -412,23 +405,20 @@
           </div>
         </div>
 
-        <!-- Key Capability Badges -->
+        <!-- Key Capability Badges (Bento Strip) -->
         <div class="hero-metrics-grid">
           <div class="metric-item">
             <span class="metric-val">16+</span>
             <span class="metric-lbl">Supported Platforms</span>
           </div>
-          <div class="metric-divider"></div>
           <div class="metric-item">
             <span class="metric-val">100%</span>
             <span class="metric-lbl">Client-Side Scrapers</span>
           </div>
-          <div class="metric-divider"></div>
           <div class="metric-item">
             <span class="metric-val">0</span>
             <span class="metric-lbl">Tracking or Cloud Logs</span>
           </div>
-          <div class="metric-divider"></div>
           <div class="metric-item">
             <span class="metric-val">OTA</span>
             <span class="metric-lbl">Hot-Patch Updates</span>
@@ -1437,7 +1427,6 @@
       </nav>
     </div>
     <div class="hwf-rule">
-      <span class="hwf-hint" style="margin-right: auto; opacity: 0.45; font-size: 10px; text-transform: none; letter-spacing: normal;">Hover across dots to scatter on springs · Click to trigger shockwave ring</span>
       <button type="button" class="hwf-up" id="hwf-back-to-top">
         Back to top ↑
       </button>
