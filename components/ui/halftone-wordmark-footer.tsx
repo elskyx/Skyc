@@ -247,11 +247,17 @@ export default function HalftoneWordmarkFooter({
       const face = o.fontWeight + " 100px " + o.fontFamily
       m.font = face
       const word = o.wordmark || " "
-      const fit = hwfFitSize(m.measureText(word).width, w * 1.02)
+      const ruleEl = root.querySelector(".hwf-rule")
+      const ruleBottom = ruleEl ? (ruleEl.getBoundingClientRect().bottom - rect.top) : 210
+      const safeGap = 48
+      const maxAvailableHeight = Math.max(100, h - ruleBottom - safeGap)
+      const c = Math.max(0, Math.min(0.6, o.crop))
+      const maxFitFromHeight = maxAvailableHeight / ((1 - c) * 0.78)
+      const maxFitFromWidth = hwfFitSize(m.measureText(word).width, w * 0.82)
+      const fit = Math.max(60, Math.min(maxFitFromWidth, maxFitFromHeight))
       m.font = o.fontWeight + " " + fit + "px " + o.fontFamily
       const box = m.measureText(word)
-      const cap = box.actualBoundingBoxAscent || fit * 0.72
-      const c = Math.max(0, Math.min(0.6, o.crop))
+      const cap = box.actualBoundingBoxAscent || fit * 0.75
       m.fillStyle = "#000"
       m.textBaseline = "alphabetic"
       m.fillText(word, (w - box.width) / 2, h + cap * c)

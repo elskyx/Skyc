@@ -835,10 +835,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       m.font = fontWeight + ' 100px ' + fontFamily;
       const measure = m.measureText(wordmark).width;
-      const fit = measure > 0 ? (w * 1.02 / measure) * 100 : 100;
+
+      // Ensure wordmark scales elegantly and never touches or overlaps with the .hwf-rule hairline border
+      const ruleEl = root.querySelector('.hwf-rule');
+      const ruleBottom = ruleEl ? (ruleEl.getBoundingClientRect().bottom - rect.top) : 210;
+      const safeGap = 48; // Generous clearance below the hairline rule
+      const maxAvailableHeight = Math.max(100, h - ruleBottom - safeGap);
+      const maxFitFromHeight = maxAvailableHeight / ((1 - crop) * 0.78);
+      const maxFitFromWidth = measure > 0 ? (w * 0.82 / measure) * 100 : 100;
+      const fit = Math.max(60, Math.min(maxFitFromWidth, maxFitFromHeight));
+
       m.font = fontWeight + ' ' + fit + 'px ' + fontFamily;
       const box = m.measureText(wordmark);
-      const cap = box.actualBoundingBoxAscent || fit * 0.72;
+      const cap = box.actualBoundingBoxAscent || fit * 0.75;
       m.fillStyle = '#000';
       m.textBaseline = 'alphabetic';
       m.fillText(wordmark, (w - box.width) / 2, h + cap * crop);
