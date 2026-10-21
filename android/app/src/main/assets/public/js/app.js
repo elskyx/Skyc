@@ -52,11 +52,83 @@ document.addEventListener("DOMContentLoaded", () => {
   const exportHistBtn = document.getElementById("exportHistoryBtn");
   if (exportHistBtn) exportHistBtn.addEventListener("click", exportHistoryJson);
 
-  // 7. Background OTA Scraper Patch Check (silent)
+  // 7. 21st.dev Mouse Spotlight & 3D Tilt Motion
+  safeInit("spotlightMotion", initSpotlightAnd3DTilt);
+
+  // 8. Header Theme Toggle Switcher
+  safeInit("headerThemeToggle", initHeaderThemeToggle);
+
+  // 9. Background OTA Scraper Patch Check (silent)
   setTimeout(() => {
     safeInit("otaCheck", () => checkOtaScraperUpdate(false));
   }, 3500);
 });
+
+function initHeaderThemeToggle() {
+  const toggleBtn = document.getElementById("themeToggleBtn");
+  if (!toggleBtn) return;
+
+  const currentTheme = localStorage.getItem("skyc_theme") || "light";
+  document.documentElement.setAttribute("data-theme", currentTheme);
+
+  toggleBtn.addEventListener("click", () => {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const newTheme = isDark ? "light" : "dark";
+
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("skyc_theme", newTheme);
+
+    // Sync theme settings chips
+    document.querySelectorAll(".theme-chip-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.getAttribute("data-theme-val") === newTheme);
+    });
+
+    triggerHaptic("light");
+  });
+}
+
+function initSpotlightAnd3DTilt() {
+  const spotlightElements = document.querySelectorAll("[data-spotlight], .claude-url-composer, .claude-card");
+
+  spotlightElements.forEach((el) => {
+    el.addEventListener("mousemove", (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      el.style.setProperty("--mouse-x", `${x}px`);
+      el.style.setProperty("--mouse-y", `${y}px`);
+
+      // 3D perspective tilt on desktop viewport
+      if (window.innerWidth > 768 && el.classList.contains("claude-url-composer")) {
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -3;
+        const rotateY = ((x - centerX) / centerX) * 3;
+        el.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(4px)`;
+      }
+    });
+
+    el.addEventListener("mouseleave", () => {
+      if (el.classList.contains("claude-url-composer")) {
+        el.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)";
+      }
+    });
+  });
+
+  // Clicking platform pills gives instant tactile feedback and focuses input
+  const platformPills = document.querySelectorAll(".platform-pill");
+  const composerInput = document.getElementById("composerUrlInput");
+  if (composerInput) {
+    platformPills.forEach((pill) => {
+      pill.addEventListener("click", () => {
+        const name = pill.querySelector("span")?.textContent || pill.textContent.trim();
+        composerInput.focus();
+        showToast(`Ready for ${name} link`, "info");
+        triggerHaptic("light");
+      });
+    });
+  }
+}
 
 function initNavigationRouter() {
   const tabs = document.querySelectorAll(".nav-tab-btn");

@@ -39,3 +39,8 @@ Desktop.ini
 
 # User downloads & temporary media
 downloads/
+
+# IDE & Agent Configs
+.agents/
+.cursor/
+.mcp.json

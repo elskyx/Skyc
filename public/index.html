@@ -23,19 +23,42 @@
 <body>
   <!-- Live Ambient Canvas Background -->
   <canvas id="ambientCanvas"></canvas>
+  <!-- Analog Film Grain Overlay (Studio Craft) -->
+  <div class="grain-overlay" aria-hidden="true"></div>
 
   <div class="app-viewport">
     <!-- Top Header -->
     <header class="app-header">
       <div class="brand-mark">
         <div class="brand-logo-icon">
-          <img src="logo.svg" alt="Skyc" width="34" height="34" />
+          <img src="assets/logos/concept-4-sky-capsule.svg" alt="Skyc" width="36" height="36" />
         </div>
-        <span class="brand-title">Skyc</span>
-        <span class="brand-tag">Zero-Cloud</span>
+        <div class="brand-text-group">
+          <span class="brand-title">Skyc</span>
+          <span class="brand-tag">Zero-Cloud</span>
+        </div>
       </div>
       <div class="header-actions">
-        <span id="headerOtaStatus" class="badge badge-neutral">Core v1.6.7</span>
+        <button id="themeToggleBtn" class="header-icon-btn" title="Toggle theme (Light / Dark)" aria-label="Toggle visual theme">
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+        <div class="badge-status-pill">
+          <span class="status-dot-pulse"></span>
+          <span id="headerOtaStatus">Core v1.6.7</span>
+        </div>
       </div>
     </header>
 
@@ -47,86 +70,141 @@
         <div class="home-section">
           <!-- Hero Greeting -->
           <div class="hero-greeting-container">
-            <h1 class="hero-greeting">Save anything, from anywhere.</h1>
-            <p class="hero-subtext">Watermark-free videos, photos, and music from 16+ platforms. 100% client-side.</p>
+            <div class="hero-capability-badge">
+              <span class="pulse-dot"></span>
+              <span>Zero-Cloud Native Engine • 100% Client-Side</span>
+            </div>
+            <h1 class="hero-greeting">Save anything, <em>from anywhere.</em></h1>
+            <p class="hero-subtext">Watermark-free videos, photos, and music from 16+ platforms. 100% client-side privacy.</p>
           </div>
 
-          <!-- Claude Prompt-Style URL Composer -->
-          <div class="claude-url-composer">
-            <div class="composer-input-row">
-              <div class="composer-input-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
-                  <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
-                </svg>
+          <!-- Claude Prompt-Style 3D URL Composer -->
+          <div class="composer-perspective-wrapper" data-spotlight>
+            <div class="claude-url-composer">
+              <div class="composer-input-row">
+                <div class="composer-input-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+                    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+                  </svg>
+                </div>
+                <textarea id="composerUrlInput" class="composer-textarea" rows="1" placeholder="Paste link from TikTok, Instagram, YouTube, Spotify, X..."></textarea>
               </div>
-              <textarea id="composerUrlInput" class="composer-textarea" rows="1" placeholder="Paste link from TikTok, Instagram, YouTube, Spotify, X..."></textarea>
-            </div>
-            
-            <div class="composer-controls-row">
-              <div class="composer-tools-left">
-                <button id="composerPasteBtn" class="tool-chip-btn" title="Paste from clipboard">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>
-                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+              
+              <div class="composer-controls-row">
+                <div class="composer-tools-left">
+                  <button id="composerPasteBtn" class="tool-chip-btn" title="Paste from clipboard">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>
+                      <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                    </svg>
+                    <span>Paste</span>
+                  </button>
+                  <button id="batchToggleBtn" class="tool-chip-btn" title="Multi-link Batch Mode">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="7" height="7"/>
+                      <rect x="14" y="3" width="7" height="7"/>
+                      <rect x="14" y="14" width="7" height="7"/>
+                      <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <span>Batch</span>
+                  </button>
+                  <button id="composerClearBtn" class="tool-chip-btn" style="display:none;" title="Clear input">
+                    <span>Clear</span>
+                  </button>
+                </div>
+
+                <button id="analyzeBtn" class="composer-submit-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
                   </svg>
-                  <span>Paste</span>
-                </button>
-                <button id="batchToggleBtn" class="tool-chip-btn" title="Multi-link Batch Mode">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7"/>
-                    <rect x="14" y="3" width="7" height="7"/>
-                    <rect x="14" y="14" width="7" height="7"/>
-                    <rect x="3" y="14" width="7" height="7"/>
-                  </svg>
-                  <span>Batch</span>
-                </button>
-                <button id="composerClearBtn" class="tool-chip-btn" style="display:none;" title="Clear input">
-                  <span>Clear</span>
+                  <span>Analyze</span>
                 </button>
               </div>
 
-              <button id="analyzeBtn" class="composer-submit-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-                </svg>
-                <span>Analyze</span>
-              </button>
-            </div>
-
-            <!-- Inline Live Status & Feedback Banner -->
-            <div id="composerStatusBanner" class="composer-status-banner">
-              <div class="composer-status-left">
-                <span id="composerStatusIcon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin-icon">
-                    <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
-                    <path d="M12 2a10 10 0 0110 10"/>
-                  </svg>
-                </span>
-                <span id="composerStatusText" class="composer-status-text">Connecting to media endpoint...</span>
+              <!-- Inline Live Status & Feedback Banner -->
+              <div id="composerStatusBanner" class="composer-status-banner">
+                <div class="composer-status-left">
+                  <span id="composerStatusIcon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin-icon">
+                      <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+                      <path d="M12 2a10 10 0 0110 10"/>
+                    </svg>
+                  </span>
+                  <span id="composerStatusText" class="composer-status-text">Connecting to media endpoint...</span>
+                </div>
+                <button id="composerRetryBtn" class="composer-status-retry-btn" style="display: none;">Retry</button>
               </div>
-              <button id="composerRetryBtn" class="composer-status-retry-btn" style="display: none;">Retry</button>
             </div>
           </div>
 
-          <!-- Platforms Ticker -->
-          <div class="platforms-ticker-container">
-            <span class="platform-pill">TikTok</span>
-            <span class="platform-pill">Instagram</span>
-            <span class="platform-pill">YouTube</span>
-            <span class="platform-pill">X / Twitter</span>
-            <span class="platform-pill">Spotify</span>
-            <span class="platform-pill">Apple Music</span>
-            <span class="platform-pill">Pinterest</span>
-            <span class="platform-pill">Facebook</span>
-            <span class="platform-pill">Threads</span>
-            <span class="platform-pill">RedNote</span>
-            <span class="platform-pill">Bilibili</span>
-            <span class="platform-pill">Douyin</span>
-            <span class="platform-pill">Reddit</span>
-            <span class="platform-pill">Bandcamp</span>
-            <span class="platform-pill">Pixiv</span>
-            <span class="platform-pill">TeraBox</span>
+          <!-- Platforms Ticker with Official Brand SVGs -->
+          <div class="platforms-ticker-wrapper">
+            <div class="platforms-ticker-container">
+              <span class="platform-pill p-tiktok">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.89 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.35 0 .69.06 1 .18V9.45a6.35 6.35 0 0 0-1-.08 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.3a8.28 8.28 0 0 0 4.76 1.5V6.35a4.83 4.83 0 0 1-1-.05z"/></svg>
+                <span>TikTok</span>
+              </span>
+              <span class="platform-pill p-instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                <span>Instagram</span>
+              </span>
+              <span class="platform-pill p-youtube">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                <span>YouTube</span>
+              </span>
+              <span class="platform-pill p-spotify">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.503 17.309c-.215.353-.676.467-1.029.252-2.822-1.724-6.374-2.114-10.557-1.158-.403.092-.806-.157-.898-.56-.092-.403.157-.806.56-.898 4.582-1.047 8.508-.601 11.672 1.336.353.214.467.676.252 1.028zm1.47-3.262c-.27.44-.847.578-1.287.308-3.229-1.985-8.152-2.559-11.972-1.399-.497.151-1.029-.136-1.18-.633-.151-.497.136-1.029.633-1.18 4.368-1.325 9.792-.686 13.498 1.593.44.27.578.847.308 1.311zm.126-3.411c-3.872-2.299-10.26-2.511-13.966-1.385-.593.18-1.223-.158-1.403-.751-.18-.593.158-1.223.751-1.403 4.256-1.292 11.31-1.042 15.77 1.606.533.316.707 1.008.391 1.541-.316.533-1.008.708-1.543.392z"/></svg>
+                <span>Spotify</span>
+              </span>
+              <span class="platform-pill p-x">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <span>X / Twitter</span>
+              </span>
+              <span class="platform-pill p-pinterest">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 0 0-4.37 23.17c-.07-.63-.13-1.6.03-2.29l1-4.24s-.26-.52-.26-1.28c0-1.2.7-2.1 1.57-2.1.74 0 1.1.55 1.1 1.22 0 .74-.47 1.86-.72 2.89-.2.86.43 1.56 1.28 1.56 1.53 0 2.71-1.61 2.71-3.94 0-2.06-1.48-3.5-3.6-3.5-2.45 0-3.89 1.84-3.89 3.73 0 .74.28 1.53.64 1.96.07.08.08.16.06.25l-.24.97c-.04.16-.13.2-.3.12-1.1-.51-1.78-2.12-1.78-3.41 0-2.78 2.02-5.33 5.82-5.33 3.06 0 5.43 2.18 5.43 5.09 0 3.04-1.92 5.48-4.58 5.48-.9 0-1.74-.46-2.03-1l-.55 2.1c-.2.77-.74 1.74-1.1 2.33A12 12 0 1 0 12 0z"/></svg>
+                <span>Pinterest</span>
+              </span>
+              <span class="platform-pill p-applemusic">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.63 1.35-.57.65-1.06 1.72-.93 2.74 1 .08 2.02-.5 2.64-1.24z"/></svg>
+                <span>Apple Music</span>
+              </span>
+              <span class="platform-pill p-facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                <span>Facebook</span>
+              </span>
+              <span class="platform-pill p-threads">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24C5.457 24 0 18.59 0 11.916 0 5.241 5.457-.17 12.186-.17c6.643 0 12.052 5.253 12.052 11.758 0 .524-.038 1.042-.113 1.551h-4.043c.045-.487.068-.982.068-1.485 0-4.48-3.666-8.12-8.172-8.12-4.507 0-8.173 3.64-8.173 8.12 0 4.48 3.666 8.12 8.173 8.12 2.64 0 4.98-1.252 6.467-3.19l3.076 2.454C19.23 21.84 15.93 24 12.186 24z"/></svg>
+                <span>Threads</span>
+              </span>
+              <span class="platform-pill p-reddit">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.702zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+                <span>Reddit</span>
+              </span>
+              <span class="platform-pill p-bilibili">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.813 4.653h.854c1.51 0 2.769 1.234 2.769 2.75v10.524c0 1.516-1.259 2.75-2.77 2.75H5.334c-1.511 0-2.77-1.234-2.77-2.75V7.403c0-1.516 1.259-2.75 2.77-2.75h.854l-1.332-1.333a.852.852 0 0 1 0-1.205.852.852 0 0 1 1.205 0l2.36 2.36a.85.85 0 0 1 .178.278h7.004a.85.85 0 0 1 .178-.278l2.36-2.36a.852.852 0 0 1 1.205 0 .852.852 0 0 1 0 1.205l-1.332 1.333zM7.747 9.873c-.702 0-1.272.57-1.272 1.273v2.036c0 .703.57 1.273 1.272 1.273.703 0 1.273-.57 1.273-1.273v-2.036c0-.703-.57-1.273-1.273-1.273zm8.506 0c-.703 0-1.273.57-1.273 1.273v2.036c0 .703.57 1.273 1.273 1.273.702 0 1.272-.57 1.272-1.273v-2.036c0-.703-.57-1.273-1.272-1.273z"/></svg>
+                <span>Bilibili</span>
+              </span>
+              <span class="platform-pill p-soundcloud">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.56 8.87V17h9.19c1.79 0 3.25-1.46 3.25-3.25 0-1.74-1.38-3.17-3.11-3.24-.2-.01-.4-.01-.59 0-.41-2.45-2.52-4.3-5.07-4.3-.87 0-1.7.22-2.43.61-.41.22-.81.54-1.24.95zm-1.5 1.15v6.98H8.75v-6.5c.42-.23.86-.38 1.31-.48zm-2.81 1.2v5.78H5.94v-5.22c.45-.26.9-.45 1.31-.56zm-2.81 1.33v4.45H3.12v-3.75c.44-.3.88-.5 1.32-.7zm-2.82 1.2v3.25H.31v-2.14c.42-.39.84-.73 1.31-1.11z"/></svg>
+                <span>SoundCloud</span>
+              </span>
+              <span class="platform-pill">
+                <span>Douyin</span>
+              </span>
+              <span class="platform-pill">
+                <span>RedNote</span>
+              </span>
+              <span class="platform-pill">
+                <span>Bandcamp</span>
+              </span>
+              <span class="platform-pill">
+                <span>Pixiv</span>
+              </span>
+              <span class="platform-pill">
+                <span>TeraBox</span>
+              </span>
+            </div>
           </div>
 
           <!-- Live Result Card -->
