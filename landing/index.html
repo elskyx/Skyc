@@ -41,7 +41,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=1.6.7" />
+  <link rel="stylesheet" href="style.css?v=1.6.8" />
 
   <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
@@ -349,63 +349,70 @@
 
   <main class="page-main">
     <!-- Hero Section -->
-    <header class="hero-section">
-      <div class="hero-container">
-        <!-- Floating Status Pill -->
-        <div class="hero-pill-badge" data-spotlight>
-          <span class="status-pulse"></span>
-          <span class="hero-pill-text">Zero-Cloud Architecture • 100% Free & Open Source</span>
-        </div>
+    <header class="hero-section" data-headline-position="left">
+      <div class="hero-container hero-split-layout">
+        <div class="hero-split-grid">
+          <!-- Hero Left Column: Headline & Controls -->
+          <div class="hero-content-col">
+            <!-- Floating Status Pill -->
+            <div class="hero-pill-badge" data-spotlight>
+              <span class="status-pulse"></span>
+              <span class="hero-pill-text">Zero-Cloud Architecture • 100% Free & Open Source</span>
+            </div>
 
-        <!-- Master Title -->
-        <h1 class="hero-title">
-          Save anything,<br />
-          <span class="hero-serif-accent">from anywhere.</span>
-        </h1>
+            <!-- Master Title (Real HTML h1, Left-Aligned on Desktop) -->
+            <h1 class="hero-title">
+              Save anything,<br />
+              <span class="hero-serif-accent">from anywhere.</span>
+            </h1>
 
-        <!-- Subtitle -->
-        <p class="hero-lead">
-          Universal, zero-cloud media downloader for <strong>Android</strong>, <strong>Windows Desktop</strong>, and <strong>Terminal CLI</strong>. Pristine multi-stream extraction from 16+ platforms with zero watermarks, zero tracking, and no external servers.
-        </p>
+            <!-- Subtitle -->
+            <p class="hero-lead">
+              Universal, zero-cloud media downloader for <strong>Android</strong>, <strong>Windows Desktop</strong>, and <strong>Terminal CLI</strong>. Pristine multi-stream extraction from 16+ platforms with zero watermarks, zero tracking, and no external servers.
+            </p>
 
-        <!-- Action Buttons -->
-        <div class="hero-actions">
-          <a href="#downloads" class="hero-btn-primary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-            </svg>
-            <span>Download Skyc</span>
-          </a>
+            <!-- Action Buttons -->
+            <div class="hero-actions">
+              <a href="#downloads" class="hero-btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                <span>Download Skyc</span>
+              </a>
 
-          <a href="#simulator" class="hero-btn-secondary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-            <span>Try Live Simulator</span>
-          </a>
-        </div>
+              <a href="#simulator" class="hero-btn-secondary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <span>Try Live Simulator</span>
+              </a>
+            </div>
 
-        <!-- Terminal Quick Run Snippet -->
-        <div class="hero-cli-bar">
-          <div class="cli-prompt-symbol">$</div>
-          <code class="cli-command" id="hero-cli-code">npx @elskyx/skyc</code>
-          <button class="cli-copy-btn" id="hero-cli-copy" aria-label="Copy CLI Command" title="Copy Command">
-            <svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-            </svg>
-            <span class="copied-text">Copied!</span>
-          </button>
-        </div>
-
-        <!-- 3D Cylindrical Tilted Grid Hero Showcase (21st.dev Component) -->
-        <div class="hero-tilted-stage-wrapper" id="hero-tilted-stage-wrapper">
-          <div id="hero-tilted-grid" class="hero-tilted-grid-container" aria-label="Skyc App 3D Showcase">
-            <!-- Dynamically populated 3D cylindrical tiles -->
+            <!-- Terminal Quick Run Snippet -->
+            <div class="hero-cli-bar">
+              <div class="cli-prompt-symbol">$</div>
+              <code class="cli-command" id="hero-cli-code">npx @elskyx/skyc</code>
+              <button class="cli-copy-btn" id="hero-cli-copy" aria-label="Copy CLI Command" title="Copy Command">
+                <svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span class="copied-text">Copied!</span>
+              </button>
+            </div>
           </div>
-          <div class="hero-tilted-caption">
-            <span class="tilted-pulse-dot"></span>
-            <span class="tilted-caption-text">Interactive 3D Cylinder Showcase • Real Skyc App Snapshots</span>
+
+          <!-- Hero Right Column: 3D Cylindrical Tilted Grid Showcase -->
+          <div class="hero-visual-col">
+            <div class="hero-tilted-stage-wrapper" id="hero-tilted-stage-wrapper">
+              <div id="hero-tilted-grid" class="hero-tilted-grid-container" aria-label="Skyc App 3D Showcase">
+                <!-- Dynamically populated 3D cylindrical tiles -->
+              </div>
+              <div class="hero-tilted-caption">
+                <span class="tilted-pulse-dot"></span>
+                <span class="tilted-caption-text">Interactive 3D Cylinder Showcase • Real Skyc App Snapshots</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1525,7 +1532,10 @@
           </div>
           <strong style="font-size: 13px; letter-spacing: 0.15em;">SKYC MEDIA SUITE</strong>
         </div>
-        <span>©2026 · Client-Side · Zero-Cloud · v1.6.7</span>
+        <p class="hwf-copyright-text" style="font-size: 0.82rem; margin: 6px 0 3px; color: var(--hwf-ink, #FAF9F5); opacity: 0.92;">
+          &copy; 2026 Skyc &bull; Developed by <strong style="color: var(--hwf-warm, #D97757);">elskyx</strong> &amp; <strong style="color: var(--hwf-warm, #D97757);">Antigravity</strong>
+        </p>
+        <span style="font-size: 0.74rem; opacity: 0.65;">Client-Side &bull; Zero-Cloud &bull; Free &amp; Open Source (GPL-3.0)</span>
       </div>
       <nav class="hwf-col" aria-label="Product">
         <h3>Product</h3>
@@ -1555,7 +1565,10 @@
         </ul>
       </nav>
     </div>
-    <div class="hwf-rule">
+    <div class="hwf-rule" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <div class="hwf-copyright-bottom" style="font-size: 0.78rem; opacity: 0.75; font-family: var(--hwf-mono, 'JetBrains Mono', monospace); color: var(--hwf-ink, #FAF9F5);">
+        &copy; 2026 Skyc Project &bull; Developed by elskyx &amp; Antigravity &bull; 100% Free &amp; Open Source
+      </div>
       <button type="button" class="hwf-up" id="hwf-back-to-top">
         Back to top ↑
       </button>
@@ -1563,6 +1576,6 @@
   </footer>
 
   <!-- Main JavaScript File -->
-  <script src="script.js?v=1.6.7"></script>
+  <script src="script.js?v=1.6.8"></script>
 </body>
 </html>

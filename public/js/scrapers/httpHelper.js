@@ -83,6 +83,9 @@ export async function scraperFetch(options, serverName = "Scraper") {
       const rawRes = window.SkycNativeHttp.request(payload);
       const resObj = JSON.parse(rawRes);
       if (resObj.status >= 200 && resObj.status < 300) {
+        if (options.rawText || options.responseType === "text" || options.expectHtml) {
+          return resObj.body;
+        }
         return parseJsonResponse(resObj.body, serverName);
       }
       throw new Error(`Native HTTP status ${resObj.status}: ${resObj.error || "Request failed"}`);
@@ -102,6 +105,9 @@ export async function scraperFetch(options, serverName = "Scraper") {
         body: bodyData,
       });
       if (res.status >= 200 && res.status < 300) {
+        if (options.rawText || options.responseType === "text" || options.expectHtml) {
+          return res.data;
+        }
         return parseJsonResponse(res.data, serverName);
       }
       throw new Error(`Tauri HTTP status ${res.status}`);
@@ -126,6 +132,10 @@ export async function scraperFetch(options, serverName = "Scraper") {
     }
     const resp = await fetch(options.url, fetchOptions);
     clearTimeout(timeoutId);
+
+    if (options.rawText || options.responseType === "text" || options.expectHtml) {
+      return await resp.text();
+    }
 
     const contentType = resp.headers.get("content-type") || "";
     if (contentType.includes("application/json")) {

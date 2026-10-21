@@ -1220,4 +1220,24 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCylinder();
   })();
 
+  // -------------------------------------------------------------------------
+  // 11. Hero Headline Position Controller (headlinePosition="left" | "center")
+  // -------------------------------------------------------------------------
+  window.setSkycHeadlinePosition = function(position) {
+    const heroSection = document.querySelector('.hero-section');
+    if (!heroSection) return;
+    const pos = position === 'center' ? 'center' : 'left';
+    heroSection.setAttribute('data-headline-position', pos);
+    const container = heroSection.querySelector('.hero-container');
+    if (container) {
+      if (pos === 'left') {
+        container.classList.add('hero-split-layout');
+      } else {
+        container.classList.remove('hero-split-layout');
+      }
+    }
+    // Trigger resize for dynamic layout reflow
+    window.dispatchEvent(new Event('resize'));
+  };
+
 });

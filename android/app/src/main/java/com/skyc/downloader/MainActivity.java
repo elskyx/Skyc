@@ -77,6 +77,7 @@ public class MainActivity extends BridgeActivity {
                     JSONObject result = new JSONObject();
                     result.put("status", response.code());
                     result.put("body", response.body() != null ? response.body().string() : "");
+                    result.put("finalUrl", response.request().url().toString());
                     return result.toString();
                 }
             } catch (Exception e) {

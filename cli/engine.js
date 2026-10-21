@@ -210,6 +210,92 @@ export async function scrapeUrl(url) {
     }
   }
 
+  // Pinterest
+  if (platform === "pinterest") {
+    try {
+      const pageRes = await fetch(url, {
+        redirect: "follow",
+        headers: {
+          "User-Agent": CHROME_UA,
+          Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+          Referer: "https://www.pinterest.com/",
+        },
+      });
+      const html = await pageRes.text();
+      let title = "Pinterest Pin";
+      let author = "Pinterest Creator";
+      let thumbnail = "";
+      const formats = [];
+      const photos = [];
+
+      const ldMatches = [...html.matchAll(/<script [^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)];
+      for (const m of ldMatches) {
+        try {
+          const ld = JSON.parse(m[1]);
+          if (ld.headline) title = ld.headline.trim();
+          if (ld.author?.name) author = ld.author.name.trim();
+          if (ld.image) {
+            const rawImgs = Array.isArray(ld.image) ? ld.image : [ld.image];
+            for (const rawImg of rawImgs) {
+              const imgUrl = typeof rawImg === "string" ? rawImg : (rawImg.url || rawImg.contentUrl);
+              if (imgUrl && !photos.some((p) => p.url === imgUrl)) {
+                photos.push({
+                  id: `pin_photo_${photos.length + 1}`,
+                  label: photos.length === 0 ? "Original Resolution Image" : `Original Image ${photos.length + 1}`,
+                  url: imgUrl,
+                  ext: imgUrl.toLowerCase().endsWith(".png") ? "png" : "jpg",
+                  type: "photo",
+                });
+              }
+            }
+          }
+          if (ld.video) {
+            const vidUrl = typeof ld.video === "string" ? ld.video : (ld.video.contentUrl || ld.video.embedUrl);
+            if (vidUrl && !formats.some((f) => f.url === vidUrl)) {
+              formats.push({
+                id: `pin_video_${formats.length + 1}`,
+                label: "Pinterest Video (MP4)",
+                quality: "HD 720p",
+                type: "video",
+                ext: "mp4",
+                url: vidUrl,
+              });
+            }
+          }
+        } catch (_) {}
+      }
+
+      const origMatches = [...html.matchAll(/https:\/\/i\.pinimg\.com\/originals\/[a-zA-Z0-9_\-\/]+\.(?:jpg|png|webp)/gi)].map((m) => m[0]);
+      for (const imgUrl of new Set(origMatches)) {
+        if (imgUrl.includes("75x75") || imgUrl.includes("avatar")) continue;
+        if (!photos.some((p) => p.url === imgUrl)) {
+          photos.push({
+            id: `pin_photo_${photos.length + 1}`,
+            label: photos.length === 0 ? "Original Resolution Image" : `Original Image ${photos.length + 1}`,
+            url: imgUrl,
+            ext: imgUrl.toLowerCase().endsWith(".png") ? "png" : "jpg",
+            type: "photo",
+          });
+        }
+      }
+
+      if (photos.length > 0) thumbnail = photos[0].url;
+
+      if (formats.length > 0 || photos.length > 0) {
+        return {
+          platform: "pinterest",
+          title,
+          author,
+          thumbnail,
+          duration: 0,
+          formats,
+          photos,
+          hasPdfOption: photos.length > 1,
+        };
+      }
+    } catch (_) {}
+  }
+
   throw new Error(`Extraction for ${platform} is not currently responding. Try again or check the URL.`);
 }
 

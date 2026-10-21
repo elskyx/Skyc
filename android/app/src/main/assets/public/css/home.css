@@ -414,7 +414,7 @@
   margin: 0;
 }
 
-/* 2-Column Responsive Grid */
+/* Responsive Grid for Supported Platforms */
 .supported-platforms-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -422,9 +422,36 @@
   width: 100%;
 }
 
+@media (max-width: 380px) {
+  .supported-platforms-grid {
+    gap: 0.5rem;
+  }
+  .platform-card {
+    padding: 0.6rem 0.65rem !important;
+    gap: 0.5rem !important;
+  }
+  .platform-card-name {
+    font-size: 0.72rem !important;
+  }
+}
+
 @media (min-width: 640px) {
   .supported-platforms-grid {
     gap: 0.85rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .supported-platforms-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .supported-platforms-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
   }
 }
 
