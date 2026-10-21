@@ -9,6 +9,7 @@ import { initClipboardWatcher } from "./modules/intents.js";
 import { initDownloadBubble } from "./ui/downloadBubble.js";
 import { initPlayerControls } from "./components/player.js";
 import { checkOtaScraperUpdate } from "./modules/updateScrapers.js";
+import { initUpdateSystem } from "./modules/update.js";
 import { batchQueue } from "./modules/batchManager.js";
 import { triggerHaptic, showToast } from "./utils/index.js";
 
@@ -58,7 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // 8. Header Theme Toggle Switcher
   safeInit("headerThemeToggle", initHeaderThemeToggle);
 
-  // 9. Background OTA Scraper Patch Check (silent)
+  // 9. Update & Notification Engine (Monitors GitHub Releases & Repo Commits)
+  safeInit("updateSystem", initUpdateSystem);
+
+  // 10. Background OTA Scraper Patch Check (silent)
   setTimeout(() => {
     safeInit("otaCheck", () => checkOtaScraperUpdate(false));
   }, 3500);

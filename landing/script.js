@@ -1240,4 +1240,74 @@ document.addEventListener('DOMContentLoaded', () => {
     window.dispatchEvent(new Event('resize'));
   };
 
+  // -------------------------------------------------------------------------
+  // 12. Dynamic Release & Repo Update Notification Engine
+  // -------------------------------------------------------------------------
+  (async function initReleaseNotification() {
+    try {
+      const res = await fetch("https://api.github.com/repos/elskyx/Skyc-Downloader/releases/latest", {
+        headers: { Accept: "application/vnd.github.v3+json" },
+      });
+      if (!res.ok) return;
+      const release = await res.json();
+      if (!release || !release.tag_name) return;
+
+      const latestTag = release.tag_name.replace(/^v/, "").trim();
+      const currentVersion = "1.6.7";
+
+      // If newer release or assets exist, update download links dynamically
+      const assets = Array.isArray(release.assets) ? release.assets : [];
+      const apkAsset = assets.find((a) => a.name && a.name.toLowerCase().endsWith(".apk"));
+      const exeAsset = assets.find((a) => a.name && (a.name.toLowerCase().endsWith(".exe") || a.name.toLowerCase().endsWith(".msi")));
+
+      if (apkAsset && apkAsset.browser_download_url) {
+        document.querySelectorAll('a[href*=".apk"]').forEach((link) => {
+          link.href = apkAsset.browser_download_url;
+        });
+      }
+
+      if (exeAsset && exeAsset.browser_download_url) {
+        document.querySelectorAll('a[href*="-setup.exe"]').forEach((link) => {
+          link.href = exeAsset.browser_download_url;
+        });
+      }
+
+      const isGreater = (latest, current) => {
+        const l = latest.split(".").map(Number);
+        const c = current.split(".").map(Number);
+        for (let i = 0; i < Math.max(l.length, c.length); i++) {
+          if ((l[i] || 0) > (c[i] || 0)) return true;
+          if ((l[i] || 0) < (c[i] || 0)) return false;
+        }
+        return false;
+      };
+
+      if (isGreater(latestTag, currentVersion)) {
+        // Update version pills and tags
+        document.querySelectorAll(".brand-badge, .portal-version-pill").forEach((el) => {
+          el.textContent = `v${latestTag}`;
+        });
+
+        // Inject Announcement Banner at top of page
+        const banner = document.createElement("div");
+        banner.className = "landing-update-banner";
+        banner.innerHTML = `
+          <div class="landing-update-content">
+            <span class="landing-update-pulse"></span>
+            <span><strong>🎉 Skyc v${latestTag} is now available!</strong> Fresh engine & improvements live.</span>
+            <a href="#downloads" class="landing-update-cta">Download v${latestTag}</a>
+            <button class="landing-update-dismiss" aria-label="Dismiss">✕</button>
+          </div>
+        `;
+        document.body.prepend(banner);
+
+        banner.querySelector(".landing-update-dismiss")?.addEventListener("click", () => {
+          banner.remove();
+        });
+      }
+    } catch (_) {
+      // Quiet fail if offline or API limit reached
+    }
+  })();
+
 });

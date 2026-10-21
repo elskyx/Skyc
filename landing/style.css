@@ -3712,3 +3712,62 @@ h1, h2, h3, h4 {
 @media (prefers-reduced-motion: reduce) {
   .hwf-col a, .hwf-up { transition: none; }
 }
+
+/* Dynamic Update Announcement Banner for Landing */
+.landing-update-banner {
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--accent-border);
+  padding: 0.55rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  animation: bannerSlideIn 0.3s ease-out;
+}
+
+.landing-update-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  flex-wrap: wrap;
+}
+
+.landing-update-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-primary, #D97757);
+  box-shadow: 0 0 8px var(--accent-primary, #D97757);
+  animation: pulse-dot 1.5s infinite;
+}
+
+.landing-update-cta {
+  background: var(--accent-primary, #D97757);
+  color: #FAF9F5 !important;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.landing-update-cta:hover {
+  background: var(--accent-hover, #C6613F);
+  transform: translateY(-1px);
+}
+
+.landing-update-dismiss {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+}
