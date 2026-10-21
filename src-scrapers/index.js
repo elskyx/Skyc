@@ -17,7 +17,7 @@ import { scrapeRedNote } from "./platforms/rednote.js";
 import { scrapeReddit } from "./platforms/reddit.js";
 import { scrapeTeraBox } from "./platforms/terabox.js";
 
-export const SCRAPER_VERSION = 1;
+export const SCRAPER_VERSION = 2;
 
 export const PLATFORM_REGISTRY = {
   tiktok: scrapeTikTok,

@@ -1,7 +1,7 @@
 // public/js/scrapers/index.js
 import { scraperFetch } from "./httpHelper.js";
 
-export const BUNDLED_SCRAPER_VERSION = 1;
+export const BUNDLED_SCRAPER_VERSION = 2;
 if (typeof window !== "undefined") {
   window.__SKYC_BUNDLED_SCRAPER_VERSION__ = BUNDLED_SCRAPER_VERSION;
 }
@@ -25,17 +25,23 @@ export async function getScraperEngine() {
   // 2. Check for OTA Hot-Patch in localStorage
   if (typeof localStorage !== "undefined" && typeof localStorage.getItem === "function") {
     try {
-      const patchedScript = localStorage.getItem("skyc_patched_scraper_bin");
       const activeVer = parseInt(localStorage.getItem("skyc_active_scraper_version") || "0", 10);
-
-      if (patchedScript && activeVer >= BUNDLED_SCRAPER_VERSION) {
-        console.log(`[Skyc] Executing OTA Hot-Patched Scraper Core v${activeVer}`);
-        const otaFunction = new Function("exports", patchedScript);
-        const otaExports = {};
-        otaFunction(otaExports);
-        if (otaExports.__SkycScraperEngine?.extractMedia || globalObj.__SkycScraperEngine?.extractMedia) {
-          _engineInstance = otaExports.__SkycScraperEngine || globalObj.__SkycScraperEngine;
-          return _engineInstance;
+      if (activeVer < BUNDLED_SCRAPER_VERSION) {
+        // Clear stale cached scraper hot-patches
+        localStorage.removeItem("skyc_patched_scraper_bin");
+        localStorage.removeItem("skyc_active_scraper_version");
+        localStorage.removeItem("skyc_active_scraper_hash");
+      } else {
+        const patchedScript = localStorage.getItem("skyc_patched_scraper_bin");
+        if (patchedScript && activeVer >= BUNDLED_SCRAPER_VERSION) {
+          console.log(`[Skyc] Executing OTA Hot-Patched Scraper Core v${activeVer}`);
+          const otaFunction = new Function("exports", patchedScript);
+          const otaExports = {};
+          otaFunction(otaExports);
+          if (otaExports.__SkycScraperEngine?.extractMedia || globalObj.__SkycScraperEngine?.extractMedia) {
+            _engineInstance = otaExports.__SkycScraperEngine || globalObj.__SkycScraperEngine;
+            return _engineInstance;
+          }
         }
       }
     } catch (otaErr) {

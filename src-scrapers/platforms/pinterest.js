@@ -1,6 +1,22 @@
 // src-scrapers/platforms/pinterest.js
 
-function extractFromPinterestHtml(html, fallbackUrl = "") {
+function extractPinId(url, html = "") {
+  if (url) {
+    const directMatch = url.match(/pin\/(\d+)/i);
+    if (directMatch) return directMatch[1];
+  }
+  if (html) {
+    const canonicalMatch = html.match(/<link [^>]*rel="canonical"[^>]*href="[^"]*pin\/(\d+)/i) ||
+                           html.match(/<meta [^>]*property="og:url"[^>]*content="[^"]*pin\/(\d+)/i) ||
+                           html.match(/pinterest\.com\/pin\/(\d+)/i) ||
+                           html.match(/"pin_id":\s*"(\d+)"/i) ||
+                           html.match(/"pins":\s*\{\s*"(\d+)"/i);
+    if (canonicalMatch) return canonicalMatch[1];
+  }
+  return null;
+}
+
+function parsePinterestHtml(html, fallbackUrl = "") {
   let title = "Pinterest Pin";
   let author = "Pinterest Creator";
   let thumbnail = "";
@@ -65,7 +81,7 @@ function extractFromPinterestHtml(html, fallbackUrl = "") {
           if (obj.pinner?.full_name && author === "Pinterest Creator") author = obj.pinner.full_name;
           else if (obj.pinner?.username && author === "Pinterest Creator") author = obj.pinner.username;
 
-          // Images
+          // Original Resolution Image
           if (obj.images?.orig?.url) {
             const u = obj.images.orig.url;
             if (!photos.some((p) => p.url === u)) {
@@ -79,7 +95,7 @@ function extractFromPinterestHtml(html, fallbackUrl = "") {
             }
           }
 
-          // Videos
+          // HD Videos
           if (obj.videos?.video_list) {
             for (const [k, v] of Object.entries(obj.videos.video_list)) {
               if (v?.url && !formats.some((f) => f.url === v.url)) {
@@ -192,7 +208,10 @@ export async function scrapePinterest(url, fetchClient) {
     throw new Error("Invalid or empty Pinterest URL.");
   }
 
-  // Server 1: Direct HTML page scraping (handles shortlinks like pin.it automatically)
+  let pinId = extractPinId(targetUrl);
+  let html = "";
+
+  // Server 1: Direct HTML page scraping (handles pin.it shortlinks automatically via native client follow)
   try {
     const pageHtml = await fetchClient({
       method: "GET",
@@ -206,10 +225,13 @@ export async function scrapePinterest(url, fetchClient) {
       },
     }, "Pinterest Direct");
 
-    const html = typeof pageHtml === "string" ? pageHtml : JSON.stringify(pageHtml);
+    html = typeof pageHtml === "string" ? pageHtml : JSON.stringify(pageHtml);
 
     if (html && html.length > 200) {
-      const parsed = extractFromPinterestHtml(html, targetUrl);
+      if (!pinId) {
+        pinId = extractPinId(targetUrl, html);
+      }
+      const parsed = parsePinterestHtml(html, targetUrl);
       if (parsed && (parsed.formats.length > 0 || parsed.photos.length > 0)) {
         return parsed;
       }
@@ -218,7 +240,103 @@ export async function scrapePinterest(url, fetchClient) {
     console.warn("[Skyc Scraper] Pinterest Direct HTML fetch error:", directErr);
   }
 
-  // Server 2: PinDown API fallback
+  // Server 2: Official Pinterest Widget API (Works reliably without CORS issues)
+  if (pinId) {
+    try {
+      const widgetData = await fetchClient({
+        method: "GET",
+        url: `https://widgets.pinterest.com/v3/pidgets/pins/info/?pin_ids=${pinId}`,
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          Accept: "application/json",
+          Referer: "https://www.pinterest.com/",
+        },
+      }, "Pinterest Widget API");
+
+      const pin = widgetData?.data?.[0];
+      if (pin && pin.images) {
+        const photos = [];
+        const formats = [];
+        const bestImg = pin.images["564x"] || pin.images["237x"] || pin.images["236x"];
+        if (bestImg?.url) {
+          const origUrl = bestImg.url.replace(/\/\d+x\//, "/originals/");
+          photos.push({
+            id: "pin_photo_1",
+            label: "Original Resolution Image",
+            url: origUrl,
+            ext: origUrl.toLowerCase().endsWith(".png") ? "png" : "jpg",
+            type: "photo",
+          });
+        }
+
+        if (pin.videos?.video_list) {
+          for (const [k, v] of Object.entries(pin.videos.video_list)) {
+            if (v?.url && !formats.some((f) => f.url === v.url)) {
+              formats.push({
+                id: `pin_video_${k}`,
+                label: `Pinterest Video (${k.replace(/^V_/, "")})`,
+                quality: k.replace(/^V_/, ""),
+                type: "video",
+                ext: "mp4",
+                url: v.url,
+              });
+            }
+          }
+        }
+
+        if (photos.length > 0 || formats.length > 0) {
+          return {
+            platform: "pinterest",
+            title: pin.description?.trim() || pin.link || "Pinterest Pin",
+            author: pin.pinner?.full_name || pin.pinner?.username || "Pinterest Creator",
+            thumbnail: photos[0]?.url || "",
+            duration: 0,
+            formats,
+            photos,
+            hasPdfOption: photos.length > 1,
+          };
+        }
+      }
+    } catch (widgetErr) {
+      console.warn("[Skyc Scraper] Pinterest Widget API error:", widgetErr);
+    }
+  }
+
+  // Server 3: Official Pinterest oEmbed API
+  try {
+    const oembedData = await fetchClient({
+      method: "GET",
+      url: `https://www.pinterest.com/oembed.json?url=${encodeURIComponent(targetUrl)}`,
+      headers: {
+        Accept: "application/json",
+        Referer: "https://www.pinterest.com/",
+      },
+    }, "Pinterest oEmbed API");
+
+    if (oembedData?.thumbnail_url) {
+      const orig = oembedData.thumbnail_url.replace(/\/\d+x\//, "/originals/");
+      return {
+        platform: "pinterest",
+        title: oembedData.title?.trim() || "Pinterest Pin",
+        author: oembedData.author_name || "Pinterest Creator",
+        thumbnail: orig,
+        duration: 0,
+        formats: [],
+        photos: [{
+          id: "pin_photo_1",
+          label: "Original Resolution Image",
+          url: orig,
+          ext: orig.toLowerCase().endsWith(".png") ? "png" : "jpg",
+          type: "photo",
+        }],
+        hasPdfOption: false,
+      };
+    }
+  } catch (oembedErr) {
+    console.warn("[Skyc Scraper] Pinterest oEmbed API error:", oembedErr);
+  }
+
+  // Server 4: PinDown API fallback
   try {
     const res = await fetchClient({
       method: "POST",
@@ -230,12 +348,11 @@ export async function scrapePinterest(url, fetchClient) {
       data: { url: targetUrl },
     }, "PinDown");
 
-    const html = typeof res === "string" ? res : (res?.data || JSON.stringify(res));
+    const htmlRes = typeof res === "string" ? res : (res?.data || JSON.stringify(res));
     const formats = [];
     const photos = [];
 
-    // Check video
-    const videoMatch = html.match(/href="([^"]*(?:v\.pinimg\.com|\.mp4)[^"]*)"/i);
+    const videoMatch = htmlRes.match(/href="([^"]*(?:v\.pinimg\.com|\.mp4)[^"]*)"/i);
     if (videoMatch) {
       formats.push({
         id: "pin_video",
@@ -247,8 +364,7 @@ export async function scrapePinterest(url, fetchClient) {
       });
     }
 
-    // Check image
-    const imgMatch = html.match(/href="([^"]*(?:i\.pinimg\.com\/originals|\.jpg)[^"]*)"/i);
+    const imgMatch = htmlRes.match(/href="([^"]*(?:i\.pinimg\.com\/originals|\.jpg)[^"]*)"/i);
     if (imgMatch) {
       photos.push({
         id: "pin_photo_1",
@@ -271,8 +387,8 @@ export async function scrapePinterest(url, fetchClient) {
         hasPdfOption: photos.length > 1,
       };
     }
-  } catch (err) {
-    console.warn("[Skyc Scraper] PinDown error:", err);
+  } catch (pindownErr) {
+    console.warn("[Skyc Scraper] PinDown fallback error:", pindownErr);
   }
 
   throw new Error("Pinterest media could not be extracted.");

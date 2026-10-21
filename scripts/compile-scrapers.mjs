@@ -91,7 +91,7 @@ if (typeof module !== "undefined" && module.exports) {
   // Compute SHA-256
   const hash = crypto.createHash("sha256").update(compiledCode).digest("hex");
   const manifest = {
-    version: 1,
+    version: 2,
     sha256: hash,
     size: Buffer.byteLength(compiledCode, "utf-8"),
     updatedAt: Date.now(),

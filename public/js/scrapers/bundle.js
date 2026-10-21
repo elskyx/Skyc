@@ -553,7 +553,18 @@ var __SkycScraperEngine = (() => {
   }
 
   // src-scrapers/platforms/pinterest.js
-  function extractFromPinterestHtml(html, fallbackUrl = "") {
+  function extractPinId(url, html = "") {
+    if (url) {
+      const directMatch = url.match(/pin\/(\d+)/i);
+      if (directMatch) return directMatch[1];
+    }
+    if (html) {
+      const canonicalMatch = html.match(/<link [^>]*rel="canonical"[^>]*href="[^"]*pin\/(\d+)/i) || html.match(/<meta [^>]*property="og:url"[^>]*content="[^"]*pin\/(\d+)/i) || html.match(/pinterest\.com\/pin\/(\d+)/i) || html.match(/"pin_id":\s*"(\d+)"/i) || html.match(/"pins":\s*\{\s*"(\d+)"/i);
+      if (canonicalMatch) return canonicalMatch[1];
+    }
+    return null;
+  }
+  function parsePinterestHtml(html, fallbackUrl = "") {
     let title = "Pinterest Pin";
     let author = "Pinterest Creator";
     let thumbnail = "";
@@ -724,6 +735,8 @@ var __SkycScraperEngine = (() => {
     if (!targetUrl) {
       throw new Error("Invalid or empty Pinterest URL.");
     }
+    let pinId = extractPinId(targetUrl);
+    let html = "";
     try {
       const pageHtml = await fetchClient({
         method: "GET",
@@ -736,15 +749,106 @@ var __SkycScraperEngine = (() => {
           Referer: "https://www.pinterest.com/"
         }
       }, "Pinterest Direct");
-      const html = typeof pageHtml === "string" ? pageHtml : JSON.stringify(pageHtml);
+      html = typeof pageHtml === "string" ? pageHtml : JSON.stringify(pageHtml);
       if (html && html.length > 200) {
-        const parsed = extractFromPinterestHtml(html, targetUrl);
+        if (!pinId) {
+          pinId = extractPinId(targetUrl, html);
+        }
+        const parsed = parsePinterestHtml(html, targetUrl);
         if (parsed && (parsed.formats.length > 0 || parsed.photos.length > 0)) {
           return parsed;
         }
       }
     } catch (directErr) {
       console.warn("[Skyc Scraper] Pinterest Direct HTML fetch error:", directErr);
+    }
+    if (pinId) {
+      try {
+        const widgetData = await fetchClient({
+          method: "GET",
+          url: `https://widgets.pinterest.com/v3/pidgets/pins/info/?pin_ids=${pinId}`,
+          headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            Accept: "application/json",
+            Referer: "https://www.pinterest.com/"
+          }
+        }, "Pinterest Widget API");
+        const pin = widgetData?.data?.[0];
+        if (pin && pin.images) {
+          const photos = [];
+          const formats = [];
+          const bestImg = pin.images["564x"] || pin.images["237x"] || pin.images["236x"];
+          if (bestImg?.url) {
+            const origUrl = bestImg.url.replace(/\/\d+x\//, "/originals/");
+            photos.push({
+              id: "pin_photo_1",
+              label: "Original Resolution Image",
+              url: origUrl,
+              ext: origUrl.toLowerCase().endsWith(".png") ? "png" : "jpg",
+              type: "photo"
+            });
+          }
+          if (pin.videos?.video_list) {
+            for (const [k, v] of Object.entries(pin.videos.video_list)) {
+              if (v?.url && !formats.some((f) => f.url === v.url)) {
+                formats.push({
+                  id: `pin_video_${k}`,
+                  label: `Pinterest Video (${k.replace(/^V_/, "")})`,
+                  quality: k.replace(/^V_/, ""),
+                  type: "video",
+                  ext: "mp4",
+                  url: v.url
+                });
+              }
+            }
+          }
+          if (photos.length > 0 || formats.length > 0) {
+            return {
+              platform: "pinterest",
+              title: pin.description?.trim() || pin.link || "Pinterest Pin",
+              author: pin.pinner?.full_name || pin.pinner?.username || "Pinterest Creator",
+              thumbnail: photos[0]?.url || "",
+              duration: 0,
+              formats,
+              photos,
+              hasPdfOption: photos.length > 1
+            };
+          }
+        }
+      } catch (widgetErr) {
+        console.warn("[Skyc Scraper] Pinterest Widget API error:", widgetErr);
+      }
+    }
+    try {
+      const oembedData = await fetchClient({
+        method: "GET",
+        url: `https://www.pinterest.com/oembed.json?url=${encodeURIComponent(targetUrl)}`,
+        headers: {
+          Accept: "application/json",
+          Referer: "https://www.pinterest.com/"
+        }
+      }, "Pinterest oEmbed API");
+      if (oembedData?.thumbnail_url) {
+        const orig = oembedData.thumbnail_url.replace(/\/\d+x\//, "/originals/");
+        return {
+          platform: "pinterest",
+          title: oembedData.title?.trim() || "Pinterest Pin",
+          author: oembedData.author_name || "Pinterest Creator",
+          thumbnail: orig,
+          duration: 0,
+          formats: [],
+          photos: [{
+            id: "pin_photo_1",
+            label: "Original Resolution Image",
+            url: orig,
+            ext: orig.toLowerCase().endsWith(".png") ? "png" : "jpg",
+            type: "photo"
+          }],
+          hasPdfOption: false
+        };
+      }
+    } catch (oembedErr) {
+      console.warn("[Skyc Scraper] Pinterest oEmbed API error:", oembedErr);
     }
     try {
       const res = await fetchClient({
@@ -756,10 +860,10 @@ var __SkycScraperEngine = (() => {
         },
         data: { url: targetUrl }
       }, "PinDown");
-      const html = typeof res === "string" ? res : res?.data || JSON.stringify(res);
+      const htmlRes = typeof res === "string" ? res : res?.data || JSON.stringify(res);
       const formats = [];
       const photos = [];
-      const videoMatch = html.match(/href="([^"]*(?:v\.pinimg\.com|\.mp4)[^"]*)"/i);
+      const videoMatch = htmlRes.match(/href="([^"]*(?:v\.pinimg\.com|\.mp4)[^"]*)"/i);
       if (videoMatch) {
         formats.push({
           id: "pin_video",
@@ -770,7 +874,7 @@ var __SkycScraperEngine = (() => {
           url: videoMatch[1]
         });
       }
-      const imgMatch = html.match(/href="([^"]*(?:i\.pinimg\.com\/originals|\.jpg)[^"]*)"/i);
+      const imgMatch = htmlRes.match(/href="([^"]*(?:i\.pinimg\.com\/originals|\.jpg)[^"]*)"/i);
       if (imgMatch) {
         photos.push({
           id: "pin_photo_1",
@@ -792,8 +896,8 @@ var __SkycScraperEngine = (() => {
           hasPdfOption: photos.length > 1
         };
       }
-    } catch (err) {
-      console.warn("[Skyc Scraper] PinDown error:", err);
+    } catch (pindownErr) {
+      console.warn("[Skyc Scraper] PinDown fallback error:", pindownErr);
     }
     throw new Error("Pinterest media could not be extracted.");
   }
@@ -1220,7 +1324,7 @@ var __SkycScraperEngine = (() => {
   }
 
   // src-scrapers/index.js
-  var SCRAPER_VERSION = 1;
+  var SCRAPER_VERSION = 2;
   var PLATFORM_REGISTRY = {
     tiktok: scrapeTikTok,
     douyin: scrapeDouyin,

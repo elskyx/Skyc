@@ -574,6 +574,15 @@
   padding: 0.25rem 0.5rem;
 }
 
+.app-copyright-note {
+  margin-top: 0.5rem;
+  font-size: 0.72rem;
+  opacity: 0.75;
+  font-family: var(--font-mono, monospace);
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
 /* ─────────────────────────────────────────────────────────────
    3b. FLOATING ACTION CIRCULAR APP LOGO BUTTON (Faithful to Reference Image)
    ───────────────────────────────────────────────────────────── */
