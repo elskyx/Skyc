@@ -115,17 +115,69 @@ function initSpotlightAnd3DTilt() {
     });
   });
 
-  // Clicking platform pills gives instant tactile feedback and focuses input
-  const platformPills = document.querySelectorAll(".platform-pill");
+  // Clicking platform cards or pills gives instant tactile feedback, updates active card style, and focuses input
+  const platformElements = document.querySelectorAll(".platform-card, .platform-pill");
   const composerInput = document.getElementById("composerUrlInput");
-  if (composerInput) {
-    platformPills.forEach((pill) => {
-      pill.addEventListener("click", () => {
-        const name = pill.querySelector("span")?.textContent || pill.textContent.trim();
+  platformElements.forEach((item) => {
+    item.addEventListener("click", () => {
+      const platformKey = item.getAttribute("data-platform");
+      const name = item.querySelector(".platform-card-name")?.textContent || item.querySelector("span")?.textContent || item.textContent.trim();
+
+      // Dynamic Active Style: remove from all cards and assign to selected platform
+      if (platformKey) {
+        document.querySelectorAll(".platform-card").forEach((card) => {
+          if (card.getAttribute("data-platform") === platformKey) {
+            card.classList.add("platform-card-active-style");
+          } else {
+            card.classList.remove("platform-card-active-style");
+          }
+        });
+      }
+
+      // If clicked from another view (e.g. Platforms view), switch to home tab
+      const homeTab = document.querySelector('.nav-tab-btn[data-tab="home"]');
+      const homeView = document.getElementById("view-home");
+      if (homeView && !homeView.classList.contains("active") && homeTab) {
+        homeTab.click();
+      }
+
+      if (composerInput) {
         composerInput.focus();
-        showToast(`Ready for ${name} link`, "info");
-        triggerHaptic("light");
-      });
+        showToast(`Ready for ${name} link • Paste URL`, "info");
+      }
+      triggerHaptic("light");
+
+      // Tactile press animation
+      item.classList.add("is-pressed");
+      setTimeout(() => item.classList.remove("is-pressed"), 180);
+
+      // Scroll composer into view
+      const composerWrapper = document.querySelector(".composer-perspective-wrapper");
+      if (composerWrapper) {
+        composerWrapper.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
+  });
+
+  // Circular Floating Action Button with Official Skyc Capsule Logo (Reference Design)
+  const logoFab = document.getElementById("skycLogoFab");
+  if (logoFab) {
+    logoFab.addEventListener("click", () => {
+      triggerHaptic("medium");
+      showToast("Skyc Core Engine • 16+ Zero-Cloud Extractors", "info");
+      logoFab.classList.add("is-spinning");
+      setTimeout(() => logoFab.classList.remove("is-spinning"), 600);
+
+      const homeTab = document.querySelector('.nav-tab-btn[data-tab="home"]');
+      const homeView = document.getElementById("view-home");
+      if (homeView && !homeView.classList.contains("active") && homeTab) {
+        homeTab.click();
+      }
+
+      const platformsSec = document.getElementById("supportedPlatformsSection");
+      if (platformsSec) {
+        platformsSec.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     });
   }
 }
