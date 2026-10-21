@@ -5,7 +5,9 @@ import { fileURLToPath } from 'url';
 import pw from 'playwright-core';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dir = path.resolve(__dirname, '../../About-Skyc');
+const dir = fs.existsSync(path.resolve(__dirname, '../../About-Skyc-Downloader'))
+  ? path.resolve(__dirname, '../../About-Skyc-Downloader')
+  : path.resolve(__dirname, '../../About-Skyc');
 
 const server = http.createServer((req, res) => {
   let filePath = path.join(dir, req.url === '/' ? 'index.html' : req.url.split('?')[0]);

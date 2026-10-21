@@ -6,7 +6,9 @@ import pw from 'playwright-core';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.resolve(__dirname, '../public');
-const aboutDir = path.resolve(__dirname, '../../About-Skyc/assets/snapshots');
+const aboutDir = fs.existsSync(path.resolve(__dirname, '../../About-Skyc-Downloader'))
+  ? path.resolve(__dirname, '../../About-Skyc-Downloader/assets/snapshots')
+  : path.resolve(__dirname, '../../About-Skyc/assets/snapshots');
 const landingDir = path.resolve(__dirname, '../landing/assets/snapshots');
 
 fs.mkdirSync(aboutDir, { recursive: true });
