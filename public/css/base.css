@@ -149,6 +149,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  flex-shrink: 0;
 }
 
 /* Status Badge Pill */
@@ -187,6 +188,9 @@ html, body {
 .header-icon-btn {
   width: 36px;
   height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  flex-shrink: 0;
   border-radius: var(--radius-md);
   display: inline-flex;
   align-items: center;
@@ -329,6 +333,9 @@ html, body {
 }
 
 @media (max-width: 480px) {
+  .brand-tag {
+    display: none;
+  }
   .nav-tab-btn span {
     display: none;
   }

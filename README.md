@@ -2,7 +2,7 @@
   <img src="public/logo.svg" width="112" height="112" alt="Skyc Official Logo" />
 </p>
 
-<h1 align="center">Skyc</h1>
+<h1 align="center">Skyc Downloader</h1>
 
 <p align="center">
   <strong>Save anything, From anywhere.</strong>
@@ -41,9 +41,9 @@ Seluruh paket instalasi siap pakai tersedia di halaman **GitHub Releases** dan *
 
 | Platform | Paket Tersedia | Metode Instalasi |
 | :--- | :--- | :--- |
-| **Android (Universal / x64)** | [**`Skyc-v1.6.7.apk`**](https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc-v1.6.7.apk) | [Unduh Langsung APK](https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc-v1.6.7.apk) *(Sideload)* |
-| **Windows Desktop (64-bit x64)** | [**`Skyc_1.6.7_x64-setup.exe`**](https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc_1.6.7_x64-setup.exe) / [**`.msi`**](https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc_1.6.7_x64.msi) | [Unduh Installer .exe](https://github.com/elskyx/Skyc/releases/download/v1.6.7/Skyc_1.6.7_x64-setup.exe) *(NSIS / WiX)* |
-| **Windows Desktop (32-bit x86)** | [**`Skyc_1.6.7_x86-setup.exe`**](https://github.com/elskyx/Skyc/releases/tag/v1.6.7) | Tersedia di [GitHub Releases](https://github.com/elskyx/Skyc/releases/tag/v1.6.7) |
+| **Android (Universal / x64)** | [**`Skyc-v1.6.7.apk`**](https://github.com/elskyx/Skyc-Downloader/releases/download/v1.6.7/Skyc-v1.6.7.apk) | [Unduh Langsung APK](https://github.com/elskyx/Skyc-Downloader/releases/download/v1.6.7/Skyc-v1.6.7.apk) *(Sideload)* |
+| **Windows Desktop (64-bit x64)** | [**`Skyc_1.6.7_x64-setup.exe`**](https://github.com/elskyx/Skyc-Downloader/releases/download/v1.6.7/Skyc_1.6.7_x64-setup.exe) / [**`.msi`**](https://github.com/elskyx/Skyc-Downloader/releases/download/v1.6.7/Skyc_1.6.7_x64.msi) | [Unduh Installer .exe](https://github.com/elskyx/Skyc-Downloader/releases/download/v1.6.7/Skyc_1.6.7_x64-setup.exe) *(NSIS / WiX)* |
+| **Windows Desktop (32-bit x86)** | [**`Skyc_1.6.7_x86-setup.exe`**](https://github.com/elskyx/Skyc-Downloader/releases/tag/v1.6.7) | Tersedia di [GitHub Releases](https://github.com/elskyx/Skyc-Downloader/releases/tag/v1.6.7) |
 | **CLI (Terminal)** | [`npx @elskyx/skyc`](https://www.npmjs.com/package/@elskyx/skyc) | Jalankan via Node.js / npm (`skyc <URL>`) |
 
 ---
@@ -79,7 +79,7 @@ skyc
 
 - **Dukungan 16+ Platform**: Unduh media bebas tanda air dari TikTok, Instagram, YouTube, Twitter/X, Spotify, Apple Music, Pinterest, Facebook, Threads, Bandcamp, Pixiv, Bilibili, Douyin, RedNote (Xiaohongshu), Reddit, dan TeraBox.
 - **Desain Hangat Bergaya Claude**: Antarmuka bersih dan nyaman di mata dengan palet *Warm Parchment* (`#F4F3EE`), *Warm Obsidian* (`#191918`), dan aksen *Terracotta* (`#D97757`).
-- **Pembaruan *Scraper* *Over-The-Air* (OTA)**: Saat sebuah platform mengubah struktur API-nya, Skyc memperbarui bundel *scraper* (`bundle.js`) secara otomatis di latar belakang dari GitHub `elskyx/Skyc` tanpa perlu menginstal ulang APK atau `.exe`.
+- **Pembaruan *Scraper* *Over-The-Air* (OTA)**: Saat sebuah platform mengubah struktur API-nya, Skyc Downloader memperbarui bundel *scraper* (`bundle.js`) secara otomatis di latar belakang dari GitHub `elskyx/Skyc-Downloader` tanpa perlu menginstal ulang APK atau `.exe`.
 - **Unduhan Paralel Berkecepatan Tinggi**: Mengunduh *playlist* musik, album, dan galeri foto *carousel* secara bersamaan hingga 5 *worker thread* paralel.
 - **Menu *Quick Save* Android**: Unduh video langsung dari menu *Share* Android melalui tampilan *overlay* ringan tanpa meninggalkan aplikasi yang sedang dibuka.
 - **Konversi Foto ke PDF Instan**: Gabungkan postingan multi-foto menjadi satu dokumen PDF menggunakan `pdf-lib` untuk dibaca secara luring.
@@ -98,8 +98,8 @@ skyc
 
 1. Kloning repositori dan instal dependensi:
    ```bash
-   git clone https://github.com/elskyx/Skyc.git
-   cd Skyc
+   git clone https://github.com/elskyx/Skyc-Downloader.git
+   cd Skyc-Downloader
    npm install
    ```
 2. Kompilasi bundel *scraper* beserta manifest SHA256:
@@ -114,4 +114,4 @@ skyc
 
 ## 📄 Lisensi & Atribusi
 
-Proyek `elskyx/Skyc` merupakan perangkat lunak sumber terbuka berlisensi **GNU General Public License v3.0 (GPL-3.0)** yang mengadaptasi arsitektur dari [coflyn/Mori](https://github.com/coflyn/Mori).
+Proyek `elskyx/Skyc-Downloader` merupakan perangkat lunak sumber terbuka berlisensi **GNU General Public License v3.0 (GPL-3.0)** yang mengadaptasi arsitektur dari [coflyn/Mori](https://github.com/coflyn/Mori).

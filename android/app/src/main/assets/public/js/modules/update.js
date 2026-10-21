@@ -8,7 +8,7 @@ export const APP_CURRENT_VERSION = "1.6.7";
  */
 export async function checkForAppUpdates(manual = false) {
   try {
-    const res = await fetch("https://api.github.com/repos/elskyx/Skyc/releases/latest", {
+    const res = await fetch("https://api.github.com/repos/elskyx/Skyc-Downloader/releases/latest", {
       headers: { Accept: "application/vnd.github.v3+json" },
     });
     if (!res.ok) throw new Error("Could not contact GitHub Releases API");

@@ -2,8 +2,8 @@
 import { BUNDLED_SCRAPER_VERSION } from "../scrapers/index.js";
 import { showToast, triggerHaptic } from "../utils/index.js";
 
-const MANIFEST_URL = "https://raw.githubusercontent.com/elskyx/Skyc/main/public/scrapers-version.json";
-const BUNDLE_URL = "https://raw.githubusercontent.com/elskyx/Skyc/main/public/js/scrapers/bundle.js";
+const MANIFEST_URL = "https://raw.githubusercontent.com/elskyx/Skyc-Downloader/main/public/scrapers-version.json";
+const BUNDLE_URL = "https://raw.githubusercontent.com/elskyx/Skyc-Downloader/main/public/js/scrapers/bundle.js";
 
 /**
  * Checks GitHub Raw CDN for OTA Scraper Patches
