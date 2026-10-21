@@ -3045,6 +3045,9 @@ h1, h2, h3, h4 {
 }
 
 @media (max-width: 768px) {
+  .nav-actions .btn-github {
+    display: none;
+  }
   .hero-metrics-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -3069,6 +3072,12 @@ h1, h2, h3, h4 {
   .footer-bottom-row {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-actions .nav-cta {
+    display: none;
   }
 }
 
