@@ -117,11 +117,17 @@ server.listen(4892, async () => {
     for (const snap of snapshots) {
       await snap.setup();
       await page.waitForTimeout(500);
-      const out1 = path.join(aboutDir, snap.name);
-      const out2 = path.join(landingDir, snap.name);
-      await page.screenshot({ path: out1 });
-      fs.copyFileSync(out1, out2);
-      console.log(`Saved snapshot: ${snap.name}`);
+      const newName = snap.name.replace(/^skyc-/, 'skyc-downloader-');
+      const out1New = path.join(aboutDir, newName);
+      const out1Old = path.join(aboutDir, snap.name);
+      const out2New = path.join(landingDir, newName);
+      const out2Old = path.join(landingDir, snap.name);
+
+      await page.screenshot({ path: out1New });
+      fs.copyFileSync(out1New, out1Old);
+      fs.copyFileSync(out1New, out2New);
+      fs.copyFileSync(out1New, out2Old);
+      console.log(`Saved snapshot: ${newName} & ${snap.name}`);
     }
 
     await browser.close();

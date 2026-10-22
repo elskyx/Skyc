@@ -1043,27 +1043,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const SKYC_SNAPSHOTS = [
       {
-        src: 'assets/snapshots/skyc-home-dark.png',
+        src: 'assets/snapshots/skyc-downloader-home-dark.png',
         alt: 'Skyc Downloader URL Composer • Claude Obsidian Dark Mode'
       },
       {
-        src: 'assets/snapshots/skyc-home-light.png',
+        src: 'assets/snapshots/skyc-downloader-home-light.png',
         alt: 'Skyc Downloader URL Composer • Warm Parchment Light Mode'
       },
       {
-        src: 'assets/snapshots/skyc-batch.png',
+        src: 'assets/snapshots/skyc-downloader-batch.png',
         alt: 'Skyc Downloader Multi-Stream Batch Downloader Queue'
       },
       {
-        src: 'assets/snapshots/skyc-downloads.png',
+        src: 'assets/snapshots/skyc-downloader-downloads.png',
         alt: 'Skyc Downloader Media Player & Downloads Gallery'
       },
       {
-        src: 'assets/snapshots/skyc-platforms.png',
+        src: 'assets/snapshots/skyc-downloader-platforms.png',
         alt: 'Skyc Downloader 16+ Supported Social Media Platforms'
       },
       {
-        src: 'assets/snapshots/skyc-settings.png',
+        src: 'assets/snapshots/skyc-downloader-settings.png',
         alt: 'Skyc Downloader Zero-Cloud Storage & OTA Settings'
       }
     ];
