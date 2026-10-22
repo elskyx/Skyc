@@ -1044,27 +1044,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const SKYC_SNAPSHOTS = [
       {
         src: 'assets/snapshots/skyc-home-dark.png',
-        alt: 'Skyc URL Composer • Claude Obsidian Dark Mode'
+        alt: 'Skyc Downloader URL Composer • Claude Obsidian Dark Mode'
       },
       {
         src: 'assets/snapshots/skyc-home-light.png',
-        alt: 'Skyc URL Composer • Warm Parchment Light Mode'
+        alt: 'Skyc Downloader URL Composer • Warm Parchment Light Mode'
       },
       {
         src: 'assets/snapshots/skyc-batch.png',
-        alt: 'Skyc Multi-Stream Batch Downloader Queue'
+        alt: 'Skyc Downloader Multi-Stream Batch Downloader Queue'
       },
       {
         src: 'assets/snapshots/skyc-downloads.png',
-        alt: 'Skyc Media Player & Downloads Gallery'
+        alt: 'Skyc Downloader Media Player & Downloads Gallery'
       },
       {
         src: 'assets/snapshots/skyc-platforms.png',
-        alt: 'Skyc 16+ Supported Social Media Platforms'
+        alt: 'Skyc Downloader 16+ Supported Social Media Platforms'
       },
       {
         src: 'assets/snapshots/skyc-settings.png',
-        alt: 'Skyc Zero-Cloud Storage & OTA Settings'
+        alt: 'Skyc Downloader Zero-Cloud Storage & OTA Settings'
       }
     ];
 

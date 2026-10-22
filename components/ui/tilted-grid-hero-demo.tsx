@@ -4,27 +4,27 @@ import { TiltedGridHero, type TiltedGridImage } from "@/components/ui/tilted-gri
 export const SKYC_HERO_SNAPSHOTS: TiltedGridImage[] = [
   {
     src: "/assets/snapshots/skyc-home-dark.png",
-    alt: "Skyc Home URL Composer in Claude Obsidian Dark Mode",
+    alt: "Skyc Downloader Home URL Composer in Claude Obsidian Dark Mode",
   },
   {
     src: "/assets/snapshots/skyc-home-light.png",
-    alt: "Skyc Home URL Composer in Warm Parchment Light Mode",
+    alt: "Skyc Downloader Home URL Composer in Warm Parchment Light Mode",
   },
   {
     src: "/assets/snapshots/skyc-batch.png",
-    alt: "Skyc Multi-stream Batch Downloader Queue",
+    alt: "Skyc Downloader Multi-stream Batch Downloader Queue",
   },
   {
     src: "/assets/snapshots/skyc-downloads.png",
-    alt: "Skyc Media Player and Photo Gallery",
+    alt: "Skyc Downloader Media Player and Photo Gallery",
   },
   {
     src: "/assets/snapshots/skyc-platforms.png",
-    alt: "Skyc 16+ Supported Social Media Platforms Matrix",
+    alt: "Skyc Downloader 16+ Supported Social Media Platforms Matrix",
   },
   {
     src: "/assets/snapshots/skyc-settings.png",
-    alt: "Skyc Zero-Cloud Storage & OTA Hot-Patch Settings",
+    alt: "Skyc Downloader Zero-Cloud Storage & OTA Hot-Patch Settings",
   },
 ];
 
